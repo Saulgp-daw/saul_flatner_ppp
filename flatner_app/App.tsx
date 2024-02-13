@@ -33,7 +33,7 @@ function App(): JSX.Element {
 
   return (
     <View>
-    <Text>Hola</Text>
+    <Text>Hola :)</Text>
     </View> 
   );
 }
