@@ -1,17 +1,31 @@
 package es.iespuertodelacruz.sgp.flatner.domain.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.PisoEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 public class Usuario {
 	private String email;
 	private String nombre;
 	private String apellidos;
+	private String fotoPerfil;
 	private String password;
 	private String hash;
 	private String rol;
 	private String sexo;
 	private boolean active;
+	private BigInteger fechaUltimaEstancia;
+	private BigInteger fechaUltimoAlquiler;
 	private int anhoNacimiento;
 	private BigDecimal valoracion;
 	private List<Piso> propiedades;
@@ -21,39 +35,73 @@ public class Usuario {
 	public Usuario() {
 		super();
 	}
-	
-	public Usuario(String email, String nombre, String apellidos, String password, String hash, String rol, String sexo,
-			boolean active, int anhoNacimiento, BigDecimal valoracion) {
+
+	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
+			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
+			int anhoNacimiento, BigDecimal valoracion) {
 		super();
 		this.email = email;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
+		this.fotoPerfil = fotoPerfil;
 		this.password = password;
 		this.hash = hash;
 		this.rol = rol;
 		this.sexo = sexo;
 		this.active = active;
+		this.fechaUltimaEstancia = fechaUltimaEstancia;
+		this.fechaUltimoAlquiler = fechaUltimoAlquiler;
 		this.anhoNacimiento = anhoNacimiento;
 		this.valoracion = valoracion;
 	}
-
-	public Usuario(String email, String nombre, String apellidos, String password, String hash, String rol, String sexo,
-			boolean active, int anhoNacimiento, BigDecimal valoracion, List<Piso> propiedades, List<Piso> pisosInteres,
+	
+	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
+			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
+			int anhoNacimiento, BigDecimal valoracion, List<Piso> propiedades, List<Piso> pisosInteres,
 			Piso pisoActual) {
 		super();
 		this.email = email;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
+		this.fotoPerfil = fotoPerfil;
 		this.password = password;
 		this.hash = hash;
 		this.rol = rol;
 		this.sexo = sexo;
 		this.active = active;
+		this.fechaUltimaEstancia = fechaUltimaEstancia;
+		this.fechaUltimoAlquiler = fechaUltimoAlquiler;
 		this.anhoNacimiento = anhoNacimiento;
 		this.valoracion = valoracion;
 		this.propiedades = propiedades;
 		this.pisosInteres = pisosInteres;
 		this.pisoActual = pisoActual;
+	}
+
+
+
+	public String getFotoPerfil() {
+		return fotoPerfil;
+	}
+
+	public void setFotoPerfil(String fotoPerfil) {
+		this.fotoPerfil = fotoPerfil;
+	}
+
+	public BigInteger getFechaUltimaEstancia() {
+		return fechaUltimaEstancia;
+	}
+
+	public void setFechaUltimaEstancia(BigInteger fechaUltimaEstancia) {
+		this.fechaUltimaEstancia = fechaUltimaEstancia;
+	}
+
+	public BigInteger getFechaUltimoAlquiler() {
+		return fechaUltimoAlquiler;
+	}
+
+	public void setFechaUltimoAlquiler(BigInteger fechaUltimoAlquiler) {
+		this.fechaUltimoAlquiler = fechaUltimoAlquiler;
 	}
 
 	public String getEmail() {

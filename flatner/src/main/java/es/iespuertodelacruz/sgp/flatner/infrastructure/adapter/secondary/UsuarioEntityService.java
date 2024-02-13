@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,14 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	
 	@Autowired
 	IUsuarioEntityRepository ueRepository;
+	
+	UsuarioEntityMapper mapper = new UsuarioEntityMapper();
 
 	@Override
 	public List<Usuario> findAll() {
+		List<UsuarioEntity> lista = ueRepository.findAll();
 		
-		return null;
+		return lista.stream().map(ue -> mapper.toDomainUsuario(ue)).collect(Collectors.toList());
 	}
 
 	@Override

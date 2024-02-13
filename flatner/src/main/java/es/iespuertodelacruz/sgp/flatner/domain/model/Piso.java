@@ -38,7 +38,39 @@ public class Piso {
 			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
 			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
 			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,
-			boolean wifi, Usuario propietario) {
+			boolean wifi) {
+		super();
+		this.idPiso = idPiso;
+		this.ascensor = ascensor;
+		this.descripcion = descripcion;
+		this.electrodomesticos = electrodomesticos;
+		this.estanciaMinimaDias = estanciaMinimaDias;
+		this.fotos = fotos;
+		this.fumar = fumar;
+		this.gasIncluido = gasIncluido;
+		this.jardin = jardin;
+		this.luzIncluida = luzIncluida;
+		this.mCuadrados = mCuadrados;
+		this.mascotas = mascotas;
+		this.numHabitaciones = numHabitaciones;
+		this.mapsLink = mapsLink;
+		this.parejas = parejas;
+		this.precioMes = precioMes;
+		this.propietarioReside = propietarioReside;
+		this.terraza = terraza;
+		this.titulo = titulo;
+		this.ubicacion = ubicacion;
+		this.valoracion = valoracion;
+		this.wifi = wifi;
+	}
+	
+	
+
+	public Piso(int idPiso, boolean ascensor, String descripcion, String electrodomesticos, int estanciaMinimaDias,
+			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
+			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
+			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,
+			boolean wifi, Usuario propietario, List<Usuario> usuariosInteresados, List<Usuario> inquilinos) {
 		super();
 		this.idPiso = idPiso;
 		this.ascensor = ascensor;
@@ -63,6 +95,8 @@ public class Piso {
 		this.valoracion = valoracion;
 		this.wifi = wifi;
 		this.propietario = propietario;
+		this.usuariosInteresados = usuariosInteresados;
+		this.inquilinos = inquilinos;
 	}
 
 	public int getIdPiso() {

@@ -31,7 +31,7 @@ public class UsuarioEntity implements Serializable {
 	@Id
 	private String email;
 
-	private byte active;
+	private boolean active;
 
 	@Column(name="anho_nacimiento")
 	private int anhoNacimiento;
@@ -95,11 +95,11 @@ public class UsuarioEntity implements Serializable {
 		this.email = email;
 	}
 
-	public byte getActive() {
+	public boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 

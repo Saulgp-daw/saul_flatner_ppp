@@ -20,7 +20,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.Usuario
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/v1/usuarios")
 public class UsuarioRESTController {
 	Logger log;
 	
