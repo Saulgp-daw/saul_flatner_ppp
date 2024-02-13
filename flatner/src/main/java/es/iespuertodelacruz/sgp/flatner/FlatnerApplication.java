@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.saul.flatner;
+package es.iespuertodelacruz.sgp.flatner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
