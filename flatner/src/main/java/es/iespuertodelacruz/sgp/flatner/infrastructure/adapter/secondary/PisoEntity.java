@@ -98,7 +98,7 @@ public class PisoEntity implements Serializable {
 	private List<UsuarioEntity> usuariosInteresados;
 
 	//bi-directional many-to-one association to UsuarioEntity
-	@OneToMany(mappedBy="piso")
+	@OneToMany(mappedBy="pisoActual")
 	private List<UsuarioEntity> inquilinos;
 
 	public PisoEntity() {
@@ -306,14 +306,14 @@ public class PisoEntity implements Serializable {
 
 	public UsuarioEntity addInquilino(UsuarioEntity inquilino) {
 		getInquilinos().add(inquilino);
-		inquilino.setPiso(this);
+		inquilino.setPisoActual(this);
 
 		return inquilino;
 	}
 
 	public UsuarioEntity removeInquilino(UsuarioEntity inquilino) {
 		getInquilinos().remove(inquilino);
-		inquilino.setPiso(null);
+		inquilino.setPisoActual(null);
 
 		return inquilino;
 	}

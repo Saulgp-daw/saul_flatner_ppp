@@ -82,7 +82,7 @@ public class UsuarioEntity implements Serializable {
 	//bi-directional many-to-one association to PisoEntity
 	@ManyToOne
 	@JoinColumn(name="id_piso_actual")
-	private PisoEntity piso;
+	private PisoEntity pisoActual;
 
 	public UsuarioEntity() {
 	}
@@ -213,20 +213,20 @@ public class UsuarioEntity implements Serializable {
 		return propiedade;
 	}
 
-	public List<PisoEntity> getPisos_interes() {
+	public List<PisoEntity> getPisosInteres() {
 		return this.pisosInteres;
 	}
 
-	public void setPisos_interes(List<PisoEntity> pisos_interes) {
+	public void setPisosInteres(List<PisoEntity> pisos_interes) {
 		this.pisosInteres = pisos_interes;
 	}
 
-	public PisoEntity getPiso() {
-		return this.piso;
+	public PisoEntity getPisoActual() {
+		return this.pisoActual;
 	}
 
-	public void setPiso(PisoEntity piso) {
-		this.piso = piso;
+	public void setPisoActual(PisoEntity pisoActual) {
+		this.pisoActual = pisoActual;
 	}
 
 }
