@@ -1,5 +1,9 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +61,9 @@ public class UsuarioRESTController {
 			encontrado.setSexo(usuarioDto.getSexo());
 			encontrado.setFotoPerfil(usuarioDto.getFotoPerfil());
 			encontrado.setPassword(passwordEncoder.encode(usuarioDto.getPassword()));
-			//encontrado.setFechaUltimaEstancia(usuarioDto.getFechaUltimaEstancia());
-			//encontrado.setFechaUltimoAlquiler(usuarioDto.getFechaUltimoAlquiler());
+			BigInteger fechaUltimaEstancia = convertirFechaABigInteger(usuarioDto.getFechaUltimaEstancia());
+			encontrado.setFechaUltimaEstancia(fechaUltimaEstancia);
+			encontrado.setFechaUltimoAlquiler(convertirFechaABigInteger(usuarioDto.getFechaUltimoAlquiler()));
 
 
 			String generateToken = jwtService.generateToken(usuarioDto.getNombre(), usuarioDto.getPassword());
@@ -72,6 +77,14 @@ public class UsuarioRESTController {
 	}
 	
 	
-	
+	private static BigInteger convertirFechaABigInteger(String fechaComoString) {
+		
+		if(fechaComoString != "") {
+			LocalDate fecha = LocalDate.parse(fechaComoString, DateTimeFormatter.ISO_LOCAL_DATE);
+	        long timestampEnMilisegundos = fecha.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+	        return BigInteger.valueOf(timestampEnMilisegundos);
+		}
+        return null;
+    }
 	
 }
