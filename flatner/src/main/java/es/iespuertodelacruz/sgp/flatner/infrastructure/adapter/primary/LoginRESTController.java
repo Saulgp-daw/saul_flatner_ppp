@@ -3,6 +3,7 @@ package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.LoginDTO;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.RegisterDTO;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.MailService;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.UsuarioEntityService;
@@ -21,7 +23,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.security.AuthService;
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
-public class LoginController {
+public class LoginRESTController {
 	Logger log;
 	@Autowired
 	private AuthService service;
@@ -62,6 +64,14 @@ public class LoginController {
 		}
 
 		return ResponseEntity.badRequest().body("Usuario inexistente");
-
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> authenticate(@RequestBody LoginDTO request) {
+		String token = service.authenticate(request);
+		if (token == null)
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");
+		else
+			return ResponseEntity.ok(token);
 	}
 }

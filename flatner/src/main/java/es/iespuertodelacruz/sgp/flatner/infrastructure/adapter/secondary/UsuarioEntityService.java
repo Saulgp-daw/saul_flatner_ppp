@@ -42,9 +42,9 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	}
 
 	@Override
-	public Usuario save(Usuario entity) {
-		if(entity != null) {
-			UsuarioEntity ue = mapper.toEntityUsuario(entity, true);
+	public Usuario save(Usuario domain) {
+		if(domain != null) {
+			UsuarioEntity ue = mapper.toEntityUsuario(domain, true);
 			UsuarioEntity save = ueRepository.save(ue);
 			if(save != null) {
 				return mapper.toDomainUsuario(save);
@@ -53,22 +53,52 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 		return null;
 	}
 
+	@Override
 	@Transactional
-	public UsuarioEntity update(Usuario entity) {
-		Optional<UsuarioEntity> usuarioAntiguo = ueRepository.findById(entity.getEmail());
+	public Usuario update(Usuario domain) {
+		Optional<UsuarioEntity> opt = ueRepository.findById(domain.getEmail());
 		
-		if(usuarioAntiguo.isPresent()) {
-			usuarioAntiguo.get().setEmail(entity.getEmail());
-			usuarioAntiguo.get().setPassword(entity.getPassword());
-			usuarioAntiguo.get().setHash(entity.getHash());
-			return usuarioAntiguo.get();
+		if(opt.isPresent()) {
+			UsuarioEntity ue = mapper.toEntityUsuario(domain, true);
+			
+			PisoEntity pisoActual = mapper.toEntityPiso(domain.getPisoActual(), false);
+			
+			List<PisoEntity> propiedades = domain.getPropiedades().stream()
+					.map(piso -> mapper.toEntityPiso(piso, false))
+					.collect(Collectors.toList());
+			
+			List<PisoEntity> pisosInteres = domain.getPisosInteres().stream()
+					.map(piso -> mapper.toEntityPiso(piso, false))
+					.collect(Collectors.toList());
+			
+			ue.setNombre(domain.getNombre());
+			ue.setApellidos(domain.getApellidos());
+			ue.setEmail(domain.getEmail());
+			ue.setActive(domain.isActive());
+			ue.setAnhoNacimiento(domain.getAnhoNacimiento());
+			ue.setFechaUltimaEstancia(domain.getFechaUltimaEstancia());
+			ue.setFechaUltimoAlquiler(domain.getFechaUltimoAlquiler());
+			ue.setFotoPerfil(domain.getFotoPerfil());
+			ue.setPassword(domain.getPassword());
+			ue.setHash(domain.getHash());
+			ue.setRol(domain.getRol());
+			ue.setSexo(domain.getSexo());
+			ue.setValoracion(domain.getValoracion());
+			ue.setPropiedades(propiedades);
+			ue.setPisosInteres(pisosInteres);
+			ue.setPisoActual(pisoActual);
+			
+			UsuarioEntity update = ueRepository.save(ue);
+			return mapper.toDomainUsuario(update);
 		}
 		return null;
 	}
 	
+	@Transactional
 	public UsuarioEntity registro(UsuarioEntity entity) {
 		return ueRepository.save(entity);
 	}
+	
 
 
 

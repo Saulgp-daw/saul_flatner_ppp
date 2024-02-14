@@ -27,8 +27,13 @@ public class UsuarioDomainService implements IUsuarioDomainService {
 	}
 
 	@Override
-	public Usuario save(Usuario entity) {
-		return usuarioRepository.save(entity);
+	public Usuario save(Usuario domain) {
+		return usuarioRepository.save(domain);
+	}
+
+	@Override
+	public Usuario update(Usuario domain) {
+		return usuarioRepository.update(domain);
 	}
 
 	

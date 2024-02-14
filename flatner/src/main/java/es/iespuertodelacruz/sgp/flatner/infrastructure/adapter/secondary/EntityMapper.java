@@ -175,6 +175,7 @@ public class EntityMapper {
 			ue.setRol(domain.getRol());
 			ue.setSexo(domain.getSexo());
 			ue.setValoracion(domain.getValoracion());
+			ue.setHash(domain.getHash());
 			
 			if(recursion) {
 				PisoEntity pisoActual = this.toEntityPiso(domain.getPisoActual(), false);

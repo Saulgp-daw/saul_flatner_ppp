@@ -7,5 +7,6 @@ import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 public interface IUsuarioDomainRepository {
 	List<Usuario> findAll();
 	Usuario findById(String email);
-	Usuario save(Usuario entity);
+	Usuario save(Usuario domain);
+	Usuario update(Usuario domain);
 }

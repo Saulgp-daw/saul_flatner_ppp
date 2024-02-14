@@ -1,23 +1,23 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IUsuarioDomainService;
-import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.RegisterDTO;
-import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.UsuarioEntity;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.UsuarioDTO;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.security.JwtService;
 
 
 @RestController
@@ -26,6 +26,11 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.Usuario
 public class UsuarioRESTController {
 	
 	@Autowired IUsuarioDomainService usuarioDomainService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private JwtService jwtService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
@@ -40,6 +45,30 @@ public class UsuarioRESTController {
 			return ResponseEntity.ok(encontrado);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+	}
+	
+	@PutMapping("")
+	public ResponseEntity<?> update(@RequestBody UsuarioDTO usuarioDto){
+		Usuario encontrado = usuarioDomainService.findById(usuarioDto.getEmail());
+		if(encontrado != null) {
+			encontrado.setNombre(usuarioDto.getNombre());
+			encontrado.setApellidos(usuarioDto.getApellidos());
+			encontrado.setAnhoNacimiento(usuarioDto.getAnhoNacimiento());
+			encontrado.setSexo(usuarioDto.getSexo());
+			encontrado.setFotoPerfil(usuarioDto.getFotoPerfil());
+			encontrado.setPassword(passwordEncoder.encode(usuarioDto.getPassword()));
+			//encontrado.setFechaUltimaEstancia(usuarioDto.getFechaUltimaEstancia());
+			//encontrado.setFechaUltimoAlquiler(usuarioDto.getFechaUltimoAlquiler());
+
+
+			String generateToken = jwtService.generateToken(usuarioDto.getNombre(), usuarioDto.getPassword());
+			encontrado.setHash(generateToken);
+			Usuario update = usuarioDomainService.update(encontrado);
+			if(update != null) {
+				return ResponseEntity.ok(update);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
 	}
 	
 	
