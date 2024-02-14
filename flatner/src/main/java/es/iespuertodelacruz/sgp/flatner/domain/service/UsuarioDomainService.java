@@ -22,20 +22,18 @@ public class UsuarioDomainService implements IUsuarioDomainService {
 
 	@Override
 	public Usuario findById(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return usuarioRepository.findById(email);
 	}
 
 	@Override
 	public Usuario save(Usuario entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return usuarioRepository.save(entity);
 	}
 
 	@Override
 	public Usuario update(Usuario entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return usuarioRepository.update(entity);
 	}
 
 }

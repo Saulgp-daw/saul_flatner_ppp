@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	@Autowired
 	IUsuarioEntityRepository ueRepository;
 	
-	UsuarioEntityMapper mapper = new UsuarioEntityMapper();
+	EntityMapper mapper = new EntityMapper();
 
 	@Override
 	public List<Usuario> findAll() {
@@ -26,8 +27,17 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 
 	@Override
 	public Usuario findById(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		Usuario usuario = null;
+		if(email != null) {
+			Optional<UsuarioEntity> opt = ueRepository.findById(email);
+			if(opt.isPresent()) {
+				
+				UsuarioEntity usuarioEntity = opt.get();
+				usuario = mapper.toDomainUsuario(usuarioEntity);
+			}
+			
+		}
+		return usuario;
 	}
 
 	@Override

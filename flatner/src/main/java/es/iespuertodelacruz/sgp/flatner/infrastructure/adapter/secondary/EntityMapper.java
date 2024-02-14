@@ -11,7 +11,7 @@ import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 
 @Component
-public class UsuarioEntityMapper {
+public class EntityMapper {
 	
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
@@ -72,6 +72,51 @@ public class UsuarioEntityMapper {
 					entity.getUbicacion(), 
 					entity.getValoracion(), 
 					entity.getWifi());
+		}
+		return piso;
+	}
+	
+	protected Piso toDomainPiso(PisoEntity entity) {
+		Piso piso = null;
+		if (entity != null) {
+			
+			Usuario propietario = this.toDomainSimpleUsuario(entity.getPropietario());
+			
+			List<Usuario> usuariosInteresados = entity.getUsuarios_interesados().stream()
+					.map(this::toDomainSimpleUsuario)
+					.collect(Collectors.toList());
+			
+			List<Usuario> inquilinos = entity.getInquilinos().stream()
+					.map(this::toDomainSimpleUsuario)
+					.collect(Collectors.toList());
+			
+			piso = new Piso(
+					entity.getIdPiso(), 
+					entity.getAscensor(), 
+					entity.getDescripcion(),
+					entity.getElectrodomesticos(), 
+					entity.getEstanciaMinimaDias(), 
+					this.stringAList(entity.getFotos()),
+					entity.getFumar(), 
+					entity.getGasIncluido(), 
+					entity.getJardin(), 
+					entity.getLuzIncluida(),
+					entity.getMCuadrados(), 
+					entity.getMascotas(), 
+					entity.getNumHabitaciones(), 
+					entity.getMapsLink(),
+					entity.getParejas(), 
+					entity.getPrecioMes(), 
+					entity.getPropietarioReside(), 
+					entity.getTerraza(),
+					entity.getTitulo(), 
+					entity.getUbicacion(), 
+					entity.getValoracion(), 
+					entity.getWifi(),
+					propietario,
+					usuariosInteresados,
+					inquilinos
+					);
 		}
 		return piso;
 	}
