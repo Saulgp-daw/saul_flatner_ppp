@@ -8,5 +8,4 @@ public interface IUsuarioDomainRepository {
 	List<Usuario> findAll();
 	Usuario findById(String email);
 	Usuario save(Usuario entity);
-	Usuario update(Usuario entity);
 }

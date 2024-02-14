@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 import es.iespuertodelacruz.sgp.flatner.domain.port.secondary.IUsuarioDomainRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioEntityService implements IUsuarioDomainRepository{
@@ -42,14 +43,31 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 
 	@Override
 	public Usuario save(Usuario entity) {
-		// TODO Auto-generated method stub
+		if(entity != null) {
+			UsuarioEntity ue = mapper.toEntityUsuario(entity, true);
+			UsuarioEntity save = ueRepository.save(ue);
+			if(save != null) {
+				return mapper.toDomainUsuario(save);
+			}
+		}
 		return null;
 	}
 
-	@Override
-	public Usuario update(Usuario entity) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public UsuarioEntity update(Usuario entity) {
+		Optional<UsuarioEntity> usuarioAntiguo = ueRepository.findById(entity.getEmail());
+		
+		if(usuarioAntiguo.isPresent()) {
+			usuarioAntiguo.get().setEmail(entity.getEmail());
+			usuarioAntiguo.get().setPassword(entity.getPassword());
+			usuarioAntiguo.get().setHash(entity.getHash());
+			return usuarioAntiguo.get();
+		}
 		return null;
+	}
+	
+	public UsuarioEntity registro(UsuarioEntity entity) {
+		return ueRepository.save(entity);
 	}
 
 

@@ -31,9 +31,6 @@ public class UsuarioDomainService implements IUsuarioDomainService {
 		return usuarioRepository.save(entity);
 	}
 
-	@Override
-	public Usuario update(Usuario entity) {
-		return usuarioRepository.update(entity);
-	}
+	
 
 }
