@@ -38,13 +38,19 @@ public class PisoEntityService implements IPisoDomainRepository{
 	}
 
 	@Override
-	public Piso save(Piso entity) {
-		// TODO Auto-generated method stub
+	public Piso save(Piso domain) {
+		if(domain != null) {
+			PisoEntity pe = mapper.toEntityPiso(domain, true);
+			PisoEntity save = peRepository.save(pe);
+			if(save != null) {
+				return mapper.toDomainPiso(save);
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public Piso update(Piso entity) {
+	public Piso update(Piso domain) {
 		// TODO Auto-generated method stub
 		return null;
 	}

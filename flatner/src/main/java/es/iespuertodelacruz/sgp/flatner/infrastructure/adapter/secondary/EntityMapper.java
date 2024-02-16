@@ -1,10 +1,10 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
@@ -226,16 +226,25 @@ public class EntityMapper {
 			pe.setWifi(domain.isWifi());
 
 			if (recursion) {
+				List<UsuarioEntity> usuariosInteresado = new ArrayList<UsuarioEntity>();
+				List<UsuarioEntity> inquilinos = new ArrayList<UsuarioEntity>();
+				
 				UsuarioEntity propietario = this.toEntityUsuario(domain.getPropietario(), false);
 				pe.setPropietario(propietario);
 
-				List<UsuarioEntity> usuariosInteresado = domain.getUsuariosInteresados().stream()
-						.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
+				if(domain.getUsuariosInteresados() != null) {
+					usuariosInteresado = domain.getUsuariosInteresados().stream()
+							.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
+				}
 				pe.setUsuarios_interesados(usuariosInteresado);
-
-				List<UsuarioEntity> inquilinos = domain.getInquilinos().stream()
-						.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
+				
+				if(domain.getInquilinos() != null) {
+					inquilinos = domain.getInquilinos().stream()
+							.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
+				}
 				pe.setInquilinos(inquilinos);
+
+				
 
 			}
 
