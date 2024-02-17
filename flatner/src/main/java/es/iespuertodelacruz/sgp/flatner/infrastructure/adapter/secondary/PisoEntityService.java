@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.port.secondary.IPisoDomainRepository;
+import jakarta.transaction.Transactional;
 
 @Service
-public class PisoEntityService implements IPisoDomainRepository{
-	
+public class PisoEntityService implements IPisoDomainRepository {
+
 	@Autowired
 	IPisoEntityRepository peRepository;
-	
+
 	EntityMapper mapper = new EntityMapper();
 
 	@Override
@@ -27,9 +28,9 @@ public class PisoEntityService implements IPisoDomainRepository{
 	@Override
 	public Piso findById(Integer id) {
 		Piso piso = null;
-		if(id != null) {
+		if (id != null) {
 			Optional<PisoEntity> opt = peRepository.findById(id);
-			if(opt.isPresent()) {
+			if (opt.isPresent()) {
 				PisoEntity pisoEntity = opt.get();
 				piso = mapper.toDomainPiso(pisoEntity);
 			}
@@ -39,10 +40,10 @@ public class PisoEntityService implements IPisoDomainRepository{
 
 	@Override
 	public Piso save(Piso domain) {
-		if(domain != null) {
+		if (domain != null) {
 			PisoEntity pe = mapper.toEntityPiso(domain, true);
 			PisoEntity save = peRepository.save(pe);
-			if(save != null) {
+			if (save != null) {
 				return mapper.toDomainPiso(save);
 			}
 		}
@@ -53,6 +54,41 @@ public class PisoEntityService implements IPisoDomainRepository{
 	public Piso update(Piso domain) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Transactional
+	@Override
+	public boolean delete(Integer id) {
+		boolean borrado = false;
+		if (id != null) {
+			Optional<PisoEntity> opt = peRepository.findById(id);
+			if (opt.isPresent()) {
+				PisoEntity pisoEntity = opt.get();
+				List<UsuarioEntity> usuariosInteresados = pisoEntity.getUsuarios_interesados();
+				List<UsuarioEntity> inquilinos = pisoEntity.getInquilinos();
+
+				if (usuariosInteresados != null) {
+					for (UsuarioEntity interesado : usuariosInteresados) {
+						interesado.getPisosInteres().remove(pisoEntity);
+					}
+					usuariosInteresados.clear();
+				}
+
+				if (inquilinos != null) {
+					for (UsuarioEntity inquilino : inquilinos) {
+						inquilino.setPisoActual(null);
+					}
+					inquilinos.clear();
+				}
+
+				peRepository.delete(pisoEntity);
+				Optional<PisoEntity> pisoBorrado = peRepository.findById(id);
+				if (pisoBorrado.isEmpty()) {
+					borrado = true;
+				}
+			}
+		}
+		return borrado;
 	}
 
 }

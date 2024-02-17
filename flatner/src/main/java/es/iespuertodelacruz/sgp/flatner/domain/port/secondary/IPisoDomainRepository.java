@@ -9,4 +9,5 @@ public interface IPisoDomainRepository {
 	Piso findById(Integer id);
 	Piso save(Piso domain);
 	Piso update(Piso domain);
+	boolean delete(Integer id);
 }

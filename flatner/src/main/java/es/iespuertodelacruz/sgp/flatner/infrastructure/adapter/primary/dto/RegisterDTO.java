@@ -3,13 +3,11 @@ package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto;
 public class RegisterDTO {
 	private String email;
 	private String password;
-	private String nombre;
 	
-	public RegisterDTO(String email, String password, String nombre) {
+	public RegisterDTO(String email, String password) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.nombre = nombre;
 	}
 
 	public RegisterDTO() {
@@ -30,14 +28,6 @@ public class RegisterDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 	
 	

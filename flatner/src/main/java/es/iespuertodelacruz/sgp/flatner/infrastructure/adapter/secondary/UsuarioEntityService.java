@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 import es.iespuertodelacruz.sgp.flatner.domain.port.secondary.IUsuarioDomainRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +17,9 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	
 	@Autowired
 	IUsuarioEntityRepository ueRepository;
+	
+	@Autowired
+	IPisoEntityRepository peRepository;
 	
 	EntityMapper mapper = new EntityMapper();
 
@@ -97,6 +101,40 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	@Transactional
 	public UsuarioEntity registro(UsuarioEntity entity) {
 		return ueRepository.save(entity);
+	}
+	
+	@Transactional
+	@Override
+	public boolean delete(String email) {
+		boolean borrado = false;
+		Optional<UsuarioEntity> opt = ueRepository.findById(email);
+		if(opt.isPresent()) {
+			UsuarioEntity usuarioEntity = opt.get();
+			List<PisoEntity> propiedades = usuarioEntity.getPropiedades();
+			List<PisoEntity> pisosInteres = usuarioEntity.getPisosInteres();
+			
+			//Aunque tenga many to many y no tenga borrado en cascada borra la tabla intermedia
+			for(PisoEntity piso : pisosInteres) {
+				System.out.println("----------------------------"+piso.getIdPiso());
+			}
+			
+			if(propiedades != null) {
+				for(PisoEntity piso : propiedades) {
+					if(piso.getPropietario().getEmail().equals(usuarioEntity.getEmail())) {
+						peRepository.delete(piso);
+					}
+				}
+				propiedades.clear();
+			}
+			
+			
+			ueRepository.delete(usuarioEntity);
+			Optional<UsuarioEntity> usuarioBorrado = ueRepository.findById(email);
+			if(usuarioBorrado.isEmpty()) {
+				borrado = true;
+			}
+		}
+		return borrado;
 	}
 	
 

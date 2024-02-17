@@ -21,13 +21,13 @@ public class AuthService {
 
 	public String register(RegisterDTO userdetails) {
 		UsuarioEntity userentity = new UsuarioEntity();
-		userentity.setNombre(userdetails.getNombre());
+		userentity.setEmail(userdetails.getEmail());
 		userentity.setPassword(passwordEncoder.encode(userdetails.getPassword()));
 		userentity.setRol("ROLE_USER");
 		
 		//userdetails.setRole(userentity.getRol());
-		String generateToken = jwtService.generateToken(userdetails.getNombre(), userdetails.getPassword());
-		userentity.setEmail(userdetails.getEmail());
+		String generateToken = jwtService.generateToken(userdetails.getEmail(), userdetails.getPassword());
+		
 		userentity.setHash(generateToken);
 		UsuarioEntity save = usuarioservice.registro(userentity);
 		return generateToken;
@@ -39,14 +39,14 @@ public class AuthService {
 		if (userentity != null) {
 			if (passwordEncoder.matches(request.getPassword(), userentity.getPassword())) {
 				userlogin = new UserDetailsLogin();
-				userlogin.setUsername(userentity.getNombre());
+				userlogin.setUsername(userentity.getEmail());
 				userlogin.setPassword(userentity.getPassword());
 				userlogin.setRole(userentity.getRol());
 			}
 		}
 		String generateToken = null;
 		if (userlogin != null) {
-			generateToken = jwtService.generateToken(userentity.getNombre(), userentity.getRol());
+			generateToken = jwtService.generateToken(userentity.getEmail(), userentity.getRol());
 		}
 		return generateToken;
 	}

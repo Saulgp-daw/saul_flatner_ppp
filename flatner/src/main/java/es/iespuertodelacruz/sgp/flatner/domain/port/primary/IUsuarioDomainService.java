@@ -10,4 +10,5 @@ public interface IUsuarioDomainService {
 	Usuario findById(String email);
 	Usuario save(Usuario domain);
 	Usuario update(Usuario domain);
+	boolean delete(String email);
 }

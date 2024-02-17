@@ -36,6 +36,11 @@ public class UsuarioDomainService implements IUsuarioDomainService {
 		return usuarioRepository.update(domain);
 	}
 
+	@Override
+	public boolean delete(String email) {
+		return usuarioRepository.delete(email);
+	}
+
 	
 
 }

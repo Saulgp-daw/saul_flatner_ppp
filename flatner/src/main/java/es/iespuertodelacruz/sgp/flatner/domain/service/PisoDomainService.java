@@ -34,4 +34,9 @@ public class PisoDomainService implements IPisoDomainService {
 		return pisoRepository.update(entity);
 	}
 
+	@Override
+	public boolean delete(Integer id) {
+		return pisoRepository.delete(id);
+	}
+
 }

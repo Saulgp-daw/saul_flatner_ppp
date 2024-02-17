@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +60,21 @@ public class PisoRESTController {
 	
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable Integer id){
+		Piso encontrado = pisoDomainService.findById(id);
+		if(encontrado != null) {
+			try {
+				boolean delete = pisoDomainService.delete(id);
+				return delete ? 
+						ResponseEntity.ok().body("Piso borrado con éxito") : 
+						ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Hubo un error a la hora de borrar el piso");
+			}catch(Exception ex) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL piso tiene usuarios vinculados");
+			}
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
 	}
 }

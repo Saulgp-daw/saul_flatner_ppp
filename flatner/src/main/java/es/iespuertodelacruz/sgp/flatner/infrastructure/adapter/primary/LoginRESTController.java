@@ -35,7 +35,7 @@ public class LoginRESTController {
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterDTO request) {
 		String token = service.register(request);
-		mailService.send(request.getEmail(), "Verficiación de cuenta",
+		mailService.send(request.getEmail(), "Verficación de cuenta",
 				"http://localhost:8080/api/registerverify?usermail=" + request.getEmail() + "&hash="
 						+ token);
 		return ResponseEntity.ok(token);

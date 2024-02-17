@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,23 @@ public class UsuarioRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
 	}
 	
-	@PostMapping("/{email}/piso_actual/{id}")
+	@DeleteMapping("/{email}")
+	public ResponseEntity<?> deleteById(@PathVariable String email) {
+		Usuario encontrado = usuarioDomainService.findById(email);
+		if(encontrado != null) {
+			try {
+				boolean delete = usuarioDomainService.delete(email);
+				return delete ? 
+					    ResponseEntity.ok().body("Usuario borrado con éxito") : 
+					    ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Hubo un error a la hora de borrar el usuario");
+			}catch(Exception ex) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL usuario tiene piso vinculados");
+			}
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+	}
+	
+	@PostMapping("/{email}/reside/{id}")
 	public ResponseEntity<?> pisoActual(@PathVariable String email, @PathVariable Integer id){
 		Usuario inquilino = usuarioDomainService.findById(email);
 		
@@ -65,8 +82,13 @@ public class UsuarioRESTController {
 			Piso encontrado = pisoDomainService.findById(id);
 			if(encontrado != null) {
 				inquilino.setPisoActual(encontrado);
+				Usuario update = usuarioDomainService.update(inquilino);
+				if(update != null) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(inquilino);
+				}
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el usuario");
 			}
-			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
 	}
