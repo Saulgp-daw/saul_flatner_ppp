@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import jakarta.persistence.Column;
 
 public class UsuarioDTO {
-	private String email;
 	private String nombre;
 	private String apellidos;
 	private int anhoNacimiento;
@@ -16,13 +15,6 @@ public class UsuarioDTO {
 	private String password;
 	private String sexo;
 	
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public String getNombre() {
 		return nombre;

@@ -50,9 +50,37 @@ public class PisoEntityService implements IPisoDomainRepository {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public Piso update(Piso domain) {
-		// TODO Auto-generated method stub
+		Optional<PisoEntity> opt = peRepository.findById(domain.getIdPiso());
+		
+		if(opt.isPresent()) {
+			PisoEntity pe = opt.get();
+			pe.setAscensor(domain.isAscensor());
+			pe.setDescripcion(domain.getDescripcion());
+			pe.setElectrodomesticos(domain.getElectrodomesticos());
+			pe.setEstanciaMinimaDias(domain.getEstanciaMinimaDias());
+			pe.setFotos(mapper.listAString(domain.getFotos()));
+			pe.setFumar(domain.isFumar());
+			pe.setGasIncluido(domain.isGasIncluido());
+			pe.setJardin(domain.isJardin());
+			pe.setLuzIncluida(domain.isLuzIncluida());
+			pe.setMCuadrados(domain.getmCuadrados());
+			pe.setMapsLink(domain.getMapsLink());
+			pe.setMascotas(domain.isMascotas());
+			pe.setNumHabitaciones(domain.getNumHabitaciones());
+			pe.setParejas(domain.isParejas());
+			pe.setPrecioMes(domain.getPrecioMes());
+			pe.setPropietarioReside(domain.isPropietarioReside());
+			pe.setTerraza(domain.isTerraza());
+			pe.setTitulo(domain.getTitulo());
+			pe.setUbicacion(domain.getUbicacion());
+			
+			PisoEntity update = peRepository.save(pe);
+			return mapper.toDomainPiso(update);
+			
+		}
 		return null;
 	}
 

@@ -49,8 +49,6 @@ public class PisoRESTController {
 	}
 	
 	
-	
-	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody PisoDTO pisoDTO){
 		Piso encontrado = pisoDomainService.findById(id);

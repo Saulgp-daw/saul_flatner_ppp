@@ -2,17 +2,8 @@ package es.iespuertodelacruz.sgp.flatner.domain.model;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.List;
-
-import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.PisoEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 public class Usuario {
 	private String email;
@@ -206,6 +197,17 @@ public class Usuario {
 
 	public void setPisoActual(Piso pisoActual) {
 		this.pisoActual = pisoActual;
+	}
+
+	public void eliminarPisoPorId(int idPiso) {
+	    Iterator<Piso> iterador = pisosInteres.iterator();
+	    while (iterador.hasNext()) {
+	        Piso piso = iterador.next();
+	        if (piso.getIdPiso() == idPiso) {
+	            iterador.remove();
+	            break;
+	        }
+	    }
 	}
 	
 	

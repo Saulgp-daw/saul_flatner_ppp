@@ -13,11 +13,11 @@ import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 @Component
 public class EntityMapper {
 	
-	private List<String> stringAList(String fotos) {
+	protected List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
 	}
 
-	private String listAString(List<String> fotos) {
+	protected String listAString(List<String> fotos) {
 		return fotos.stream().collect(Collectors.joining(";;"));
 	}
 
