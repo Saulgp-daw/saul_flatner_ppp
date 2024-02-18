@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,10 @@ public class PisoRESTController {
 	@Autowired IPisoDomainService pisoDomainService;
 	@Autowired IUsuarioDomainService usuarioDomainService;
 	
+	private List<String> stringAList(String fotos) {
+		return Arrays.asList(fotos.split(";;"));
+	}
+	
 	@GetMapping
 	public ResponseEntity<?> findAll(){
 		List<Piso> lista = pisoDomainService.findAll();
@@ -43,23 +48,40 @@ public class PisoRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
 	}
 	
-	@PostMapping("")
-	public ResponseEntity<?> save(@RequestBody PisoDTO pisoDTO){
-		Usuario propietarioFind = usuarioDomainService.findById(pisoDTO.getEmailPropietario());
-		
-		if(propietarioFind != null) {
-			Piso piso = new Piso(0, pisoDTO.isAscensor(), pisoDTO.getDescripcion(), pisoDTO.getElectrodomesticos(), pisoDTO.getEstanciaMinimaDias(), stringAList( pisoDTO.getFotos()), pisoDTO.isFumar(), pisoDTO.isGasIncluido(), pisoDTO.isJardin(), pisoDTO.isLuzIncluida(), pisoDTO.getmCuadrados(), pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(), pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(), pisoDTO.getUbicacion(), pisoDTO.getValoracion(), pisoDTO.isWifi(), propietarioFind);
-			Piso save = pisoDomainService.save(piso);
-			if(save != null) {
-				return ResponseEntity.ok(save);
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al guardar");
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Propietario no encontrado");
-	}
 	
-	private List<String> stringAList(String fotos) {
-		return Arrays.asList(fotos.split(";;"));
+	
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody PisoDTO pisoDTO){
+		Piso encontrado = pisoDomainService.findById(id);
+		if(encontrado != null) {
+				encontrado.setAscensor(pisoDTO.isAscensor());
+				encontrado.setDescripcion(pisoDTO.getDescripcion());
+				encontrado.setElectrodomesticos(pisoDTO.getElectrodomesticos());
+				encontrado.setEstanciaMinimaDias(pisoDTO.getEstanciaMinimaDias());
+				encontrado.setFotos(this.stringAList(pisoDTO.getFotos()));
+				encontrado.setFumar(pisoDTO.isFumar());
+				encontrado.setGasIncluido(pisoDTO.isGasIncluido());
+				encontrado.setJardin(pisoDTO.isJardin());
+				encontrado.setLuzIncluida(pisoDTO.isLuzIncluida());
+				encontrado.setmCuadrados(pisoDTO.getmCuadrados());
+				encontrado.setMapsLink(pisoDTO.getMapsLink());
+				encontrado.setMascotas(pisoDTO.isMascotas());
+				encontrado.setNumHabitaciones(pisoDTO.getNumHabitaciones());
+				encontrado.setParejas(pisoDTO.isParejas());
+				encontrado.setPrecioMes(pisoDTO.getPrecioMes());
+				encontrado.setPropietarioReside(pisoDTO.isPropietarioReside());
+				encontrado.setTerraza(pisoDTO.isTerraza());
+				encontrado.setTitulo(pisoDTO.getTitulo());
+				encontrado.setUbicacion(pisoDTO.getUbicacion());
+				
+				Piso update = pisoDomainService.update(encontrado);
+				if(update != null) {
+					return ResponseEntity.ok(update);
+				}
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
 	}
 	
 	@DeleteMapping("/{id}")
@@ -77,4 +99,6 @@ public class PisoRESTController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
 	}
+	
+	
 }

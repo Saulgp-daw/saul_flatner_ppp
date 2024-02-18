@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import jakarta.persistence.Column;
 
 public class PisoDTO {
-	private String emailPropietario;
 	private boolean ascensor;
 	private String descripcion;
 	private String electrodomesticos;
@@ -31,19 +30,6 @@ public class PisoDTO {
 	public PisoDTO() {
 		super();
 	}
-
-	
-
-	public String getEmailPropietario() {
-		return emailPropietario;
-	}
-
-
-
-	public void setEmailPropietario(String emailPropietario) {
-		this.emailPropietario = emailPropietario;
-	}
-
 
 
 	public boolean isAscensor() {
