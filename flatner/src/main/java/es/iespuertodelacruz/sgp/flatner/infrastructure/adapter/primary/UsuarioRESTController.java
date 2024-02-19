@@ -1,16 +1,21 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URLConnection;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +34,7 @@ import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IPisoDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IUsuarioDomainService;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.PisoDTO;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.UsuarioDTO;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.FileStorageService;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.security.JwtService;
 
 @RestController
@@ -44,8 +50,12 @@ public class UsuarioRESTController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private FileStorageService storageService;
 
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
@@ -67,7 +77,7 @@ public class UsuarioRESTController {
 	}
 
 	@GetMapping("/{email}/pisos")
-	public ResponseEntity<?> findPîsos(@PathVariable String email) {
+	public ResponseEntity<?> findPisos(@PathVariable String email) {
 		Usuario propietario = usuarioDomainService.findById(email);
 
 		if (propietario != null) {
@@ -201,20 +211,45 @@ public class UsuarioRESTController {
 			encontrado.setApellidos(usuarioDto.getApellidos());
 			encontrado.setAnhoNacimiento(usuarioDto.getAnhoNacimiento());
 			encontrado.setSexo(usuarioDto.getSexo());
-			encontrado.setFotoPerfil(usuarioDto.getFotoPerfil());
 			encontrado.setPassword(passwordEncoder.encode(usuarioDto.getPassword()));
 			encontrado.setFechaUltimaEstancia(convertirFechaABigInteger(usuarioDto.getFechaUltimaEstancia()));
-
 			encontrado.setFechaUltimoAlquiler(convertirFechaABigInteger(usuarioDto.getFechaUltimoAlquiler()));
-
 			String generateToken = jwtService.generateToken(usuarioDto.getNombre(), usuarioDto.getPassword());
 			encontrado.setHash(generateToken);
+			
+			String codedPhoto = usuarioDto.getFotoBase64();
+			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
+			
+			
+			String perfilAntiguo = encontrado.getFotoPerfil();
+			String nombreNuevoFichero = storageService.savePerfil(email, perfilAntiguo,usuarioDto.getFotoPerfil(), photoBytes);
+			encontrado.setFotoPerfil(nombreNuevoFichero);
+			
 			Usuario update = usuarioDomainService.update(encontrado);
 			if (update != null) {
 				return ResponseEntity.ok(update);
 			}
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
+	}
+	
+	@GetMapping("/{email}/imgPerfil/{filename}")
+	public ResponseEntity<?> getFiles(@PathVariable String email, @PathVariable String filename) {
+		Resource resource = storageService.getPerfil(email, filename);
+		// Try to determine file's content type
+		String contentType = null;
+		try {
+			contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());
+		} catch (IOException ex) {
+			System.out.println("Could not determine file type.");
+		}
+		// Fallback to the default content type if type could not be determined
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+		String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+				.header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, headerValue).body(resource);
 	}
 
 	private static BigInteger convertirFechaABigInteger(String fechaComoString) {
