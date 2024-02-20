@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import Navbar from '../../components/Proyecto/Navbar';
+import Navbar from '../components/Navbar';
 
 type Props = {
     navigation: any,

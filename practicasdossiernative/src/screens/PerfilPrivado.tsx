@@ -6,6 +6,8 @@ import SexoPicker from '../components/SexoPicker';
 import { ScrollView } from 'react-native-gesture-handler';
 import YearPicker from '../components/YearPicker';
 import { Button } from 'react-native';
+import { ip } from '../../global';
+import { useAppContext } from '../contexts/TokenContextProvider';
 
 type Props = {
     navigation: any,
@@ -16,8 +18,12 @@ const PerfilPrivado = ({ navigation }: Props) => {
     const { informacionUsuario, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Hombre');
     const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
-
+    const ruta = "http://" + ip + "/api/v2/usuarios/" + informacionUsuario.email + "/images/";
     const [loading, setLoading] = useState(false);
+    const { token, settoken } = useAppContext();
+
+    //console.log(ruta + informacionUsuario.fotoPerfil);
+
 
     const handleSexoChange = (newSexo) => {
         setSexo(newSexo);
@@ -29,8 +35,38 @@ const PerfilPrivado = ({ navigation }: Props) => {
         updateAnho(year);
     };
 
+    const handleActualizarDatos = async () => {
+        setLoading(true);
+        try {
+            // Realizar la solicitud POST con Axios para actualizar los datos
+            await actualizarDatos();
+
+            // Después de la actualización exitosa, puedes realizar alguna acción adicional si es necesario,
+            // como mostrar un mensaje de éxito o redirigir a otra pantalla.
+
+            // Finalmente, detener el indicador de carga
+            
+            setLoading(false);
+        } catch (error) {
+            // Manejar errores de la solicitud POST
+            console.error("Error al actualizar datos:", error);
+            setLoading(false);
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.profileImageContainer}>
+                <Image
+                    source={{
+                        uri: ruta + informacionUsuario.fotoPerfil,
+                        method: "GET",
+                        headers: { 'Authorization': `Bearer ${token}` }
+
+                    }}
+                    style={styles.profileImage}
+                />
+            </View>
             <View style={styles.row}>
                 <View style={styles.column}>
                     <Text style={styles.label}>Email:</Text>
@@ -86,7 +122,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
 
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
-                    <Button title={loading ? 'Enviando...' : 'Agregar'} onPress={actualizarDatos} />
+                    <Button title={loading ? 'Enviando...' : 'Actualizar Datos'} onPress={handleActualizarDatos} />
                 </View>
             </View>
         </ScrollView>
@@ -124,5 +160,15 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 5,
         padding: 10,
+    },
+
+    profileImageContainer: {
+        alignItems: 'center', // Centra la imagen horizontalmente
+        marginBottom: 20,
+    },
+    profileImage: {
+        width: 100, // Ajusta el tamaño de la imagen
+        height: 100, // Ajusta el tamaño de la imagen
+        borderRadius: 50, // Hace que la imagen sea circular
     },
 })

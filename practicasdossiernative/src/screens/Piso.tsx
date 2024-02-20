@@ -1,44 +1,57 @@
-import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import React from 'react'
-import Icon from 'react-native-vector-icons/Fontisto';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons';
 import PerfilPublico from './PerfilPublico';
 import Navbar from '../components/Navbar';
 import Slider from '../components/Slider';
+import useFindById from '../hooks/useFindPiso';
+import { useRoute } from '@react-navigation/native';
 
 type Props = {
     navigation: any;
 }
+type RouteParams = {
+    pisoId: number;
+};
 
-const Piso = ({navigation}: Props) => {
-    const electrodomesticos: string[] = ["Nevera", "Microondas", "Horno", "Plancha", "Cafetera", "Lavadora", "Lavavajillas", "Secadora", "TV"];
+
+const Piso = ({ navigation }: Props) => {
+    const route = useRoute();
+    const { pisoId } = route.params as RouteParams;
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { piso } = useFindById(pisoId);
+
+
+    if (!piso) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
             <Navbar navigation={navigation} />
             <ScrollView style={styles.container} >
-                <Slider images={[
-                    { id: 1, source: require('../../resources/Proyecto/piso1.jpg') },
-                    { id: 2, source: require('../../resources/Proyecto/piso1-2.jpg') },
-                    { id: 3, source: require('../../resources/Proyecto/piso1-3.jpg') },
-                    // Agrega más imágenes según sea necesario
-                ]} />
+                <Slider images={[{ id: 1, source: piso.fotos }]} valoracion={piso.valoracion} email={piso.propietario.email} />
                 <View style={styles.datosContainer}>
-                    <Text style={styles.infoRelevante} >Titulo</Text>
-                    <Text style={styles.infoRelevante}>Precio €</Text>
+                    <Text style={styles.infoRelevante} >{piso.titulo}</Text>
+                    <Text style={styles.infoRelevante}>{piso.precioMes} €</Text>
                 </View>
                 <View style={styles.datosContainer}>
-                    <Text>Nº Hab</Text>
-                    <Text>Nº inquilinos</Text>
-                    <Text>Propietario</Text>
+                    <Text>Nº Hab: {piso.numHabitaciones}</Text>
+                    <Text>Nº inquilinos: {piso.inquilinos.length}</Text>
+                    <Text>Propietario: {piso.propietarioReside ? 'Sí' : 'No'}</Text>
                 </View>
                 <View>
                     <Text>Detalles: </Text>
                     <View style={styles.detallesContainer}>
-                        {electrodomesticos.map((electro, index) => (
+                        {piso.electrodomesticos.split(';;').map((electro, index) => (
                             <View key={index} style={styles.detallesItem}>
                                 {index % 4 === 0 && index !== 0 && <View style={styles.lineBreak} />}
                                 <Text>
-                                    {Math.round(Math.random()) ? <Icon name='checkbox-active' /> : <Icon name='checkbox-passive' />} {electro}
+                                    <Icon name="checkmark-circle" size={20}/> {electro}
                                 </Text>
                             </View>
                         ))}
@@ -46,13 +59,15 @@ const Piso = ({navigation}: Props) => {
                 </View>
                 <View>
                     <Text>Inquilinos actuales: </Text>
-                    <Text>Mario 3.4⭐</Text>
-                    <Text>Luisa 4⭐</Text>
+                    {piso.inquilinos.map(inquilino => (
+                        <Text>{inquilino.nombre} {inquilino.valoracion ?? ": NO RATING"} ⭐</Text>
+                    ))
+                    }
                 </View>
                 <View>
                     <Text>Propietario: </Text>
-                    <TouchableHighlight onPress={()=> navigation.navigate("PerfilPublico")} >
-                        <Text>Pepe 5⭐</Text>
+                    <TouchableHighlight onPress={() => navigation.navigate("PerfilPublico")} >
+                        <Text>{piso.propietario.nombre} {piso.propietario.valoracion ?? ": NO RATING"}⭐</Text>
                     </TouchableHighlight>
                 </View>
             </ScrollView>
@@ -91,5 +106,10 @@ const styles = StyleSheet.create({
     },
     lineBreak: {
         width: '100%', // Ocupa el ancho completo para forzar un salto de línea
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })

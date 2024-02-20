@@ -23,6 +23,7 @@ const StackNavigation = (props: Props) => {
                 <Stack.Screen name='DrawerFlatner' component={DrawerFlatner} options={{ headerShown: false }}/>
                 <Stack.Screen name='Busqueda' component={Busqueda} />
                 <Stack.Screen name='Mi Perfil' component={PerfilPrivado} />
+                <Stack.Screen name='Piso' component={Piso} />
             </Stack.Navigator>
         </TokenContextProvider>
     )

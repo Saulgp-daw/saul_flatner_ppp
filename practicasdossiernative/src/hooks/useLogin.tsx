@@ -47,11 +47,6 @@ const useLogin = () => {
         //navigation.navigate("DrawerGestion");
         console.log(nuevoLogin);
 
-       
-
-
-
-
         const axiospost = async () => {
             try {
                 setLoading(true);

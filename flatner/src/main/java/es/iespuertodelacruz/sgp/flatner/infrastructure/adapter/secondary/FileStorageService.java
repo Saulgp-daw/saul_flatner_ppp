@@ -49,17 +49,45 @@ public class FileStorageService {
 		}
 		
 		//reemplazar la antigua imagen en caso de poner un perfil nuevo
-		if(antiguoPerfil != null && !antiguoPerfil.isEmpty()) {
-			try {
-		        Path rutaAntigua = Paths.get(this.root + "/perfiles/"+usuario+"/" +antiguoPerfil);
-		        Files.deleteIfExists(rutaAntigua);
-		    } catch (IOException e) {
-		        throw new RuntimeException("Error al borrar la imagen de perfil anterior: " + e.getMessage());
-		    }
-		}
+//		if(antiguoPerfil != null && !antiguoPerfil.isEmpty()) {
+//			try {
+//		        Path rutaAntigua = Paths.get(this.root + "/perfiles/"+usuario+"/" +antiguoPerfil);
+//		        Files.deleteIfExists(rutaAntigua);
+//		    } catch (IOException e) {
+//		        throw new RuntimeException("Error al borrar la imagen de perfil anterior: " + e.getMessage());
+//		    }
+//		}
 
 		try {
 			Path filenameFree = getFilenameFree("perfiles/"+usuario+"/"+nuevoPerfil);
+			Files.write(filenameFree, dataFile);
+			return filenameFree.getFileName().toString();
+		} catch (Exception e) {
+			if (e instanceof FileAlreadyExistsException) {
+				throw new RuntimeException("A file of that name already exists.");
+
+			}
+
+			throw new RuntimeException(e.getMessage());
+		}
+
+	}
+	
+	
+	public String saveImagenPiso(String usuario, String foto, byte[] dataFile) {
+		// creamos el directorio si no existe
+		Path carpetaPerfiles = null;
+		try {
+			carpetaPerfiles = Paths.get(this.root+"/perfiles/"+usuario);
+			Files.createDirectories(carpetaPerfiles);
+		} catch (IOException e) {
+			throw new RuntimeException("no se puede crear el directorio");
+		}
+		
+		
+
+		try {
+			Path filenameFree = getFilenameFree("perfiles/"+usuario+"/"+foto);
 			Files.write(filenameFree, dataFile);
 			return filenameFree.getFileName().toString();
 		} catch (Exception e) {

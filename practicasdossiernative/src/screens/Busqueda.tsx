@@ -3,61 +3,45 @@ import React from 'react'
 import Piso from './Piso'
 import Navbar from '../components/Navbar'
 import Slider from '../components/Slider'
+import useFindAll from '../hooks/useFindAllPisos'
+import { ip } from '../../global'
 
 type Props = {
   navigation: any,
 }
 
+
+
 const Busqueda = ({ navigation }: Props) => {
-  return (
+
+  const {pisos} = useFindAll();
+
+ return (
     <View style={{ flex: 1 }}>
       <Navbar navigation={navigation} />
       <ScrollView style={styles.busqueda}>
-        <TouchableOpacity onPress={() => navigation.navigate('Piso')} >
-          <View style={styles.caja} >
-            <Slider images={[
-              { id: 1, source: require('../resources/piso1.jpg') },
-              { id: 2, source: require('../resources/piso1-2.jpg') },
-              { id: 3, source: require('../resources/piso1-3.jpg') },
-              // Agrega más imágenes según sea necesario
-            ]} />
-
-            <View style={styles.datosContainer}>
-              <Text style={styles.infoRelevante} >Titulo</Text>
-              <Text style={styles.infoRelevante}>Precio €</Text>
+        {pisos.map((piso, index) => (
+          <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
+            <View style={styles.caja}>
+            <Slider images={[{ id: index, source: piso.fotos }]}
+					valoracion={piso.valoracion} email={piso.propietario} />
+              <View style={styles.datosContainer}>
+                <Text style={styles.infoRelevante}>{piso.titulo}</Text>
+                <Text style={styles.infoRelevante}>{piso.precio} €</Text>
+              </View>
+              <View style={styles.datosContainer}>
+                <Text>Nº Hab: {piso.numHabitaciones}</Text>
+                <Text>Nº inquilinos: {piso.numInquilinos}</Text>
+                <Text>Propietario: {piso.propietarioReside ? 'Sí' : 'No'}</Text>
+              </View>
             </View>
-            <View style={styles.datosContainer}>
-              <Text>Nº Hab</Text>
-              <Text>Nº inquilinos</Text>
-              <Text>Propietario</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Piso')} >
-          <View style={styles.caja} >
-            <Slider images={[
-              { id: 1, source: require('../resources/piso2.jpg') },
-              { id: 2, source: require('../resources/piso2-2.jpg') },
-              { id: 3, source: require('../resources/piso2-3.jpg') },
-              // Agrega más imágenes según sea necesario
-            ]} />
-            <View style={styles.datosContainer}>
-              <Text style={styles.infoRelevante} >Titulo</Text>
-              <Text style={styles.infoRelevante}>Precio €</Text>
-            </View>
-            <View style={styles.datosContainer}>
-              <Text>Nº Hab</Text>
-              <Text>Nº inquilinos</Text>
-              <Text>Propietario</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
+  );
+};
 
-
-  )
-}
 
 export default Busqueda
 

@@ -206,6 +206,12 @@ public class UsuarioRESTController {
 					pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(),
 					pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(),
 					pisoDTO.getUbicacion(), pisoDTO.getValoracion(), pisoDTO.isWifi(), propietarioFind);
+			
+			String codedPhoto = pisoDTO.getFotoBase64();
+			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
+			
+			String nombreNuevoFichero = storageService.saveImagenPiso(email, pisoDTO.getFotos(), photoBytes);
+			piso.setFotos(stringAList(nombreNuevoFichero));
 			Piso save = pisoDomainService.save(piso);
 			if (save != null) {
 				return ResponseEntity.ok(save);
@@ -246,7 +252,7 @@ public class UsuarioRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
 	}
 	
-	@GetMapping("/{email}/imgPerfil/{filename}")
+	@GetMapping("/{email}/images/{filename}")
 	public ResponseEntity<?> getFiles(@PathVariable String email, @PathVariable String filename) {
 		Resource resource = storageService.getPerfil(email, filename);
 		// Try to determine file's content type

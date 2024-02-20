@@ -8,6 +8,7 @@ import Mensajes from '../screens/Mensajes';
 import FAQ from '../screens/FAQ';
 import Historial from '../screens/Historial';
 import Busqueda from '../screens/Busqueda';
+import TabPisos from './TabPisos';
 
 
 type Props = {}
@@ -18,7 +19,7 @@ const DrawerFlatner = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <CustomDrawer {...props}/>}>
       <Drawer.Screen name='Mi Perfil' component={PerfilPrivado}/>
-       <Drawer.Screen name="Busqueda" component={Busqueda} />
+       <Drawer.Screen name="Pisos" component={TabPisos} />
         <Drawer.Screen name='WatchList' component={WatchList}/>
         <Drawer.Screen name='Mensajes' component={Mensajes}/>
         <Drawer.Screen name='Historial' component={Historial}/>

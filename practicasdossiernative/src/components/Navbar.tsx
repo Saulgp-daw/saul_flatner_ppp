@@ -19,7 +19,9 @@ const Navbar = ({navigation}: Props) => {
 		<View style={styles.navbar} >
 			<TouchableOpacity><Icon name='menu' size={30}></Icon></TouchableOpacity>
 			<View style={styles.circleContainer}>
-				<TouchableHighlight onPress={() => navigation.navigate(PerfilPrivado)} ><Image source={require(perfil)} style={styles.imgPerfil} /></TouchableHighlight>
+				<TouchableHighlight onPress={() => navigation.navigate('Mi Perfil')} >
+					<Image source={require(perfil)} style={styles.imgPerfil} />
+				</TouchableHighlight>
 			</View>
 		</View>
 	)

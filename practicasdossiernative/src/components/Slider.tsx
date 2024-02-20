@@ -1,19 +1,23 @@
 import React, { useRef } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useAppContext } from '../contexts/TokenContextProvider';
+import { ip } from '../../global';
 
 
 
 type SliderProps = {
   images: { id: number; source: any }[];
-  
+  valoracion: number;
+  email: string;
 };
 
-
-
-
-const Slider: React.FC<SliderProps> = ({ images } : SliderProps) => {
+const Slider: React.FC<SliderProps> = ({ images, valoracion, email } : SliderProps) => {
+  const { token, settoken } = useAppContext();
   const flatListRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const ruta = "http://" + ip + "/api/v2/usuarios/"+email+"/images/";
+  //console.log(ruta);
 
   const goToNextSlide = () => {
     flatListRef.current.scrollToIndex({
@@ -35,8 +39,8 @@ const Slider: React.FC<SliderProps> = ({ images } : SliderProps) => {
     }
   }).current;
 
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-
+  
+  
   return (
     <View>
       <FlatList
@@ -47,14 +51,17 @@ const Slider: React.FC<SliderProps> = ({ images } : SliderProps) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-            <Image source={item.source} style={styles.image} resizeMode="cover" />
+            <Image source={{ uri: ruta+item.source ,
+              method: "GET",
+              headers: { 'Authorization': `Bearer ${token}` }
+            }} style={styles.image} resizeMode="cover" />
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 50,
         }}
       />
-      <Text style={styles.rating}>5⭐</Text>
+      <Text style={styles.rating}>{valoracion}⭐</Text>
       <Icon name='map-marker' style={styles.location} ></Icon>
       <Text style={styles.pageCount} >{currentIndex + 1 +"/"+images.length}</Text>
       <TouchableOpacity style={[styles.controlButton, styles.prevButton]} onPress={goToPrevSlide}>
