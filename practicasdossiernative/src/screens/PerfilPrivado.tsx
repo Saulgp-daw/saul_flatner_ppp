@@ -1,6 +1,11 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
+import usePerfilPrivado from '../hooks/usePerfilPrivado';
+import SexoPicker from '../components/SexoPicker';
+import { ScrollView } from 'react-native-gesture-handler';
+import YearPicker from '../components/YearPicker';
+import { Button } from 'react-native';
 
 type Props = {
     navigation: any,
@@ -8,38 +13,82 @@ type Props = {
 
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
+    const { informacionUsuario, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
+    const [sexo, setSexo] = useState('Hombre');
+    const [selectedYear, setSelectedYear] = useState(null);
+
+    const [loading, setLoading] = useState(false);
+
+    const handleSexoChange = (newSexo) => {
+        setSexo(newSexo);
+        updateSexo(newSexo);
+    };
+
+    const handleYearChange = (year) => {
+        setSelectedYear(year);
+        updateAnho(year);
+    };
+
     return (
-        <View style={{ flex: 1 }}>
-            <Navbar navigation={navigation} />
-            <View style={styles.container}>
-                <Text style={styles.rating}>Valoración:  5⭐</Text>
-                <View style={styles.circleContainer}>
-                    <Image source={require(perfil)} style={styles.imgPerfil} />
-                </View>
-                <View>
-                    <View style={styles.row}>
-                        <TextInput defaultValue='Juan' style={styles.textinput} />
-                        <TextInput defaultValue='Palomo' style={styles.textinput} />
-                    </View>
-                    <View style={styles.row}>
-                        <TextInput defaultValue='12345678A' style={styles.textinput} />
-                        <TextInput defaultValue='Hombre' style={styles.textinput} />
-                    </View>
-                    <View style={styles.row}>
-                        <TextInput defaultValue='922 12 12 12' style={styles.textinput} />
-                        <TextInput defaultValue='680 08 89 89' style={styles.textinput} />
-                    </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Email:</Text>
+                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.email || "Email" : "Email"} editable={false} />
                 </View>
 
-
-
-                <TouchableOpacity style={styles.btnEntrar}>
-                    <Text>Guardar</Text>
-                </TouchableOpacity>
-
+                <View style={styles.column}>
+                    <Text style={styles.label}>Nombre:</Text>
+                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.nombre || "" : ""} onChangeText={(texto) => updateNombre(texto)} />
+                </View>
             </View>
-        </View>
 
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Apellidos:</Text>
+                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.apellidos || "" : ""} onChangeText={(texto) => updateApellidos(texto)} />
+                </View>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Contraseña:</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        secureTextEntry={true}
+                        onChangeText={(texto) => updatePassword(texto)}
+                    />
+                </View>
+            </View>
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Sexo:</Text>
+                    <SexoPicker onSexoChange={handleSexoChange} />
+                </View>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Año de Nacimiento:</Text>
+                    <YearPicker selectedYear={selectedYear} onYearChange={handleYearChange} />
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Foto de Perfil:</Text>
+                </View>
+                <View style={styles.column}>
+                    <Button title="Subir imagen" onPress={() => selectImage()} />
+                </View>
+            </View>
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Imagen subida: {informacionUsuario ? informacionUsuario.fotoPerfil || "" : ""}</Text>
+                </View>
+            </View>
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Button title={loading ? 'Enviando...' : 'Agregar'} onPress={actualizarDatos} />
+                </View>
+            </View>
+        </ScrollView>
     )
 }
 
@@ -47,69 +96,32 @@ export default PerfilPrivado
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex",
-        flex: 1,
-        alignItems: 'center'
-    },
-    inputContainer: {
-        marginTop: 10,
+        flexGrow: 1,
+        padding: 20,
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 10,
+        justifyContent: 'space-between',
+        marginBottom: 20,
     },
-    
-    rating : {
-        position: 'absolute',
-        top: 20,
-        right: 20
+    column: {
+        flex: 1,
+        flexDirection: 'column',
+        marginRight: 10,
     },
 
-    textinput: {
-        width: 300,
-        borderColor: 'purple',
-        borderWidth: 2,
+    singleColumnRow: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+
+    label: {
+        marginBottom: 5,
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
         borderRadius: 5,
-        paddingHorizontal: 10,
-        maxWidth: '40%'
-    },
-
-    enlacePiso: {
-        color: "blue",
-        textDecorationLine: 'underline'
-    },
-
-    circleContainer: {
-        marginTop: 50,
-        height: 130,
-        width: 130,
-        borderRadius: 65, // La mitad del valor de la altura y anchura para hacer un círculo
-        overflow: 'hidden', // Asegura que la imagen se ajuste al círculo
-        marginBottom: 20
-    },
-
-    imgPerfil: {
-        height: 130,
-        width: 130,
-        resizeMode: 'cover', // Ajusta el modo de redimensionamiento de la imagen
-    },
-
-
-
-    btnValorar: {
-        backgroundColor: 'transparent',
-        borderColor: "#2bfc23",
-        borderRadius: 5,
-        marginTop: 10,
-        borderWidth: 2,
-        padding: 10
-    },
-    btnEntrar: {
-        backgroundColor: "#2bfc23",
         padding: 10,
-        borderRadius: 5,
-        marginTop: 10,
-
-    }
+    },
 })

@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URLConnection;
 import java.time.Instant;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +41,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v2/usuarios")
 public class UsuarioRESTController {
 
 	@Autowired
@@ -59,6 +61,16 @@ public class UsuarioRESTController {
 
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
+	}
+	
+	@GetMapping("/profile")
+	public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader){
+		//System.out.println("----------------------------------"+authorizationHeader);
+		String token = authorizationHeader.substring(7);
+		String email = jwtService.extractUsername(token);
+		//System.out.println("----------------------------------"+email);
+		Usuario usuario = usuarioDomainService.findById(email);
+		return ResponseEntity.ok(usuario);
 	}
 
 	@GetMapping
@@ -214,6 +226,7 @@ public class UsuarioRESTController {
 			encontrado.setPassword(passwordEncoder.encode(usuarioDto.getPassword()));
 			encontrado.setFechaUltimaEstancia(convertirFechaABigInteger(usuarioDto.getFechaUltimaEstancia()));
 			encontrado.setFechaUltimoAlquiler(convertirFechaABigInteger(usuarioDto.getFechaUltimoAlquiler()));
+			encontrado.setValoracion(BigDecimal.valueOf(2.5));
 			String generateToken = jwtService.generateToken(usuarioDto.getNombre(), usuarioDto.getPassword());
 			encontrado.setHash(generateToken);
 			
@@ -254,7 +267,7 @@ public class UsuarioRESTController {
 
 	private static BigInteger convertirFechaABigInteger(String fechaComoString) {
 
-		if (!fechaComoString.equals("")) {
+		if (fechaComoString != null) {
 			LocalDate fecha = LocalDate.parse(fechaComoString, DateTimeFormatter.ISO_LOCAL_DATE);
 			long timestampEnMilisegundos = fecha.atStartOfDay(ZoneId.systemDefault()).toInstant().getEpochSecond();
 			return BigInteger.valueOf(timestampEnMilisegundos);

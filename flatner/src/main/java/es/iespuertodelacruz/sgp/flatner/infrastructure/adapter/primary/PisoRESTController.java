@@ -24,7 +24,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.PisoD
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/pisos")
+@RequestMapping("/api/v2/pisos")
 public class PisoRESTController {
 	@Autowired IPisoDomainService pisoDomainService;
 	@Autowired IUsuarioDomainService usuarioDomainService;

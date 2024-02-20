@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ip } from '../../global';
 import axios from 'axios';
 import { useAppContext } from '../contexts/TokenContextProvider';
@@ -18,6 +18,25 @@ const useLogin = () => {
     const [loading, setLoading] = useState(false);
     const [valido, setValido] = useState(false);
     const [error, setError] = useState("");
+
+    // useEffect(() => {
+    //     const verificarToken = async () => {
+    //         try {
+    //             const jsonValue = await AsyncStorage.getItem('token');
+    //             const data = jsonValue != null ? JSON.parse(jsonValue) : null;
+    //             console.log(data);
+
+    //             if (data != null) {
+    //                 settoken(data);
+    //                 setValido(true);
+    //             }
+    //         } catch (e) {
+    //             console.error("Error al leer el token", e);
+    //         }
+    //     };
+
+    //     verificarToken();
+    // }, []);
     
     async function login(email: string, password: string) {
         setValido(false);
@@ -27,6 +46,8 @@ const useLogin = () => {
         }
         //navigation.navigate("DrawerGestion");
         console.log(nuevoLogin);
+
+       
 
 
 
