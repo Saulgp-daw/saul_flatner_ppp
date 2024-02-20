@@ -29,7 +29,7 @@ const usePerfilPrivado = () => {
   const { token, settoken } = useAppContext();
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
-  const [sexo, setSexo] = useState('');
+  const [sexo, setSexo] = useState('Hombre');
   const [anho, setAnho] = useState(0);
   const [password, setPassword] = useState('');
 

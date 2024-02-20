@@ -15,7 +15,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
     const { informacionUsuario, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Hombre');
-    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
 
     const [loading, setLoading] = useState(false);
 
@@ -53,6 +53,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
                     <TextInput
                         style={styles.textInput}
                         secureTextEntry={true}
+                        placeholder='*************'
                         onChangeText={(texto) => updatePassword(texto)}
                     />
                 </View>
@@ -64,7 +65,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.label}>Año de Nacimiento:</Text>
-                    <YearPicker selectedYear={selectedYear} onYearChange={handleYearChange} />
+                    <YearPicker selectedYear={selectedYear !== null ? selectedYear : informacionUsuario ? informacionUsuario.anhoNacimiento : null} onYearChange={handleYearChange} />
                 </View>
             </View>
 
