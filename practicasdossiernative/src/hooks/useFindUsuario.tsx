@@ -34,7 +34,7 @@ const useFindUsuario = (email: string) => {
     let pisoActual: Piso = null;
     const pisosInteres: Piso[] = [];
 
-    console.log(ruta);
+    //console.log(ruta);
     useEffect(() => {
 
         const axiosget = async () => {
@@ -84,7 +84,7 @@ const useFindUsuario = (email: string) => {
                     pisoActual: pisoActual
                 }
 
-                console.log(find);
+                //console.log(find);
                 setUsuario(find);
 
             } catch (error) {

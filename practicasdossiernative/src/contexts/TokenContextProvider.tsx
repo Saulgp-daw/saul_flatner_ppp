@@ -4,20 +4,27 @@ import { Dispatch, SetStateAction, createContext, useContext, useState } from "r
 export interface TokenContextType {
     token: string;
     settoken: Dispatch<SetStateAction<string>>;
+    email: string;
+    setemail: Dispatch<SetStateAction<string>>;
 }
 
 //Contexto
 const TokenContext = createContext<TokenContextType>({
     token: '',
-    settoken: () => { }
+    settoken: () => { },
+    email: '',
+    setemail: () => {}
 });
 
 const TokenContextProvider = (props: any) => {
     const [token, setToken] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
 
     const contextValues: TokenContextType = {
         token: token,
-        settoken: setToken
+        settoken: setToken,
+        email: email,
+        setemail: setEmail
     }
 
     return (

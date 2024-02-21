@@ -14,7 +14,7 @@ export interface iLogin {
 
 const useLogin = () => {
     const ruta = "http://"+ip+"/api/login";
-    const {token, settoken} = useAppContext();
+    const {token, settoken, email, setemail} = useAppContext();
     const [loading, setLoading] = useState(false);
     const [valido, setValido] = useState(false);
     const [error, setError] = useState("");
@@ -56,6 +56,7 @@ const useLogin = () => {
                 console.log(status);
                 if (status === 200) {
                     settoken(response.data);
+                    setemail(email);
                     console.log("todo correcto");
                     const jsonValue = JSON.stringify(response.data);
                     console.log(jsonValue);

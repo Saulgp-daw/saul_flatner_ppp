@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 import PerfilPublico from './PerfilPublico';
@@ -6,6 +6,8 @@ import Navbar from '../components/Navbar';
 import Slider from '../components/Slider';
 import useFindById from '../hooks/useFindPiso';
 import { useRoute } from '@react-navigation/native';
+import usePerfilPrivado from '../hooks/usePerfilPrivado';
+import useWatchList from '../hooks/useWatchList';
 
 type Props = {
     navigation: any;
@@ -20,7 +22,8 @@ const Piso = ({ navigation }: Props) => {
     const { pisoId } = route.params as RouteParams;
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { piso } = useFindById(pisoId);
-
+    const {informacionUsuario } = usePerfilPrivado();
+    const {agregar} = useWatchList();
 
     if (!piso) {
         return (
@@ -81,6 +84,10 @@ const Piso = ({ navigation }: Props) => {
                     <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: piso.propietario.email })} >
                         <Text>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
                     </TouchableHighlight>
+                </View>
+
+                <View>
+                    <Button title="Estoy interesado" onPress={() => agregar(informacionUsuario.email , piso.idPiso)} />
                 </View>
             </ScrollView>
 
