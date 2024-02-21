@@ -16,6 +16,14 @@ const Busqueda = ({ navigation }: Props) => {
 
   const {pisos} = useFindAll();
 
+  if (!pisos) {
+    return (
+        <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+    );
+}
+
  return (
     <View style={{ flex: 1 }}>
       <Navbar navigation={navigation} />
@@ -23,8 +31,14 @@ const Busqueda = ({ navigation }: Props) => {
         {pisos.map((piso, index) => (
           <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
             <View style={styles.caja}>
-            <Slider images={[{ id: index, source: piso.fotos }]}
-					valoracion={piso.valoracion} email={piso.propietario} />
+            <Slider
+                    images={piso.fotos.map((foto, index) => ({
+                        id: index, 
+                        source: foto
+                    }))}
+                    valoracion={piso.valoracion}
+                    email={piso.propietario}
+                />
               <View style={styles.datosContainer}>
                 <Text style={styles.infoRelevante}>{piso.titulo}</Text>
                 <Text style={styles.infoRelevante}>{piso.precio} €</Text>
@@ -69,6 +83,11 @@ const styles = StyleSheet.create({
   infoRelevante: {
     fontWeight: 'bold',
     fontSize: 20
-  }
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
 
 })

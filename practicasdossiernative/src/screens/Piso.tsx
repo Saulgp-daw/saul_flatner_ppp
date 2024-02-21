@@ -34,7 +34,16 @@ const Piso = ({ navigation }: Props) => {
         <View style={styles.container}>
             <Navbar navigation={navigation} />
             <ScrollView style={styles.container} >
-                <Slider images={[{ id: 1, source: piso.fotos }]} valoracion={piso.valoracion} email={piso.propietario.email} />
+
+                <Slider
+                    images={piso.fotos.map((foto, index) => ({
+                        id: index,
+                        source: foto
+                    }))}
+                    valoracion={piso.valoracion}
+                    email={piso.propietario.email}
+                />
+
                 <View style={styles.datosContainer}>
                     <Text style={styles.infoRelevante} >{piso.titulo}</Text>
                     <Text style={styles.infoRelevante}>{piso.precioMes} €</Text>
@@ -48,10 +57,10 @@ const Piso = ({ navigation }: Props) => {
                     <Text>Detalles: </Text>
                     <View style={styles.detallesContainer}>
                         {piso.electrodomesticos.split(';;').map((electro, index) => (
-                            <View key={index} style={styles.detallesItem}>
+                            <View key={electro + "-" + index} style={styles.detallesItem}>
                                 {index % 4 === 0 && index !== 0 && <View style={styles.lineBreak} />}
                                 <Text>
-                                    <Icon name="checkmark-circle" size={20}/> {electro}
+                                    <Icon name="checkmark-circle" size={20} /> {electro}
                                 </Text>
                             </View>
                         ))}
@@ -60,14 +69,17 @@ const Piso = ({ navigation }: Props) => {
                 <View>
                     <Text>Inquilinos actuales: </Text>
                     {piso.inquilinos.map(inquilino => (
-                        <Text>{inquilino.nombre} {inquilino.valoracion ?? ": NO RATING"} ⭐</Text>
+                        <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
+                            <Text>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
+                        </TouchableHighlight>
+
                     ))
                     }
                 </View>
                 <View>
                     <Text>Propietario: </Text>
-                    <TouchableHighlight onPress={() => navigation.navigate("PerfilPublico")} >
-                        <Text>{piso.propietario.nombre} {piso.propietario.valoracion ?? ": NO RATING"}⭐</Text>
+                    <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: piso.propietario.email })} >
+                        <Text>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
                     </TouchableHighlight>
                 </View>
             </ScrollView>

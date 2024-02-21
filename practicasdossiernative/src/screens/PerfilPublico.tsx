@@ -1,36 +1,90 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
+import useFindUsuario from '../hooks/useFindUsuario';
+import { useRoute } from '@react-navigation/native';
+import { ip } from '../../global';
+import { useAppContext } from '../contexts/TokenContextProvider';
 
 type Props = {
     navigation: any,
-  }
+}
+
+type RouteParams = {
+    email: string;
+};
 
 const PerfilPublico = ({ navigation }: Props) => {
-    const perfil = "../../resources/Proyecto/perfil2.jpeg";
-    const pisos: string[] = ["Mayorazgo suite", "Pisos Picados"]
-    return (
-        <View style={{ flex: 1 }}>
-            <Navbar navigation={navigation} />
-            <View style={styles.container}>
-                <View style={styles.circleContainer}>
-                    <Image source={require(perfil)} style={styles.imgPerfil} />
-                </View>
-                <Text>Pepe Ramirez</Text>
-                <Text>Valoración:  5⭐</Text>
+    const perfil = "../resources/perfil2.jpeg";
+    const route = useRoute();
+    const { email } = route.params as RouteParams;
+    const { usuario } = useFindUsuario(email);
+    const { token, settoken } = useAppContext();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const pisos: string[] = ["Mayorazgo suite", "Pisos Picados"];
+    const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
+    //const perfil = "../../resources/Proyecto/perfil.jpg";
+    const imagenDefecto = "../resources/user_default.jpg";
 
-                <Text>Piso actual: <Text style={styles.enlacePiso}>Villa Arriba</Text></Text>
-                <Text>Pisos en los que ha estado: </Text>
-                {pisos.map((piso, index) => (
-                    <Text key={index} style={styles.enlacePiso} >{piso},</Text>
-                ))}
-                <Text>Fecha última estancia: 2023/05/12</Text>
-                <TouchableOpacity style={styles.btnValorar}>
-                    <Text>Valorar</Text>
-                </TouchableOpacity>
+    if (!usuario) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
             </View>
-        </View>
+        );
+    }
 
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.profileImageContainer}>
+                {error == false ?
+                    <Image
+                        source={{
+                            uri: ruta + usuario.fotoPerfil,
+                            method: "GET",
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        }}
+                        style={styles.profileImage}
+                        onError={(e) => {
+                            setError(true);
+                        }}
+                    /> :
+                    <Image source={require(imagenDefecto)} style={styles.profileImage} />
+                }
+
+            </View>
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>{usuario ? usuario.nombre + " " + usuario.apellidos || "" : ""}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Email:</Text>
+                    <Text style={styles.label}>{usuario ? usuario.email || "" : ""}</Text>
+                </View>
+            </View>
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Sexo:</Text>
+                    <Text style={styles.label}>{usuario ? usuario.sexo || "" : ""}</Text>
+
+                </View>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Año de Nacimiento:</Text>
+                    <Text style={styles.label}>{usuario ? usuario.anhoNacimiento || "" : ""}</Text>
+                </View>
+            </View>
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Button title={loading ? 'Enviando...' : 'Valorar Usuario'} />
+                </View>
+            </View>
+
+        </ScrollView>
     )
 }
 
@@ -38,36 +92,50 @@ export default PerfilPublico
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex",
+        flexGrow: 1,
+        padding: 20,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    column: {
         flex: 1,
-        alignItems: "center",
+        flexDirection: 'column',
+        marginRight: 10,
     },
 
-    enlacePiso : {
-        color: "blue",
-        textDecorationLine: 'underline'
+    singleColumnRow: {
+        flexDirection: 'row',
+        marginBottom: 20,
     },
 
-    circleContainer: {
-        marginTop: 50,
-        height: 130,
-        width: 130,
-        borderRadius: 65, // La mitad del valor de la altura y anchura para hacer un círculo
-        overflow: 'hidden', // Asegura que la imagen se ajuste al círculo
-    },
+    label: {
+        marginBottom: 5,
 
-    imgPerfil: {
-        height: 130,
-        width: 130,
-        resizeMode: 'cover', // Ajusta el modo de redimensionamiento de la imagen
+        textAlign: 'center'
     },
-
-    btnValorar : {
-        backgroundColor: 'transparent',
-        borderColor: "#2bfc23",
+    textInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
         borderRadius: 5,
-		marginTop: 10,
-        borderWidth: 2,
-        padding: 10
-    }
+        padding: 10,
+    },
+
+    profileImageContainer: {
+        alignItems: 'center', // Centra la imagen horizontalmente
+        marginBottom: 20,
+    },
+    profileImage: {
+        width: 100, // Ajusta el tamaño de la imagen
+        height: 100, // Ajusta el tamaño de la imagen
+        borderRadius: 50, // Hace que la imagen sea circular
+    },
+
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })

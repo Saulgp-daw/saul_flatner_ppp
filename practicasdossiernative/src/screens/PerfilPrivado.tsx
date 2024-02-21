@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
@@ -21,8 +21,12 @@ const PerfilPrivado = ({ navigation }: Props) => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + informacionUsuario.email + "/images/";
     const [loading, setLoading] = useState(false);
     const { token, settoken } = useAppContext();
+    const [error, setError] = useState(false);
+    const imagenDefecto = "../resources/user_default.jpg";
 
     //console.log(ruta + informacionUsuario.fotoPerfil);
+
+
 
 
     const handleSexoChange = (newSexo) => {
@@ -45,7 +49,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
             // como mostrar un mensaje de éxito o redirigir a otra pantalla.
 
             // Finalmente, detener el indicador de carga
-            
+
             setLoading(false);
         } catch (error) {
             // Manejar errores de la solicitud POST
@@ -57,15 +61,20 @@ const PerfilPrivado = ({ navigation }: Props) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.profileImageContainer}>
-                <Image
-                    source={{
-                        uri: ruta + informacionUsuario.fotoPerfil,
-                        method: "GET",
-                        headers: { 'Authorization': `Bearer ${token}` }
-
-                    }}
-                    style={styles.profileImage}
-                />
+                {error == false ?
+                    <Image
+                        source={{
+                            uri: ruta + informacionUsuario.fotoPerfil,
+                            method: "GET",
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        }}
+                        style={styles.profileImage}
+                        onError={(e) => {
+                            setError(true);
+                        }}
+                    /> :
+                    <Image source={require(imagenDefecto)} style={styles.profileImage} />
+                }
             </View>
             <View style={styles.row}>
                 <View style={styles.column}>
@@ -170,5 +179,11 @@ const styles = StyleSheet.create({
         width: 100, // Ajusta el tamaño de la imagen
         height: 100, // Ajusta el tamaño de la imagen
         borderRadius: 50, // Hace que la imagen sea circular
+    },
+
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })
