@@ -2,7 +2,6 @@ import { Image, StyleSheet, Text, View, TextInput, Button, TouchableOpacity } fr
 import React, { useEffect, useState } from 'react'
 
 import Busqueda from './Busqueda';
-import Registro from './Registro';
 import useLogin from '../hooks/useLogin';
 
 type Props = {
@@ -43,7 +42,7 @@ const Login = ({ navigation }: Props) => {
 			<TouchableOpacity style={styles.btnEntrar} onPress={() => login(email, password)} >
 				<Text>{loading ? 'Un momento...' : 'Entrar'}</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate(Registro)} >
+			<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Registro")} >
 				<Text>Ir a Registro</Text>
 			</TouchableOpacity>
 			{error ? <Text style={{ color: 'red' }}>{error}</Text> : null}

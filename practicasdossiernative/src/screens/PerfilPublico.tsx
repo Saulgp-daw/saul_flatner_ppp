@@ -24,7 +24,6 @@ const PerfilPublico = ({ navigation }: Props) => {
     const [error, setError] = useState(false);
     const pisos: string[] = ["Mayorazgo suite", "Pisos Picados"];
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
-    //const perfil = "../../resources/Proyecto/perfil.jpg";
     const imagenDefecto = "../resources/user_default.jpg";
 
     if (!usuario) {
@@ -37,6 +36,9 @@ const PerfilPublico = ({ navigation }: Props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.valoracion}>
+                <Text>{usuario.valoracion ?? "NO RATING" }⭐</Text>
+            </View>
             <View style={styles.profileImageContainer}>
                 {error == false ?
                     <Image
@@ -78,6 +80,63 @@ const PerfilPublico = ({ navigation }: Props) => {
                     <Text style={styles.label}>{usuario ? usuario.anhoNacimiento || "" : ""}</Text>
                 </View>
             </View>
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Propiedades:</Text>
+                </View>
+            </View>
+            {usuario.propiedades.map((piso, index) => (
+                <View key={index} style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
+                            <Text style={styles.link}>{piso.titulo}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ))}
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Pisos Interes:</Text>
+                </View>
+            </View>
+            {usuario.pisosInteres.map((piso, index) => (
+                <View key={index} style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
+                            <Text style={styles.link}>{piso.titulo}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ))}
+
+            <View style={styles.singleColumnRow}>
+                <View style={styles.column}>
+                    <Text style={styles.label}>Piso actual:</Text>
+                </View>
+            </View>
+
+            {usuario.pisoActual ?
+                <View style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+                        <TouchableOpacity key={usuario.pisoActual.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: usuario.pisoActual.idPiso })} >
+                            <Text style={styles.link}>{usuario.pisoActual.titulo}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> :
+                null
+            }
+            {usuario.pisosInteres.map((piso, index) => (
+                <View style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
+                            <Text style={styles.link}>{piso.titulo}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ))}
+
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
                     <Button title={loading ? 'Enviando...' : 'Valorar Usuario'} />
@@ -113,9 +172,15 @@ const styles = StyleSheet.create({
 
     label: {
         marginBottom: 5,
-
         textAlign: 'center'
     },
+
+    link: {
+        marginBottom: 5,
+        textAlign: 'center',
+        color: '#0A17EB'
+    },
+
     textInput: {
         borderWidth: 1,
         borderColor: 'gray',
@@ -137,5 +202,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+
+    valoracion: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
     },
 })

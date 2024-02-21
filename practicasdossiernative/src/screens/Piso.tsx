@@ -69,7 +69,7 @@ const Piso = ({ navigation }: Props) => {
                 <View>
                     <Text>Inquilinos actuales: </Text>
                     {piso.inquilinos.map(inquilino => (
-                        <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
+                        <TouchableHighlight key={inquilino.nombre} onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
                             <Text>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
                         </TouchableHighlight>
 

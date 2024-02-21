@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Busqueda from './Busqueda';
 import WatchList from './WatchList';
 import useRegistro from '../hooks/useRegistro';
-import Login from './Login';
 
 
 type Props = {
@@ -47,7 +46,7 @@ const Registro = ({ navigation }: Props) => {
 					<Text>{loading ? 'Un momento...' : 'Registrarse'}</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate(Login)} >
+				<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Login")} >
 					<Text>Ir a Login</Text>
 				</TouchableOpacity>
 

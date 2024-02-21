@@ -87,9 +87,6 @@ const useFindUsuario = (email: string) => {
                 console.log(find);
                 setUsuario(find);
 
-
-
-
             } catch (error) {
                 console.log(error);
 
