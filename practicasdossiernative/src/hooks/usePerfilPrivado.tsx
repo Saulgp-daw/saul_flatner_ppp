@@ -32,6 +32,7 @@ const usePerfilPrivado = () => {
   const [sexo, setSexo] = useState('Hombre');
   const [anho, setAnho] = useState(0);
   const [password, setPassword] = useState('');
+  const [fotoSubida, setFotoSubida] = useState(false);
 
   const [informacionUsuario, setInformacionUsuario] = useState<Usuario>(
     {
@@ -103,6 +104,7 @@ const usePerfilPrivado = () => {
           fotoBase64: base64Image,
           fotoPerfil: imgPerfil
         }));
+        setFotoSubida(true);
       }
     });
   };
@@ -187,7 +189,7 @@ const usePerfilPrivado = () => {
 
 
 
-  return { informacionUsuario, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos }
+  return { informacionUsuario, fotoSubida, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos }
 }
 
 export default usePerfilPrivado

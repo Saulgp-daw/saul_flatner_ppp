@@ -16,7 +16,7 @@ type Props = {
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
     const { token, email } = useAppContext();
-    const { informacionUsuario, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
+    const { informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Hombre');
     const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
@@ -24,6 +24,8 @@ const PerfilPrivado = ({ navigation }: Props) => {
     
     const [error, setError] = useState(false);
     const imagenDefecto = "../resources/user_default.jpg";
+    console.log(fotoSubida);
+    
 
     //console.log(ruta + informacionUsuario.fotoPerfil);
 
@@ -106,7 +108,8 @@ const PerfilPrivado = ({ navigation }: Props) => {
 
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
-                    <Button title="Subir foto de perfil" onPress={() => selectImage()} />
+                    
+                    <Button title={fotoSubida ? "Foto Subida" : "Subir foto de perfil"} onPress={() => selectImage()} />
                 </View>
             </View>
             {
