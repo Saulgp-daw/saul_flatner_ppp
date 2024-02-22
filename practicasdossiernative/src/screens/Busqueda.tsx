@@ -1,5 +1,5 @@
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Piso from './Piso'
 import Navbar from '../components/Navbar'
 import Slider from '../components/Slider'
@@ -14,31 +14,39 @@ type Props = {
 
 const Busqueda = ({ navigation }: Props) => {
 
-  const {pisos} = useFindAll();
+  const { pisos, reload, setReload } = useFindAll();
+
+  useEffect(() => {
+    const onFocus = navigation.addListener('focus', () => {
+      setReload(true);
+    });
+    return onFocus;
+
+  }, [reload])
 
   if (!pisos) {
     return (
-        <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
-}
+  }
 
- return (
+  return (
     <View style={{ flex: 1 }}>
       <Navbar navigation={navigation} />
       <ScrollView style={styles.busqueda}>
         {pisos.map((piso, index) => (
           <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
             <View style={styles.caja}>
-            <Slider
-                    images={piso.fotos.map((foto, index) => ({
-                        id: index, 
-                        source: foto
-                    }))}
-                    valoracion={piso.valoracion}
-                    email={piso.propietario}
-                />
+              <Slider
+                images={piso.fotos.map((foto, index) => ({
+                  id: index,
+                  source: foto
+                }))}
+                valoracion={piso.valoracion}
+                email={piso.propietario}
+              />
               <View style={styles.datosContainer}>
                 <Text style={styles.infoRelevante}>{piso.titulo}</Text>
                 <Text style={styles.infoRelevante}>{piso.precio} €</Text>
@@ -46,7 +54,7 @@ const Busqueda = ({ navigation }: Props) => {
               <View style={styles.datosContainer}>
                 <Text>Nº Hab: {piso.numHabitaciones}</Text>
                 <Text>Nº inquilinos: {piso.numInquilinos}</Text>
-                <Text>Propietario: {piso.propietarioReside ? 'Sí' : 'No'}</Text>
+                <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -88,6 +96,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-},
+  },
 
 })

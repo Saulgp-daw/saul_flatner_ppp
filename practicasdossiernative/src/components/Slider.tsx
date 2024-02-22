@@ -12,12 +12,12 @@ type SliderProps = {
   email: string;
 };
 
-const Slider: React.FC<SliderProps> = ({ images, valoracion, email } : SliderProps) => {
+const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProps) => {
   const { token, settoken } = useAppContext();
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const ruta = "http://" + ip + "/api/v2/usuarios/"+email+"/images/";
-  //console.log(ruta);
+  const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
+  console.log(ruta);
 
   const goToNextSlide = () => {
     flatListRef.current.scrollToIndex({
@@ -39,8 +39,8 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email } : SliderPro
     }
   }).current;
 
-  
-  
+
+
   return (
     <View>
       <FlatList
@@ -51,10 +51,11 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email } : SliderPro
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-            <Image source={{ uri: ruta+item.source ,
-              method: "GET",
-              headers: { 'Authorization': `Bearer ${token}` }
-            }} style={styles.image} resizeMode="cover" />
+          <Image source={{
+            uri: ruta + item.source,
+            method: "GET",
+            headers: { 'Authorization': `Bearer ${token}` }
+          }} style={styles.image} resizeMode="cover" />
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{
@@ -63,7 +64,7 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email } : SliderPro
       />
       <Text style={styles.rating}>{valoracion}⭐</Text>
       <Icon name='map-marker' style={styles.location} ></Icon>
-      <Text style={styles.pageCount} >{currentIndex + 1 +"/"+images.length}</Text>
+      <Text style={styles.pageCount} >{currentIndex + 1 + "/" + images.length}</Text>
       <TouchableOpacity style={[styles.controlButton, styles.prevButton]} onPress={goToPrevSlide}>
         <Text style={styles.controlButtonText}>{'<'}</Text>
       </TouchableOpacity>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
 
-  rating : {
+  rating: {
     position: 'absolute',
     fontSize: 17,
     top: 10,
@@ -96,11 +97,11 @@ const styles = StyleSheet.create({
     textShadowRadius: 5, // Radio del sombreado
   },
 
-  location : {
+  location: {
     position: 'absolute',
     color: "white",
     fontSize: 30,
-    bottom:10,
+    bottom: 10,
     left: 10,
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.75)', // Color del sombreado
@@ -108,11 +109,11 @@ const styles = StyleSheet.create({
     textShadowRadius: 5, // Radio del sombreado
   },
 
-  pageCount : {
+  pageCount: {
     position: 'absolute',
     color: "white",
     fontSize: 12,
-    bottom:10,
+    bottom: 10,
     right: 10,
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.75)', // Color del sombreado

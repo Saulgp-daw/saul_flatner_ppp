@@ -31,10 +31,12 @@ const useFindUsuario = (email: string) => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email;
     const { token, settoken } = useAppContext();
     const [usuario, setUsuario] = useState<Usuario>();
+    const [reload, setReload] = useState(true);
+
     let pisoActual: Piso = null;
     const pisosInteres: Piso[] = [];
 
-    //console.log(ruta);
+    
     useEffect(() => {
 
         const axiosget = async () => {
@@ -48,14 +50,14 @@ const useFindUsuario = (email: string) => {
 
                 const data = response.data;
 
-                if(data.pisoActual != null){
+                if (data.pisoActual != null) {
                     pisoActual = {
                         idPiso: data.pisoActual.idPiso,
                         titulo: data.pisoActual.titulo,
                         valoracion: data.pisoActual.valoracion
                     };
                 }
-               
+
 
                 const pisosInteres: Piso[] = data.pisosInteres.map((pisoData: any) => ({
                     idPiso: pisoData.idPiso,
@@ -86,16 +88,18 @@ const useFindUsuario = (email: string) => {
 
                 //console.log(find);
                 setUsuario(find);
+                setReload(false);
 
             } catch (error) {
                 console.log(error);
+                setReload(false);
 
             }
         }
         axiosget();
-    }, []);
+    }, [reload]);
 
-    return { usuario }
+    return { usuario, reload, setReload }
 }
 
 export default useFindUsuario

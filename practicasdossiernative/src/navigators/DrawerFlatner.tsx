@@ -17,13 +17,13 @@ const Drawer = createDrawerNavigator();
 
 const DrawerFlatner = () => {
   return (
-    <Drawer.Navigator drawerContent={(props) => <CustomDrawer {...props}/>}>
-      <Drawer.Screen name='Mi Perfil' component={PerfilPrivado}/>
-       <Drawer.Screen name="Pisos" component={TabPisos} />
-        <Drawer.Screen name='WatchList' component={WatchList}/>
-        <Drawer.Screen name='Mensajes' component={Mensajes}/>
-        <Drawer.Screen name='Historial' component={Historial}/>
-        <Drawer.Screen name='F.A.Q' component={FAQ}/>
+    <Drawer.Navigator initialRouteName="Pisos" drawerContent={(props) => <CustomDrawer {...props} />}>
+      <Drawer.Screen name='Mi Perfil' component={PerfilPrivado} />
+      <Drawer.Screen name="Pisos" component={TabPisos} />
+      <Drawer.Screen name='WatchList' component={WatchList} />
+      <Drawer.Screen name='Mensajes' component={Mensajes} />
+      <Drawer.Screen name='Historial' component={Historial} />
+      <Drawer.Screen name='F.A.Q' component={FAQ} />
     </Drawer.Navigator>
   )
 }

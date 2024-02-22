@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ip } from '../../global';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import axios from 'axios';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
+import { launchImageLibrary, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 
 type Props = {}
 
@@ -87,7 +87,7 @@ const usePerfilPrivado = () => {
   }, []);
 
   const selectImage = () => {
-    const options = {
+    const options: ImageLibraryOptions = {
       includeBase64: true,
       maxHeight: 2000,
       maxWidth: 2000,
@@ -153,7 +153,7 @@ const usePerfilPrivado = () => {
   };
 
   async function actualizarDatos() {
-    
+
     const actualizado = {
       nombre: informacionUsuario.nombre,
       apellidos: informacionUsuario.apellidos,
@@ -171,9 +171,9 @@ const usePerfilPrivado = () => {
 
     const axiosput = async () => {
       try {
-        console.log(rutaPut+informacionUsuario.email);
-        
-        const response = await axios.put(rutaPut+informacionUsuario.email, actualizado, { headers: { 'Authorization': `Bearer ${token}` } });
+        console.log(rutaPut + informacionUsuario.email);
+
+        const response = await axios.put(rutaPut + informacionUsuario.email, actualizado, { headers: { 'Authorization': `Bearer ${token}` } });
         console.log(response.data);
         Alert.alert("Usuario modificado!", "Respuesta: " + response.status);
       } catch (error) {

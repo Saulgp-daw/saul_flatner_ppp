@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import useFindUsuario from '../hooks/useFindUsuario';
 import { useAppContext } from '../contexts/TokenContextProvider';
@@ -11,8 +11,17 @@ type Props = {
 const WatchList = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { token, email } = useAppContext();
-  const { usuario } = useFindUsuario(email);
+  const { usuario, reload, setReload } = useFindUsuario(email);
   const imagenDefecto = "../resources/default.jpg";
+
+  useEffect(() => {
+    const onFocus = navigation.addListener('focus', () => {
+      setReload(true);
+    });
+    return onFocus;
+
+  }, [reload])
+
 
   if (!usuario) {
     return (

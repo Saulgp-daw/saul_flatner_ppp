@@ -26,9 +26,6 @@ const PerfilPrivado = ({ navigation }: Props) => {
 
     //console.log(ruta + informacionUsuario.fotoPerfil);
 
-
-
-
     const handleSexoChange = (newSexo) => {
         setSexo(newSexo);
         updateSexo(newSexo);
@@ -42,17 +39,9 @@ const PerfilPrivado = ({ navigation }: Props) => {
     const handleActualizarDatos = async () => {
         setLoading(true);
         try {
-            // Realizar la solicitud POST con Axios para actualizar los datos
             await actualizarDatos();
-
-            // Después de la actualización exitosa, puedes realizar alguna acción adicional si es necesario,
-            // como mostrar un mensaje de éxito o redirigir a otra pantalla.
-
-            // Finalmente, detener el indicador de carga
-
             setLoading(false);
         } catch (error) {
-            // Manejar errores de la solicitud POST
             console.error("Error al actualizar datos:", error);
             setLoading(false);
         }
@@ -114,20 +103,19 @@ const PerfilPrivado = ({ navigation }: Props) => {
                 </View>
             </View>
 
-            <View style={styles.row}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Foto de Perfil:</Text>
-                </View>
-                <View style={styles.column}>
-                    <Button title="Subir imagen" onPress={() => selectImage()} />
-                </View>
-            </View>
-
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
-                    <Text style={styles.label}>Imagen subida: {informacionUsuario ? informacionUsuario.fotoPerfil || "" : ""}</Text>
+                    <Button title="Subir foto de perfil" onPress={() => selectImage()} />
                 </View>
             </View>
+            {
+                //     <View style={styles.singleColumnRow}>
+                //     <View style={styles.column}>
+                //         <Text style={styles.label}>{informacionUsuario && informacionUsuario.fotoPerfil != "" ? informacionUsuario.fotoPerfil || "" : ""}</Text>
+                //     </View>
+                // </View>
+            }
+
 
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
@@ -172,13 +160,13 @@ const styles = StyleSheet.create({
     },
 
     profileImageContainer: {
-        alignItems: 'center', // Centra la imagen horizontalmente
+        alignItems: 'center',
         marginBottom: 20,
     },
     profileImage: {
-        width: 100, // Ajusta el tamaño de la imagen
-        height: 100, // Ajusta el tamaño de la imagen
-        borderRadius: 50, // Hace que la imagen sea circular
+        width: 100,
+        height: 100,
+        borderRadius: 50,
     },
 
     loadingContainer: {

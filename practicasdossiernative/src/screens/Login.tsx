@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react'
 
 import Busqueda from './Busqueda';
@@ -11,42 +11,74 @@ type Props = {
 const Login = ({ navigation }: Props) => {
 	const { login, loading, valido, error } = useLogin();
 	const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-	
+	const [email, setEmail] = useState("");
+
 	const logo = "../resources/logo.jpeg";
 
 
 	useEffect(() => {
-        if (valido) {
-            navigation.navigate("DrawerFlatner");
-        }
-    }, [valido, navigation]);
+		if (valido) {
+			navigation.navigate("DrawerFlatner");
+		}
+	}, [valido, navigation]);
 
 	return (
-		<View style={styles.container}>
-			<Image source={require(logo)} style={styles.logo} />
-			<Text style={styles.h2}>Login</Text>
-			<Text>Bienvenido de vuelta</Text>
-
-			<View style={styles.inputContainer}>
-				<Text>Email o nombre de usuario</Text>
-				<TextInput placeholder='Ejm. marcelino@gmail.com' style={styles.textinput} onChangeText={(texto) => setEmail(texto)}/>
+		<ScrollView style={styles.container}>
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<Image source={require(logo)} style={styles.logo} />
+				</View>
 			</View>
 
-			<View style={styles.inputContainer}>
-				<Text>Contraseña</Text>
-				<TextInput placeholder='*************' style={styles.textinput} onChangeText={(texto) => setPassword(texto)}/>
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<Text style={styles.h2}>Login</Text>
+				</View>
 			</View>
 
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<Text style={styles.h3} >Bienvenido de vuelta</Text>
+				</View>
+			</View>
 
-			<TouchableOpacity style={styles.btnEntrar} onPress={() => login(email, password)} >
-				<Text>{loading ? 'Un momento...' : 'Entrar'}</Text>
-			</TouchableOpacity>
-			<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Registro")} >
-				<Text>Ir a Registro</Text>
-			</TouchableOpacity>
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<Text>Email</Text>
+				</View>
+			</View>
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<TextInput placeholder='Ejm. marcelino@gmail.com' style={styles.textInput} onChangeText={(texto) => setEmail(texto)} />
+				</View>
+			</View>
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<Text>Contraseña</Text>
+				</View>
+			</View>
+
+			<View style={styles.singleColumnRow}>
+				<View style={styles.column}>
+					<TextInput placeholder='*************' style={styles.textInput} secureTextEntry={true} onChangeText={(texto) => setPassword(texto)} />
+				</View>
+			</View>
+
+			<View style={styles.row}>
+				<View style={styles.column}>
+					<TouchableOpacity style={styles.btnEntrar} onPress={() => login(email, password)} >
+						<Text style={{ textAlign: 'center' }}>{loading ? 'Un momento...' : 'Entrar'}</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.column}>
+					<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Registro")} >
+						<Text style={{ textAlign: 'center' }}>Ir a Registro</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+
 			{error ? <Text style={{ color: 'red' }}>{error}</Text> : null}
-		</View>
+		</ScrollView>
 	);
 };
 
@@ -54,32 +86,56 @@ export default Login;
 
 const styles = StyleSheet.create({
 	container: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
+		flexGrow: 1,
+		padding: 20,
+	},
+	row: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: 20,
+	},
+	column: {
+		flex: 1,
+		flexDirection: 'column',
+		marginRight: 10,
 	},
 
-	logo: {
-		marginTop: 50,
-		height: 150,
-		width: 150,
+	singleColumnRow: {
+		flexDirection: 'row',
+		marginBottom: 20,
 	},
 
 	h2: {
+		fontSize: 34,
 		fontWeight: 'bold',
-		fontSize: 23,
+		justifyContent: 'center',
+		textAlign: 'center'
 	},
 
-	inputContainer: {
-		marginTop: 10,
+	h3: {
+		fontSize: 21,
+		textAlign: 'center'
 	},
 
-	textinput: {
-		width: 300,
-		borderColor: 'purple',
+	label: {
+		marginBottom: 5,
+	},
+
+	textInput: {
 		borderWidth: 2,
+		borderColor: '#73FF88',
 		borderRadius: 5,
-		paddingHorizontal: 10,
+		padding: 10,
+	},
+
+	logo: {
+		height: 150,
+		width: 150,
+		marginTop: 30,
+		justifyContent: 'center',
+		alignContent: 'center',
+		alignItems: 'center',
+		alignSelf: 'center'
 	},
 
 	btnEntrar: {
@@ -87,6 +143,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 5,
 		marginTop: 10,
+		textAlign: 'center'
 
 	}
 });

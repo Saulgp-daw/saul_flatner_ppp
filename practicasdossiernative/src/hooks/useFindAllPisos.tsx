@@ -21,6 +21,7 @@ type Piso = {
 const useFindAllPisos = () => {
     const ruta = "http://" + ip + "/api/v2/pisos";
     const { token, settoken } = useAppContext();
+    const [reload, setReload] = useState(true);
 
     const [pisos, setPisos] = useState<Piso[]>([]);
 
@@ -48,19 +49,19 @@ const useFindAllPisos = () => {
                 console.log(pisosTransformados);
                 
                 setPisos(pisosTransformados);
-
+                setReload(false);
 
             } catch (error) {
                 console.log(error);
-
+                setReload(false);
             }
         }
         axiosget();
-    }, []);
+    }, [reload]);
 
 
 
-    return { pisos }
+    return { pisos, reload, setReload }
 }
 
 export default useFindAllPisos

@@ -22,8 +22,8 @@ const Piso = ({ navigation }: Props) => {
     const { pisoId } = route.params as RouteParams;
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { piso } = useFindById(pisoId);
-    const {informacionUsuario } = usePerfilPrivado();
-    const {agregar} = useWatchList();
+    const { informacionUsuario } = usePerfilPrivado();
+    const { agregar } = useWatchList();
 
     if (!piso) {
         return (
@@ -54,7 +54,7 @@ const Piso = ({ navigation }: Props) => {
                 <View style={styles.datosContainer}>
                     <Text>Nº Hab: {piso.numHabitaciones}</Text>
                     <Text>Nº inquilinos: {piso.inquilinos.length}</Text>
-                    <Text>Propietario: {piso.propietarioReside ? 'Sí' : 'No'}</Text>
+                    <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
                 </View>
                 <View>
                     <Text>Detalles: </Text>
@@ -87,7 +87,7 @@ const Piso = ({ navigation }: Props) => {
                 </View>
 
                 <View>
-                    <Button title="Estoy interesado" onPress={() => agregar(informacionUsuario.email , piso.idPiso)} />
+                    <Button title="Estoy interesado" onPress={() => agregar(informacionUsuario.email, piso.idPiso)} />
                 </View>
             </ScrollView>
 

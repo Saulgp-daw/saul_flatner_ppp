@@ -37,7 +37,7 @@ const PerfilPublico = ({ navigation }: Props) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.valoracion}>
-                <Text>{usuario.valoracion ?? "NO RATING" }⭐</Text>
+                <Text>{usuario.valoracion ?? "NO RATING"}⭐</Text>
             </View>
             <View style={styles.profileImageContainer}>
                 {error == false ?
@@ -77,65 +77,65 @@ const PerfilPublico = ({ navigation }: Props) => {
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.label}>Año de Nacimiento:</Text>
-                    <Text style={styles.label}>{usuario ? usuario.anhoNacimiento || "" : ""}</Text>
+                    <Text style={styles.label}>{usuario ? (usuario.anhoNacimiento - 3) + "-" + (usuario.anhoNacimiento + 3) || "" : ""}</Text>
                 </View>
             </View>
 
-            <View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Propiedades:</Text>
-                </View>
-            </View>
-            {usuario.propiedades.map((piso, index) => (
-                <View key={index} style={styles.singleColumnRow}>
-                    <View style={styles.column}>
-                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
-                            <Text style={styles.link}>{piso.titulo}</Text>
-                        </TouchableOpacity>
+            {usuario.propiedades && usuario.propiedades.length > 0 && (
+                <>
+                    <View style={styles.singleColumnRow}>
+                        <View style={styles.column}>
+                            <Text style={styles.label}>Propiedades:</Text>
+                        </View>
                     </View>
-                </View>
-            ))}
+                    {usuario.propiedades.map((piso, index) => (
+                        <View key={index} style={styles.singleColumnRow}>
+                            <View style={styles.column}>
+                                <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
+                                    <Text style={styles.link}>{piso.titulo}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ))}
+                </>
+            )}
 
-            <View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Pisos Interes:</Text>
-                </View>
-            </View>
-            {usuario.pisosInteres.map((piso, index) => (
-                <View key={index} style={styles.singleColumnRow}>
-                    <View style={styles.column}>
-                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
-                            <Text style={styles.link}>{piso.titulo}</Text>
-                        </TouchableOpacity>
+            {usuario.pisosInteres && usuario.pisosInteres.length > 0 && (
+                <>
+                    <View style={styles.singleColumnRow}>
+                        <View style={styles.column}>
+                            <Text style={styles.label}>Pisos Interes:</Text>
+                        </View>
                     </View>
-                </View>
-            ))}
-
-            <View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Piso actual:</Text>
-                </View>
-            </View>
+                    {usuario.pisosInteres.map((piso, index) => (
+                        <View key={index} style={styles.singleColumnRow}>
+                            <View style={styles.column}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
+                                    <Text style={styles.link}>{piso.titulo}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ))}
+                </>
+            )}
 
             {usuario.pisoActual ?
-                <View style={styles.singleColumnRow}>
-                    <View style={styles.column}>
-                        <TouchableOpacity key={usuario.pisoActual.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: usuario.pisoActual.idPiso })} >
-                            <Text style={styles.link}>{usuario.pisoActual.titulo}</Text>
-                        </TouchableOpacity>
+                <>
+                    <View style={styles.singleColumnRow}>
+                        <View style={styles.column}>
+                            <Text style={styles.label}>Piso actual:</Text>
+                        </View>
                     </View>
-                </View> :
-                null
+                    <View style={styles.singleColumnRow}>
+                        <View style={styles.column}>
+                            <TouchableOpacity key={usuario.pisoActual.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: usuario.pisoActual.idPiso })} >
+                                <Text style={styles.link}>{usuario.pisoActual.titulo}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </> : null
             }
-            {usuario.pisosInteres.map((piso, index) => (
-                <View style={styles.singleColumnRow}>
-                    <View style={styles.column}>
-                        <TouchableOpacity key={piso.idPiso} onPress={() => navigation.navigate('Piso', { pisoId: piso.idPiso })} >
-                            <Text style={styles.link}>{piso.titulo}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            ))}
+            
 
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
@@ -209,8 +209,8 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         fontWeight: 'bold',
-        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
-        textShadowOffset: { width: 2, height: 2 }, 
-        textShadowRadius: 5, 
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 5,
     },
 })

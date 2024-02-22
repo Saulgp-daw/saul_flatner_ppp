@@ -7,7 +7,7 @@ const SexoPicker = ({ onSexoChange }) => {
 
   const handleSexoChange = (itemValue, itemIndex) => {
     setSexo(itemValue);
-    onSexoChange(itemValue); // Llama a la función de devolución de llamada con el nuevo valor de sexo
+    onSexoChange(itemValue); 
   };
 
   return (
@@ -16,6 +16,7 @@ const SexoPicker = ({ onSexoChange }) => {
       onValueChange={handleSexoChange}>
       <Picker.Item label="Hombre" value="Hombre" />
       <Picker.Item label="Mujer" value="Mujer" />
+      <Picker.Item label="Otro" value="Otro" />
     </Picker>
   );
 };
