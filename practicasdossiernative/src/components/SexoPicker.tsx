@@ -11,7 +11,7 @@ const SexoPicker = ({ sexoInicial, onSexoChange }) => {
     <Picker
       selectedValue={sexoInicial}
       onValueChange={handleSexoChange}>
-      <Picker.Item label="Hombre" value="Hombre" />
+      <Picker.Item label="Hombre" value="Hombre"/>
       <Picker.Item label="Mujer" value="Mujer" />
       <Picker.Item label="Otro" value="Otro" />
     </Picker>

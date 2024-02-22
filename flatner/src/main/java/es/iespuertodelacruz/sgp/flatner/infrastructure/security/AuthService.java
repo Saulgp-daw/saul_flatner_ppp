@@ -24,6 +24,7 @@ public class AuthService {
 		userentity.setEmail(userdetails.getEmail());
 		userentity.setPassword(passwordEncoder.encode(userdetails.getPassword()));
 		userentity.setRol("ROLE_USER");
+		userentity.setSexo("Hombre");
 		
 		//userdetails.setRole(userentity.getRol());
 		String generateToken = jwtService.generateToken(userdetails.getEmail(), userdetails.getPassword());

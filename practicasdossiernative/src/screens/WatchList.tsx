@@ -37,6 +37,14 @@ const WatchList = ({ navigation }: Props) => {
 		);
 	}
 
+	if (!usuario || usuario.pisosInteres.length === 0) {
+		return (
+			<View style={styles.loadingContainer}>
+			  <Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
+			</View>
+		);
+	  }
+
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
 			{usuario.pisosInteres.map((piso) => (
@@ -120,6 +128,11 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		marginTop: 5
 	},
+	noPisosText: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		textAlign: 'center',
+	  },
 
 	valoracion: {
 		position: 'absolute',

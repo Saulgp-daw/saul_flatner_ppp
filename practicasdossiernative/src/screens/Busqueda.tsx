@@ -19,7 +19,7 @@ const Busqueda = ({ navigation }: Props) => {
 
   useEffect(() => {
     console.log("Hago el reload");
-    
+
     const onFocus = navigation.addListener('focus', () => {
       setReload(true);
     });
@@ -35,13 +35,24 @@ const Busqueda = ({ navigation }: Props) => {
     );
   }
 
+  if (!pisos || pisos.length === 0) {
+    return (
+      <>
+        <Navbar navigation={navigation} />
+        <View style={styles.loadingContainer}>
+          <Text style={styles.noPisosText}>Aún no hay pisos creados</Text>
+        </View>
+      </>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Navbar navigation={navigation} />
       <ScrollView style={styles.busqueda}>
         {pisos.map((piso, index) => (
           <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
-            <View style={styles.caja}>  
+            <View style={styles.caja}>
               <Slider
                 images={piso.fotos.map((foto, index) => ({
                   id: index,
@@ -74,6 +85,11 @@ const styles = StyleSheet.create({
   busqueda: {
     display: 'flex',
     alignContent: 'center'
+  },
+  noPisosText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 
   caja: {

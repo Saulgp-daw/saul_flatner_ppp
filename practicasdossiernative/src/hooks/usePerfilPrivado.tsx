@@ -33,6 +33,7 @@ const usePerfilPrivado = () => {
   const [anho, setAnho] = useState(0);
   const [password, setPassword] = useState('');
   const [fotoSubida, setFotoSubida] = useState(false);
+  const [reload, setReload] = useState(true);
 
   const [informacionUsuario, setInformacionUsuario] = useState<Usuario>(
     {
@@ -62,6 +63,8 @@ const usePerfilPrivado = () => {
           },
         });
         //console.log(response.data);
+        console.log("Reload perfil privado");
+        
 
         const usuario: Usuario = {
           email: response.data.email,
@@ -80,14 +83,15 @@ const usePerfilPrivado = () => {
         }
         setInformacionUsuario(usuario);
         console.log(response.data.sexo);
-        
+        setReload(false);
       } catch (error) {
         console.log(error);
+        setReload(false);
 
       }
     }
     axiosget();
-  }, []);
+  }, [reload]);
 
   const selectImage = () => {
     const options: ImageLibraryOptions = {
@@ -171,6 +175,8 @@ const usePerfilPrivado = () => {
 
     }
 
+    console.log("Actualizado");
+    
     console.log(actualizado);
 
     const axiosput = async () => {
@@ -191,7 +197,7 @@ const usePerfilPrivado = () => {
 
 
 
-  return { informacionUsuario, fotoSubida, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos }
+  return { informacionUsuario, fotoSubida, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos, reload, setReload }
 }
 
 export default usePerfilPrivado

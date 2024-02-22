@@ -43,6 +43,7 @@ const useFindPiso = (idPiso: number) => {
     const { token, settoken } = useAppContext();
     const [piso, setPiso] = useState<Piso>();
     console.log(ruta);
+    const [reload, setReload] = useState(true);
 
     useEffect(() => {
 
@@ -105,19 +106,21 @@ const useFindPiso = (idPiso: number) => {
                 console.log(find);
                 
                 setPiso(find);
+                setReload(false);
 
 
             } catch (error) {
                 console.log(error);
+                setReload(false);
 
             }
         }
         axiosget();
-    }, []);
+    }, [reload]);
 
 
 
-    return { piso }
+    return { piso, reload, setReload}
 }
 
 export default useFindPiso

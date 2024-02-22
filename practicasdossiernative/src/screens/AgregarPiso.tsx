@@ -20,38 +20,39 @@ const AgregarPiso = ({ navigation }: Props) => {
 		{ id: 3, label: 'Lavavajillas', value: 'Lavavajillas', isChecked: false },
 		{ id: 4, label: 'Horno', value: 'Horno', isChecked: false },
 		{ id: 5, label: 'Microondas', value: 'Microondas', isChecked: false },
-		{ id: 6, label: 'Lavadora', value: 'Lavadora', isChecked: false },
-		{ id: 7, label: 'Secadora', value: 'Secadora', isChecked: false },
-		{ id: 8, label: 'Plancha', value: 'Plancha', isChecked: false },
-		{ id: 9, label: 'TV', value: 'TV', isChecked: false },
-		{ id: 10, label: 'Aspiradora', value: 'Aspiradora', isChecked: false },
-		{ id: 11, label: 'Nevera', value: 'Nevera', isChecked: false },
-		{ id: 12, label: 'Congelador', value: 'Congelador', isChecked: false },
-		{ id: 13, label: 'Cocina', value: 'Cocina', isChecked: false },
-		{ id: 14, label: 'Tostadora', value: 'Tostadora', isChecked: false },
-		{ id: 15, label: 'Aire acondicionado', value: 'Aire acondicionado', isChecked: false },
-		{ id: 16, label: 'Ventilador', value: 'Ventilador', isChecked: false },
-		{ id: 17, label: 'Sandwichera', value: 'Sandwichera', isChecked: false }
+		{ id: 6, label: 'Plancha', value: 'Plancha', isChecked: false },
+		{ id: 7, label: 'TV', value: 'TV', isChecked: false },
+		{ id: 8, label: 'Aspiradora', value: 'Aspiradora', isChecked: false },
+		{ id: 9, label: 'Nevera', value: 'Nevera', isChecked: false },
+		{ id: 10, label: 'Congelador', value: 'Congelador', isChecked: false },
+		{ id: 11, label: 'Cocina', value: 'Cocina', isChecked: false },
+		{ id: 12, label: 'Tostadora', value: 'Tostadora', isChecked: false },
+		{ id: 13, label: 'Aire acondicionado', value: 'Aire acondicionado', isChecked: false },
+		{ id: 14, label: 'Ventilador', value: 'Ventilador', isChecked: false },
+		{ id: 15, label: 'Sandwichera', value: 'Sandwichera', isChecked: false }
 	]);
 
-	const handleOnChange = (id) => {
+	const handleOnChange = async (id) => {
 		const newElectrodomesticos = electrodomesticos.map((item) => {
 			if (item.id === id) {
 				return { ...item, isChecked: !item.isChecked };
 			}
 			return item;
 		});
-		console.log(electrodomesticos);
+		//console.log(electrodomesticos);
 
 		setElectrodomesticos(newElectrodomesticos);
-	};
-
-	const prepararPost = async () => {
-		const electrodomesticosString = electrodomesticos
+		const electrodomesticosString = newElectrodomesticos
 			.filter((item) => item.isChecked)
 			.map((item) => item.value)
 			.join(';;');
 		await updateCampo("electrodomesticos", electrodomesticosString);
+	};
+
+	const prepararPost = async () => {
+		
+		//console.log(informacionPiso);
+		
 		post();
 	};
 

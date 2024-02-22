@@ -26,10 +26,20 @@ const Piso = ({ navigation }: Props) => {
 
     const route = useRoute();
     const { pisoId } = route.params as RouteParams;
+    console.log(pisoId);
+    
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const { piso } = useFindById(pisoId);
+    const { piso, reload, setReload } = useFindById(pisoId);
     const { informacionUsuario } = usePerfilPrivado();
     const { agregar } = useWatchList();
+
+    useEffect(() => {
+		const onFocus = navigation.addListener('focus', () => {
+			setReload(true);
+		});
+		return onFocus;
+
+	}, [reload])
 
     if (!piso) {
         return (
@@ -61,6 +71,9 @@ const Piso = ({ navigation }: Props) => {
                     <Text>Nº Hab: {piso.numHabitaciones}</Text>
                     <Text>Nº inquilinos: {piso.inquilinos.length}</Text>
                     <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
+                </View>
+                <View style={{ marginVertical: 30 }}>
+                    <Text>{piso.descripcion}</Text>
                 </View>
                 <View>
                     <Text>Información esencial: </Text>
@@ -103,7 +116,7 @@ const Piso = ({ navigation }: Props) => {
                             <Text>Inquilinos actuales: </Text>
                             {piso.inquilinos.map(inquilino => (
                                 <TouchableHighlight key={inquilino.nombre} onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
-                                    <Text>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
+                                    <Text style={{ padding: 10, color: "#73FF8C" }}>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
                                 </TouchableHighlight>
 
                             ))}
@@ -112,9 +125,23 @@ const Piso = ({ navigation }: Props) => {
 
                 </View>
                 <View>
+                    {piso.usuariosInteresados && piso.usuariosInteresados.length > 0 && (
+                        <>
+                            <Text>Usuarios interesados: </Text>
+                            {piso.usuariosInteresados.map(usuario => (
+                                <TouchableHighlight key={usuario.nombre} onPress={() => navigation.navigate("Perfil", { email: usuario.email })} >
+                                    <Text style={{ padding: 10, color: "#73FF8C" }}>{usuario.nombre} {usuario.valoracion ?? " NO RATING"} ⭐</Text>
+                                </TouchableHighlight>
+
+                            ))}
+                        </>
+                    )}
+
+                </View>
+                <View >
                     <Text>Propietario: </Text>
                     <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: piso.propietario.email })} >
-                        <Text>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
+                        <Text style={{ padding: 10, color: "#73FF8C" }}>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
                     </TouchableHighlight>
                 </View>
 

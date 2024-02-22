@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import SexoPicker from '../components/SexoPicker';
@@ -16,18 +16,27 @@ type Props = {
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
     const { token, email } = useAppContext();
-    const { informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
+    const { reload, setReload, informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Tonto');
     const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
     const [loading, setLoading] = useState(false);
-    
+
     const [error, setError] = useState(false);
     const imagenDefecto = "../resources/user_default.jpg";
-    console.log(fotoSubida);
-    
+    //console.log(fotoSubida);
+
 
     //console.log(ruta + informacionUsuario.fotoPerfil);
+
+    useEffect(() => {
+        const onFocus = navigation.addListener('focus', () => {
+            setReload(true);
+            setError(false);
+        });
+        return onFocus;
+
+    }, [reload])
 
     const handleSexoChange = (newSexo) => {
         setSexo(newSexo);
@@ -50,7 +59,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
         }
     };
 
-    if(!informacionUsuario){
+    if (!informacionUsuario) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />
@@ -58,26 +67,28 @@ const PerfilPrivado = ({ navigation }: Props) => {
         );
     }
 
-   
-
-    
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            
+
             <View style={styles.profileImageContainer}>
-                {error == false ?
-                    <Image
-                        source={{
-                            uri: ruta + informacionUsuario.fotoPerfil,
-                            method: "GET",
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        }}
-                        style={styles.profileImage}
-                        onError={(e) => {
-                            setError(true);
-                        }}
-                    /> :
+                <Image
+                    source={{
+                        uri: ruta + informacionUsuario.fotoPerfil,
+                        method: "GET",
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }}
+                    style={styles.profileImage}
+                    onError={(e) => {
+                        console.log(ruta + informacionUsuario.fotoPerfil);
+
+                        setError(true);
+                    }}
+                    onLoad={() => {
+                        setError(false);
+                    }}
+                />
+                {error == true ??
+                  
                     <Image source={require(imagenDefecto)} style={styles.profileImage} />
                 }
             </View>
@@ -115,13 +126,13 @@ const PerfilPrivado = ({ navigation }: Props) => {
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.label}>Año de Nacimiento:</Text>
-                    <YearPicker  onYearChange={handleYearChange} anhoInicial={informacionUsuario.anhoNacimiento} />
+                    <YearPicker onYearChange={handleYearChange} anhoInicial={informacionUsuario.anhoNacimiento} />
                 </View>
             </View>
 
             <View style={styles.singleColumnRow}>
                 <View style={styles.column}>
-                    
+
                     <Button title={fotoSubida ? "Foto Subida" : "Subir foto de perfil"} onPress={() => selectImage()} />
                 </View>
             </View>

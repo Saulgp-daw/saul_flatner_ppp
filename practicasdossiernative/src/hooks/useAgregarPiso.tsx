@@ -38,35 +38,7 @@ const useAgregarPiso = () => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/pisos";
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
-    const [subido, setSubido] = useState(false);
-    const [reset] = useState<Piso>({
-        ascensor: false,
-        descripcion: '',
-        electrodomesticos: '',
-        estanciaMinimaDias: 0,
-        fotos: '',
-        fumar: false,
-        gasIncluido: false,
-        jardin: false,
-        luzIncluida: false,
-        mCuadrados: 0,
-        mascotas: false,
-        numHabitaciones: 0,
-        mapsLink: '',
-        parejas: false,
-        precioMes: 0,
-        propietarioReside: false,
-        terraza: false,
-        titulo: '',
-        ubicacion: '',
-        valoracion: 2.5,
-        wifi: false,
-        fotoBase64: ''
-    });
-
-    useEffect(() => {
-     setInformacionPiso({...reset});
-    }, [subido, reset])
+   
     
 
     const [informacionPiso, setInformacionPiso] = useState<Piso>({
@@ -99,8 +71,8 @@ const useAgregarPiso = () => {
             ...prevOpcionesPiso,
             [key]: value,
         }));
-        console.log(key);
-        console.log(value);
+        // console.log(key);
+        // console.log(value);
     };
 
     const updateCampo = async (key, value) => {
@@ -110,7 +82,7 @@ const useAgregarPiso = () => {
             ...prevOpcionesPiso,
             [key]: parsedValue,
         }));
-        console.log(parsedValue);
+        //console.log(parsedValue);
     };
 
 
@@ -144,7 +116,6 @@ const useAgregarPiso = () => {
                 console.log(response.data);
                 Alert.alert("Piso agregado!", "Respuesta: " + response.status);
                 setLoading(false);
-                setSubido(true);
             } catch (error) {
                 console.log(error);
                 setLoading(false);
