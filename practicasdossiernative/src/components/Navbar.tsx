@@ -11,13 +11,17 @@ type Props = {
 const Drawer = createDrawerNavigator();
 
 
+
+
 const Navbar = ({navigation}: Props) => {
 	const perfil = "../resources/perfil.jpg";
 
-	
+	const abrirDrawer = () => {
+		navigation?.openDrawer(); 
+	}
 	return (
 		<View style={styles.navbar} >
-			<TouchableOpacity><Icon name='menu' size={30}></Icon></TouchableOpacity>
+			<TouchableOpacity onPress={abrirDrawer}><Icon name='menu' size={30}></Icon></TouchableOpacity>
 			<View style={styles.circleContainer}>
 				<TouchableHighlight onPress={() => navigation.navigate('Mi Perfil')} >
 					<Image source={require(perfil)} style={styles.imgPerfil} />

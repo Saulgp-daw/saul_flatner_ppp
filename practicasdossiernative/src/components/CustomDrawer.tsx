@@ -4,13 +4,18 @@ import {
     DrawerItemList,
 } from '@react-navigation/drawer';
 
-import React from 'react'
+import React, { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Piso from '../screens/Piso';
 
 
 
 const CustomDrawer = (props) => {
     const { navigation } = props;
+    const [enablePiso, setEnablePiso] = useState(true);
+    const togglePisoScreen = () => {
+        setEnablePiso(!enablePiso);
+    };
     async function logOut() {
         try {
             await AsyncStorage.removeItem('token');
@@ -24,12 +29,10 @@ const CustomDrawer = (props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {/* Contenido principal del drawer */}
             <DrawerContentScrollView {...props}>
                 <DrawerItemList {...props} />
             </DrawerContentScrollView>
 
-            {/* Sección fija en la parte inferior del drawer */}
             <View style={styles.bottomDrawerSection}>
                 <Button title="Log Out" onPress={() => {logOut()}} />
             </View>

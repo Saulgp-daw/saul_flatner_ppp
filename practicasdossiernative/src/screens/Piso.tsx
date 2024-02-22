@@ -57,7 +57,13 @@ const Piso = ({ navigation }: Props) => {
                     <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
                 </View>
                 <View>
-                    <Text>Detalles: </Text>
+                    <Text>Información esencial: </Text>
+                    <View style={styles.detallesContainer}>
+                        <Text>{piso.ascensor? "Ascensor":""}</Text>
+                    </View>
+                </View>
+                <View>
+                    <Text>Electrodomésticos: </Text>
                     <View style={styles.detallesContainer}>
                         {piso.electrodomesticos.split(';;').map((electro, index) => (
                             <View key={electro + "-" + index} style={styles.detallesItem}>

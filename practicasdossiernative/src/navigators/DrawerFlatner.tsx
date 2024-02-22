@@ -9,6 +9,7 @@ import FAQ from '../screens/FAQ';
 import Historial from '../screens/Historial';
 import Busqueda from '../screens/Busqueda';
 import TabPisos from './TabPisos';
+import Piso from '../screens/Piso';
 
 
 type Props = {}
@@ -16,6 +17,7 @@ type Props = {}
 const Drawer = createDrawerNavigator();
 
 const DrawerFlatner = () => {
+  const hide = true;
   return (
     <Drawer.Navigator initialRouteName="Pisos" drawerContent={(props) => <CustomDrawer {...props} />}>
       <Drawer.Screen name='Mi Perfil' component={PerfilPrivado} />
@@ -24,6 +26,7 @@ const DrawerFlatner = () => {
       <Drawer.Screen name='Mensajes' component={Mensajes} />
       <Drawer.Screen name='Historial' component={Historial} />
       <Drawer.Screen name='F.A.Q' component={FAQ} />
+      <Drawer.Screen name='Piso' component={Piso} options={{ headerShown: false, drawerLabelStyle: {display: "none"} }}/> 
     </Drawer.Navigator>
   )
 }

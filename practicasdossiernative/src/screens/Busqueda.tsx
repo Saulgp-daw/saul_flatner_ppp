@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Slider from '../components/Slider'
 import useFindAll from '../hooks/useFindAllPisos'
 import { ip } from '../../global'
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
   navigation: any,
@@ -38,7 +39,7 @@ const Busqueda = ({ navigation }: Props) => {
       <ScrollView style={styles.busqueda}>
         {pisos.map((piso, index) => (
           <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
-            <View style={styles.caja}>
+            <View style={styles.caja}>  
               <Slider
                 images={piso.fotos.map((foto, index) => ({
                   id: index,
@@ -52,8 +53,8 @@ const Busqueda = ({ navigation }: Props) => {
                 <Text style={styles.infoRelevante}>{piso.precio} €</Text>
               </View>
               <View style={styles.datosContainer}>
-                <Text>Nº Hab: {piso.numHabitaciones}</Text>
-                <Text>Nº inquilinos: {piso.numInquilinos}</Text>
+                <Text><Icon name="bed" size={15} /> {piso.numHabitaciones}</Text>
+                <Text><Icon name="person-sharp" size={15} /> {piso.numInquilinos}</Text>
                 <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
               </View>
             </View>

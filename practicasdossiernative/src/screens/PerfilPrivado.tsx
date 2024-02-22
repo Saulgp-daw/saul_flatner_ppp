@@ -52,6 +52,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            
             <View style={styles.profileImageContainer}>
                 {error == false ?
                     <Image

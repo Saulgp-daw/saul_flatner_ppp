@@ -5,7 +5,9 @@ import useFindUsuario from '../hooks/useFindUsuario';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import { ip } from '../../global';
 import useFindPiso from '../hooks/useFindPiso';
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+
 
 type Props = {
 	navigation: any,
@@ -15,16 +17,10 @@ const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { token, email } = useAppContext();
 	const { usuario, reload, setReload } = useFindUsuario(email);
-
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
-
-
-
 	useEffect(() => {
-
-
 		const onFocus = navigation.addListener('focus', () => {
 			setReload(true);
 		});
@@ -40,8 +36,6 @@ const WatchList = ({ navigation }: Props) => {
 			</View>
 		);
 	}
-
-
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
@@ -91,7 +85,7 @@ const PisoComponent = ({ pisoId, token, navigation }) => {
 						<Text style={styles.infoRelevante}>{piso?.titulo}</Text>
 						<Text style={styles.info}>{piso?.valoracion} ⭐</Text>
 						<Text style={styles.info}>
-							<Icon name="house-user" size={20} /> {piso.inquilinos.length}
+							<Icon name="person-sharp" size={15} /> {piso.inquilinos.length} - <Icon name="bed" size={15} /> {piso.numHabitaciones}
 						</Text>
 					</View>
 				</View>
@@ -119,10 +113,12 @@ const styles = StyleSheet.create({
 	datosContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		position: 'relative'
+		position: 'relative',
+		padding: 10
 	},
 	info: {
 		marginLeft: 10,
+		marginTop: 5
 	},
 
 	valoracion: {
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
 	},
 	imagen: {
 		width: 100,
-		height: 60,
+		height: 100,
 		resizeMode: 'cover',
 	},
 });

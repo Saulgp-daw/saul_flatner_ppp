@@ -1,11 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Navbar from '../components/Navbar'
 
-type Props = {}
+type Props = {
+  navigation: any;
+}
 
-const Historial = (props: Props) => {
+const Historial = ({navigation}: Props) => {
   return (
     <View>
+      <Navbar navigation={navigation} />
       <Text>historial</Text>
     </View>
   )

@@ -4,9 +4,11 @@ import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
 import CheckBox from '@react-native-community/checkbox';
 
-type Props = {}
+type Props = {
+	navigation: any;
+  }
 
-const AgregarPiso = (props: Props) => {
+const AgregarPiso = ({navigation}: Props) => {
 	const { informacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
 	const [loading, setLoading] = useState(false);
 	const [text, setText] = useState("");
