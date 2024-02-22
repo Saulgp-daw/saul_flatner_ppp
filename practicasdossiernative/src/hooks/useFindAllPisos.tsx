@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ip } from '../../global';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import axios from 'axios';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 type Props = {}
 
@@ -22,8 +23,11 @@ const useFindAllPisos = () => {
     const ruta = "http://" + ip + "/api/v2/pisos";
     const { token, settoken } = useAppContext();
     const [reload, setReload] = useState(true);
+    const isFocused = useIsFocused();
 
     const [pisos, setPisos] = useState<Piso[]>([]);
+
+    
 
     useEffect(() => {
 
@@ -56,8 +60,10 @@ const useFindAllPisos = () => {
                 setReload(false);
             }
         }
-        axiosget();
-    }, [reload]);
+        if (isFocused) { 
+            axiosget();
+        }
+    }, [reload, isFocused]);
 
 
 

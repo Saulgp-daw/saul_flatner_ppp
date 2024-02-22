@@ -3,15 +3,17 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
 import CheckBox from '@react-native-community/checkbox';
+import { useIsFocused } from '@react-navigation/native';
 
 type Props = {
 	navigation: any;
-  }
+}
 
-const AgregarPiso = ({navigation}: Props) => {
-	const { informacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
-	const [loading, setLoading] = useState(false);
+const AgregarPiso = ({ navigation }: Props) => {
+	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
 	const [text, setText] = useState("");
+	
+	
 	const [electrodomesticos, setElectrodomesticos] = useState([
 		{ id: 1, label: 'Lavadora', value: 'Lavadora', isChecked: false },
 		{ id: 2, label: 'Secadora', value: 'Secadora', isChecked: false },
@@ -46,13 +48,12 @@ const AgregarPiso = ({navigation}: Props) => {
 
 	const prepararPost = async () => {
 		const electrodomesticosString = electrodomesticos
-		  .filter((item) => item.isChecked)
-		  .map((item) => item.value)
-		  .join(';;');
-		//console.log(electrodomesticosString); 
-		await updateCampo("electrodomesticos",electrodomesticosString );
+			.filter((item) => item.isChecked)
+			.map((item) => item.value)
+			.join(';;');
+		await updateCampo("electrodomesticos", electrodomesticosString);
 		post();
-	  };
+	};
 
 
 	return (
@@ -61,7 +62,7 @@ const AgregarPiso = ({navigation}: Props) => {
 			<View style={styles.singleColumnRow}>
 				<View style={styles.column}>
 					<Text style={styles.label}>Titulo:</Text>
-					<TextInput style={styles.textInput} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo",texto)}/>
+					<TextInput style={styles.textInput} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
 				</View>
 			</View>
 
@@ -74,8 +75,8 @@ const AgregarPiso = ({navigation}: Props) => {
 							placeholder="Escribe aquí..."
 							placeholderTextColor="grey"
 							multiline
-							numberOfLines={10} 
-							onChangeText={(texto) => updateCampo("descripcion",texto)}
+							numberOfLines={10}
+							onChangeText={(texto) => updateCampo("descripcion", texto)}
 						/>
 					</View>
 				</View>
@@ -88,7 +89,7 @@ const AgregarPiso = ({navigation}: Props) => {
 						style={styles.textInput}
 						placeholder='Ejm: 30'
 						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("estanciaMinimaDias",texto)}
+						onChangeText={(texto) => updateCampo("estanciaMinimaDias", texto)}
 					/>
 				</View>
 				<View style={styles.column}>
@@ -97,7 +98,7 @@ const AgregarPiso = ({navigation}: Props) => {
 						style={styles.textInput}
 						placeholder='Ejm: 4'
 						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("numHabitaciones",texto)}
+						onChangeText={(texto) => updateCampo("numHabitaciones", texto)}
 					/>
 				</View>
 			</View>
@@ -108,7 +109,7 @@ const AgregarPiso = ({navigation}: Props) => {
 						style={styles.textInput}
 						placeholder='Ejm: 300'
 						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("precioMes",texto)}
+						onChangeText={(texto) => updateCampo("precioMes", texto)}
 					/>
 				</View>
 				<View style={styles.column}>
@@ -117,7 +118,7 @@ const AgregarPiso = ({navigation}: Props) => {
 						style={styles.textInput}
 						placeholder='Ejm: 23'
 						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("mCuadrados",texto)}
+						onChangeText={(texto) => updateCampo("mCuadrados", texto)}
 					/>
 				</View>
 			</View>
@@ -141,11 +142,11 @@ const AgregarPiso = ({navigation}: Props) => {
 			</View>
 
 			{
-			// 	<View style={styles.singleColumnRow}>
-			// 	<View style={styles.column}>
-			// 		<Text style={styles.label}>Ubicación:</Text>
-			// 	</View>
-			// </View>
+				// 	<View style={styles.singleColumnRow}>
+				// 	<View style={styles.column}>
+				// 		<Text style={styles.label}>Ubicación:</Text>
+				// 	</View>
+				// </View>
 			}
 
 			<View style={styles.singleColumnRow}>
@@ -278,10 +279,10 @@ const AgregarPiso = ({navigation}: Props) => {
 
 			</View>
 			<View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-                    <Button title={informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : "Subir foto del piso"} onPress={() => selectImage()} />
-                </View>
-            </View>
+				<View style={styles.column}>
+					<Button title={informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : "Subir foto del piso"} onPress={() => selectImage()} />
+				</View>
+			</View>
 
 
 			<View style={styles.singleColumnRow}>
@@ -365,14 +366,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		justifyContent: 'flex-start',
-	  },
-	  itemContainer: {
+	},
+	itemContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		marginRight: 10,
 		marginBottom: 10,
-	  },
-	  itemText: {
+	},
+	itemText: {
 		marginLeft: 5,
-	  },
+	},
 })

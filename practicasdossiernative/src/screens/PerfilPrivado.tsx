@@ -17,7 +17,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
     const { token, email } = useAppContext();
     const { informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
-    const [sexo, setSexo] = useState('Hombre');
+    const [sexo, setSexo] = useState('Tonto');
     const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
     const [loading, setLoading] = useState(false);
@@ -49,6 +49,18 @@ const PerfilPrivado = ({ navigation }: Props) => {
             setLoading(false);
         }
     };
+
+    if(!informacionUsuario){
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
+   
+
+    
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -99,11 +111,11 @@ const PerfilPrivado = ({ navigation }: Props) => {
             <View style={styles.row}>
                 <View style={styles.column}>
                     <Text style={styles.label}>Sexo:</Text>
-                    <SexoPicker onSexoChange={handleSexoChange} />
+                    <SexoPicker onSexoChange={handleSexoChange} sexoInicial={informacionUsuario.sexo} />
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.label}>Año de Nacimiento:</Text>
-                    <YearPicker selectedYear={selectedYear !== null ? selectedYear : informacionUsuario ? informacionUsuario.anhoNacimiento : null} onYearChange={handleYearChange} />
+                    <YearPicker  onYearChange={handleYearChange} anhoInicial={informacionUsuario.anhoNacimiento} />
                 </View>
             </View>
 

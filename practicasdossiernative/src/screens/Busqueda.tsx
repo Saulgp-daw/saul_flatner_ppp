@@ -18,6 +18,8 @@ const Busqueda = ({ navigation }: Props) => {
   const { pisos, reload, setReload } = useFindAll();
 
   useEffect(() => {
+    console.log("Hago el reload");
+    
     const onFocus = navigation.addListener('focus', () => {
       setReload(true);
     });

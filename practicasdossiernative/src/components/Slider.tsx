@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppContext } from '../contexts/TokenContextProvider';
@@ -16,6 +16,8 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
   const { token, settoken } = useAppContext();
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const imagenDefecto = "../resources/default.jpg";
+	const [errorImagen, setErrorImagen] = useState(false);
   const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
   console.log(ruta);
 
@@ -43,7 +45,7 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
 
   return (
     <View>
-      <FlatList
+       <FlatList
         ref={flatListRef}
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -51,11 +53,22 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-          <Image source={{
-            uri: ruta + item.source,
-            method: "GET",
-            headers: { 'Authorization': `Bearer ${token}` }
-          }} style={styles.image} resizeMode="cover" />
+          <View>
+            {errorImagen === false ? (
+              <Image
+                source={{
+                  uri: ruta + item.source,
+                  method: "GET",
+                  headers: { 'Authorization': `Bearer ${token}` }
+                }}
+                style={styles.image}
+                resizeMode="cover"
+                onError={(e) => setErrorImagen(true)}
+              />
+            ) : (
+              <Image source={require(imagenDefecto)} style={styles.image} />
+            )}
+          </View>
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{

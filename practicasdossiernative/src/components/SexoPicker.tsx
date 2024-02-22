@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-const SexoPicker = ({ onSexoChange }) => {
-  const [sexo, setSexo] = useState('Hombre');
+const SexoPicker = ({ sexoInicial, onSexoChange }) => {
 
   const handleSexoChange = (itemValue, itemIndex) => {
-    setSexo(itemValue);
-    onSexoChange(itemValue); 
+    onSexoChange(itemValue);
   };
 
   return (
     <Picker
-      selectedValue={sexo}
+      selectedValue={sexoInicial}
       onValueChange={handleSexoChange}>
       <Picker.Item label="Hombre" value="Hombre" />
       <Picker.Item label="Mujer" value="Mujer" />
@@ -20,6 +17,5 @@ const SexoPicker = ({ onSexoChange }) => {
     </Picker>
   );
 };
-
 
 export default SexoPicker;

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const YearPicker = ({ selectedYear, onYearChange }) => {
+const YearPicker = ({ anhoInicial, onYearChange }) => {
   const currentYear = new Date().getFullYear();
-  const [year, setYear] = useState(selectedYear || currentYear);
 
   const years = [];
   for (let i = currentYear; i >= 1900; i--) {
@@ -12,13 +11,12 @@ const YearPicker = ({ selectedYear, onYearChange }) => {
   }
 
   const handleYearChange = (selectedYear) => {
-    setYear(selectedYear);
     onYearChange(selectedYear);
   };
 
   return (
     <Picker
-      selectedValue={year}
+      selectedValue={anhoInicial}
       onValueChange={handleYearChange}
       style={styles.picker}
     >
