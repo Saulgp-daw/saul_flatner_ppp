@@ -16,8 +16,8 @@
     "@react-native-community/slider": "^4.5.0",
     "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
-    "@react-navigation/drawer": "^6.6.6",
-    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/drawer": "^6.6.7",
+    "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.17",
     "@types/react-native-vector-icons": "^6.4.17",
     "axios": "^1.6.2",
@@ -34,6 +34,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-webview": "^13.6.2",
+    "react-navigation": "^5.0.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17"
   },

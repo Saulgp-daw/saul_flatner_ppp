@@ -8,6 +8,7 @@ import useFindById from '../hooks/useFindPiso';
 import { useRoute } from '@react-navigation/native';
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import useWatchList from '../hooks/useWatchList';
+import {DrawerActions} from '@react-navigation/native';
 
 type Props = {
     navigation: any;
@@ -18,6 +19,10 @@ type RouteParams = {
 
 
 const Piso = ({ navigation }: Props) => {
+    console.log(navigation ? true : false);
+    
+    
+    
     const route = useRoute();
     const { pisoId } = route.params as RouteParams;
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -95,6 +100,9 @@ const Piso = ({ navigation }: Props) => {
                 <View>
                     <Button title="Estoy interesado" onPress={() => agregar(informacionUsuario.email, piso.idPiso)} />
                 </View>
+                <View>
+                    <Button title="Abrir" onPress={() =>  navigation?.dispatch(DrawerActions.openDrawer())} />
+                </View> 
             </ScrollView>
 
         </View>

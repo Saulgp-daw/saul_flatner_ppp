@@ -25,7 +25,7 @@ const StackNavigation = (props: Props) => {
                     <Stack.Screen name='Busqueda' component={Busqueda} />
                     <Stack.Screen name='Mi Perfil' component={PerfilPrivado} />
                     <Stack.Screen name='Piso' component={Piso} />
-                    <Stack.Screen name='Perfil' component={PerfilPublico} />
+                    <Stack.Screen name='Perfil' component={PerfilPublico} /> 
                 </Stack.Navigator>
         </TokenContextProvider>
     )

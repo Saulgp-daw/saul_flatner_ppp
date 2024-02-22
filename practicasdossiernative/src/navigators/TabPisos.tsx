@@ -14,6 +14,7 @@ const TabPisos = ({ navigation }: Props) => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}> 
       <Tab.Screen
+      
         name="Buscar"
         options={{
           tabBarIcon: ({ color, size }) => (
