@@ -15,12 +15,13 @@ type Props = {
 
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
+    const { token, email } = useAppContext();
     const { informacionUsuario, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Hombre');
     const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
-    const ruta = "http://" + ip + "/api/v2/usuarios/" + informacionUsuario.email + "/images/";
+    const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
     const [loading, setLoading] = useState(false);
-    const { token, settoken } = useAppContext();
+    
     const [error, setError] = useState(false);
     const imagenDefecto = "../resources/user_default.jpg";
 

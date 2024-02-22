@@ -22,6 +22,7 @@ type Usuario = {
 }
 
 type Piso = {
+	fotos: any;
     idPiso: number;
     titulo: string;
     valoracion: number;
@@ -51,25 +52,45 @@ const useFindUsuario = (email: string) => {
                 const data = response.data;
 
                 if (data.pisoActual != null) {
+                    const fotos: string[] = data.pisoActual.fotos.map((foto: string) => {
+                        return foto;
+                    });
                     pisoActual = {
                         idPiso: data.pisoActual.idPiso,
                         titulo: data.pisoActual.titulo,
-                        valoracion: data.pisoActual.valoracion
+                        valoracion: data.pisoActual.valoracion,
+                        fotos: fotos
                     };
                 }
 
 
-                const pisosInteres: Piso[] = data.pisosInteres.map((pisoData: any) => ({
-                    idPiso: pisoData.idPiso,
-                    titulo: pisoData.titulo,
-                    valoracion: pisoData.valoracion
-                }));
+                const pisosInteres: Piso[] = data.pisosInteres.map((pisoData: any) => {
+                    const fotos: string[] = pisoData.fotos.map((foto: string) => {
+                        return foto;
+                    });
+                
+                    return {
+                        idPiso: pisoData.idPiso,
+                        titulo: pisoData.titulo,
+                        valoracion: pisoData.valoracion,
+                        fotos: fotos, 
+                    };
+                });
+                //console.log(pisosInteres);
+                
 
-                const propiedades: Piso[] = data.propiedades.map((pisoData: any) => ({
-                    idPiso: pisoData.idPiso,
-                    titulo: pisoData.titulo,
-                    valoracion: pisoData.valoracion
-                }));
+                const propiedades: Piso[] = data.propiedades.map((pisoData: any) => {
+                    const fotos: string[] = pisoData.fotos.map((foto: string) => {
+                        return foto;
+                    });
+                
+                    return {
+                        idPiso: pisoData.idPiso,
+                        titulo: pisoData.titulo,
+                        valoracion: pisoData.valoracion,
+                        fotos: fotos, 
+                    };
+                });
 
                 const find = {
                     email: data.email,

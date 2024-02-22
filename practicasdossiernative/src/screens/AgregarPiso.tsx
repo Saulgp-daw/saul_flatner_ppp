@@ -47,10 +47,9 @@ const AgregarPiso = (props: Props) => {
 		  .filter((item) => item.isChecked)
 		  .map((item) => item.value)
 		  .join(';;');
-		console.log(electrodomesticosString); 
+		//console.log(electrodomesticosString); 
 		await updateCampo("electrodomesticos",electrodomesticosString );
 		post();
-		
 	  };
 
 
