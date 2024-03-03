@@ -12,32 +12,37 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
-
 /**
  * The persistent class for the watchlists database table.
  * 
  */
 @Entity
-@Table(name="watchlists")
-@NamedQuery(name="WatchlistEntity.findAll", query="SELECT w FROM WatchlistEntity w")
+@Table(name = "watchlists")
+@NamedQuery(name = "WatchlistEntity.findAll", query = "SELECT w FROM WatchlistEntity w")
 public class WatchlistEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id_watchlist")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_watchlist")
 	private int idWatchlist;
+
+	@Column(name = "email_usuario", insertable = false, updatable = false)
+	private String emailUsuario;
+
+	@Column(name = "id_piso", insertable = false, updatable = false)
+	private Integer idPiso;
 
 	private String anotaciones;
 
-	//bi-directional many-to-one association to PisoEntity
+	// bi-directional many-to-one association to PisoEntity
 	@ManyToOne
-	@JoinColumn(name="id_piso")
+	@JoinColumn(name = "id_piso")
 	private PisoEntity piso;
 
-	//bi-directional many-to-one association to UsuarioEntity
+	// bi-directional many-to-one association to UsuarioEntity
 	@ManyToOne
-	@JoinColumn(name="email_usuario")
+	@JoinColumn(name = "email_usuario")
 	private UsuarioEntity usuario;
 
 	public WatchlistEntity() {

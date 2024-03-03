@@ -19,6 +19,7 @@ public class Usuario {
 	private BigInteger fechaUltimoAlquiler;
 	private int anhoNacimiento;
 	private BigDecimal valoracion;
+	private int numVotos;
 	private List<Piso> propiedades;
 	private List<Piso> pisosInteres;
 	private Piso pisoActual;
@@ -29,7 +30,7 @@ public class Usuario {
 
 	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
 			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
-			int anhoNacimiento, BigDecimal valoracion) {
+			int anhoNacimiento, BigDecimal valoracion, int numVotos) {
 		super();
 		this.email = email;
 		this.nombre = nombre;
@@ -44,11 +45,12 @@ public class Usuario {
 		this.fechaUltimoAlquiler = fechaUltimoAlquiler;
 		this.anhoNacimiento = anhoNacimiento;
 		this.valoracion = valoracion;
+		this.numVotos = numVotos;
 	}
 	
 	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
 			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
-			int anhoNacimiento, BigDecimal valoracion, List<Piso> propiedades, List<Piso> pisosInteres,
+			int anhoNacimiento, BigDecimal valoracion, int numVotos, List<Piso> propiedades, List<Piso> pisosInteres,
 			Piso pisoActual) {
 		super();
 		this.email = email;
@@ -64,12 +66,21 @@ public class Usuario {
 		this.fechaUltimoAlquiler = fechaUltimoAlquiler;
 		this.anhoNacimiento = anhoNacimiento;
 		this.valoracion = valoracion;
+		this.numVotos = numVotos;
 		this.propiedades = propiedades;
 		this.pisosInteres = pisosInteres;
 		this.pisoActual = pisoActual;
 	}
 
 
+
+	public int getNumVotos() {
+		return numVotos;
+	}
+
+	public void setNumVotos(int numVotos) {
+		this.numVotos = numVotos;
+	}
 
 	public String getFotoPerfil() {
 		return fotoPerfil;

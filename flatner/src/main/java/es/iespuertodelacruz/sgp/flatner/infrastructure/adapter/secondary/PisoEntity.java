@@ -31,7 +31,7 @@ public class PisoEntity implements Serializable {
 	@Column(name="id_piso")
 	private int idPiso;
 
-	private byte ascensor;
+	private boolean ascensor;
 
 	private String descripcion;
 
@@ -42,15 +42,15 @@ public class PisoEntity implements Serializable {
 
 	private String fotos;
 
-	private byte fumar;
+	private boolean fumar;
 
 	@Column(name="gas_incluido")
-	private byte gasIncluido;
+	private boolean gasIncluido;
 
-	private byte jardin;
+	private boolean jardin;
 
 	@Column(name="luz_incluida")
-	private byte luzIncluida;
+	private boolean luzIncluida;
 
 	@Column(name="m_cuadrados")
 	private int mCuadrados;
@@ -58,7 +58,7 @@ public class PisoEntity implements Serializable {
 	@Column(name="maps_link")
 	private String mapsLink;
 
-	private byte mascotas;
+	private boolean mascotas;
 
 	@Column(name="num_habitaciones")
 	private int numHabitaciones;
@@ -66,15 +66,15 @@ public class PisoEntity implements Serializable {
 	@Column(name="num_votos")
 	private int numVotos;
 
-	private byte parejas;
+	private boolean parejas;
 
 	@Column(name="precio_mes")
 	private BigDecimal precioMes;
 
 	@Column(name="propietario_reside")
-	private byte propietarioReside;
+	private boolean propietarioReside;
 
-	private byte terraza;
+	private boolean terraza;
 
 	private String titulo;
 
@@ -82,22 +82,22 @@ public class PisoEntity implements Serializable {
 
 	private BigDecimal valoracion;
 
-	private byte verified;
+	private boolean verified;
 
-	private byte wifi;
+	private boolean wifi;
 
 	//bi-directional many-to-one association to UsuarioEntity
 	@ManyToOne
 	@JoinColumn(name="email_propietario")
-	private UsuarioEntity usuario;
+	private UsuarioEntity propietario;
 
 	//bi-directional many-to-one association to UsuarioEntity
-	@OneToMany(mappedBy="piso")
-	private List<UsuarioEntity> usuarios;
+	@OneToMany(mappedBy="pisoActual")
+	private List<UsuarioEntity> inquilinos;
 
 	//bi-directional many-to-one association to WatchlistEntity
 	@OneToMany(mappedBy="piso")
-	private List<WatchlistEntity> watchlists;
+	private List<WatchlistEntity> usuariosInteresados;
 
 	public PisoEntity() {
 	}
@@ -110,11 +110,11 @@ public class PisoEntity implements Serializable {
 		this.idPiso = idPiso;
 	}
 
-	public byte getAscensor() {
+	public boolean getAscensor() {
 		return this.ascensor;
 	}
 
-	public void setAscensor(byte ascensor) {
+	public void setAscensor(boolean ascensor) {
 		this.ascensor = ascensor;
 	}
 
@@ -150,35 +150,35 @@ public class PisoEntity implements Serializable {
 		this.fotos = fotos;
 	}
 
-	public byte getFumar() {
+	public boolean getFumar() {
 		return this.fumar;
 	}
 
-	public void setFumar(byte fumar) {
+	public void setFumar(boolean fumar) {
 		this.fumar = fumar;
 	}
 
-	public byte getGasIncluido() {
+	public boolean getGasIncluido() {
 		return this.gasIncluido;
 	}
 
-	public void setGasIncluido(byte gasIncluido) {
+	public void setGasIncluido(boolean gasIncluido) {
 		this.gasIncluido = gasIncluido;
 	}
 
-	public byte getJardin() {
+	public boolean getJardin() {
 		return this.jardin;
 	}
 
-	public void setJardin(byte jardin) {
+	public void setJardin(boolean jardin) {
 		this.jardin = jardin;
 	}
 
-	public byte getLuzIncluida() {
+	public boolean getLuzIncluida() {
 		return this.luzIncluida;
 	}
 
-	public void setLuzIncluida(byte luzIncluida) {
+	public void setLuzIncluida(boolean luzIncluida) {
 		this.luzIncluida = luzIncluida;
 	}
 
@@ -198,11 +198,11 @@ public class PisoEntity implements Serializable {
 		this.mapsLink = mapsLink;
 	}
 
-	public byte getMascotas() {
+	public boolean getMascotas() {
 		return this.mascotas;
 	}
 
-	public void setMascotas(byte mascotas) {
+	public void setMascotas(boolean mascotas) {
 		this.mascotas = mascotas;
 	}
 
@@ -222,11 +222,11 @@ public class PisoEntity implements Serializable {
 		this.numVotos = numVotos;
 	}
 
-	public byte getParejas() {
+	public boolean getParejas() {
 		return this.parejas;
 	}
 
-	public void setParejas(byte parejas) {
+	public void setParejas(boolean parejas) {
 		this.parejas = parejas;
 	}
 
@@ -238,19 +238,19 @@ public class PisoEntity implements Serializable {
 		this.precioMes = precioMes;
 	}
 
-	public byte getPropietarioReside() {
+	public boolean getPropietarioReside() {
 		return this.propietarioReside;
 	}
 
-	public void setPropietarioReside(byte propietarioReside) {
+	public void setPropietarioReside(boolean propietarioReside) {
 		this.propietarioReside = propietarioReside;
 	}
 
-	public byte getTerraza() {
+	public boolean getTerraza() {
 		return this.terraza;
 	}
 
-	public void setTerraza(byte terraza) {
+	public void setTerraza(boolean terraza) {
 		this.terraza = terraza;
 	}
 
@@ -278,69 +278,69 @@ public class PisoEntity implements Serializable {
 		this.valoracion = valoracion;
 	}
 
-	public byte getVerified() {
+	public boolean getVerified() {
 		return this.verified;
 	}
 
-	public void setVerified(byte verified) {
+	public void setVerified(boolean verified) {
 		this.verified = verified;
 	}
 
-	public byte getWifi() {
+	public boolean getWifi() {
 		return this.wifi;
 	}
 
-	public void setWifi(byte wifi) {
+	public void setWifi(boolean wifi) {
 		this.wifi = wifi;
 	}
 
-	public UsuarioEntity getUsuario() {
-		return this.usuario;
+	public UsuarioEntity getPropietario() {
+		return this.propietario;
 	}
 
-	public void setUsuario(UsuarioEntity usuario) {
-		this.usuario = usuario;
+	public void setPropietario(UsuarioEntity usuario) {
+		this.propietario = usuario;
 	}
 
-	public List<UsuarioEntity> getUsuarios() {
-		return this.usuarios;
+	public List<UsuarioEntity> getInquilinos() {
+		return this.inquilinos;
 	}
 
-	public void setUsuarios(List<UsuarioEntity> usuarios) {
-		this.usuarios = usuarios;
+	public void setInquilinos(List<UsuarioEntity> usuarios) {
+		this.inquilinos = usuarios;
 	}
 
 	public UsuarioEntity addUsuario(UsuarioEntity usuario) {
-		getUsuarios().add(usuario);
-		usuario.setPiso(this);
+		getInquilinos().add(usuario);
+		usuario.setPisoActual(this);
 
 		return usuario;
 	}
 
 	public UsuarioEntity removeUsuario(UsuarioEntity usuario) {
-		getUsuarios().remove(usuario);
-		usuario.setPiso(null);
+		getInquilinos().remove(usuario);
+		usuario.setPisoActual(null);
 
 		return usuario;
 	}
 
-	public List<WatchlistEntity> getWatchlists() {
-		return this.watchlists;
+	public List<WatchlistEntity> getUsuariosInteresados() {
+		return this.usuariosInteresados;
 	}
 
-	public void setWatchlists(List<WatchlistEntity> watchlists) {
-		this.watchlists = watchlists;
+	public void setUsuariosInteresados(List<WatchlistEntity> watchlists) {
+		this.usuariosInteresados = watchlists;
 	}
 
 	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
-		getWatchlists().add(watchlist);
+		getUsuariosInteresados().add(watchlist);
 		watchlist.setPiso(this);
 
 		return watchlist;
 	}
 
 	public WatchlistEntity removeWatchlist(WatchlistEntity watchlist) {
-		getWatchlists().remove(watchlist);
+		getUsuariosInteresados().remove(watchlist);
 		watchlist.setPiso(null);
 
 		return watchlist;

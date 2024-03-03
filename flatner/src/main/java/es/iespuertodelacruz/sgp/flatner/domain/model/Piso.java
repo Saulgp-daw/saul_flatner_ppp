@@ -25,6 +25,7 @@ public class Piso {
 	private String titulo;
 	private String ubicacion;
 	private BigDecimal valoracion;
+	private int num_votos;
 	private boolean wifi;
 	private Usuario propietario;
 	private List<Usuario> usuariosInteresados;
@@ -37,7 +38,7 @@ public class Piso {
 	public Piso(int idPiso, boolean ascensor, String descripcion, String electrodomesticos, int estanciaMinimaDias,
 			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
 			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
-			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,
+			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,int num_votos,
 			boolean wifi) {
 		super();
 		this.idPiso = idPiso;
@@ -61,6 +62,7 @@ public class Piso {
 		this.titulo = titulo;
 		this.ubicacion = ubicacion;
 		this.valoracion = valoracion;
+		this.num_votos = num_votos;
 		this.wifi = wifi;
 	}
 	
@@ -71,7 +73,7 @@ public class Piso {
 	public Piso(int idPiso, boolean ascensor, String descripcion, String electrodomesticos, int estanciaMinimaDias,
 			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
 			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
-			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,
+			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,int num_votos,
 			boolean wifi, Usuario propietario) {
 		super();
 		this.idPiso = idPiso;
@@ -95,6 +97,7 @@ public class Piso {
 		this.titulo = titulo;
 		this.ubicacion = ubicacion;
 		this.valoracion = valoracion;
+		this.num_votos = num_votos;
 		this.wifi = wifi;
 		this.propietario = propietario;
 	}
@@ -102,7 +105,7 @@ public class Piso {
 	public Piso(int idPiso, boolean ascensor, String descripcion, String electrodomesticos, int estanciaMinimaDias,
 			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
 			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
-			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,
+			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,int num_votos,
 			boolean wifi, Usuario propietario, List<Usuario> usuariosInteresados, List<Usuario> inquilinos) {
 		super();
 		this.idPiso = idPiso;
@@ -126,10 +129,19 @@ public class Piso {
 		this.titulo = titulo;
 		this.ubicacion = ubicacion;
 		this.valoracion = valoracion;
+		this.num_votos = num_votos;
 		this.wifi = wifi;
 		this.propietario = propietario;
 		this.usuariosInteresados = usuariosInteresados;
 		this.inquilinos = inquilinos;
+	}
+
+	public int getNum_votos() {
+		return num_votos;
+	}
+
+	public void setNum_votos(int num_votos) {
+		this.num_votos = num_votos;
 	}
 
 	public int getIdPiso() {

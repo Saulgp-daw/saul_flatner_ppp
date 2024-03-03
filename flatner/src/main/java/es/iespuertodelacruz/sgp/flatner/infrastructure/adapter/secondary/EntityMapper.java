@@ -38,7 +38,8 @@ public class EntityMapper {
 					entity.getFechaUltimaEstancia(),
 					entity.getFechaUltimoAlquiler(),
 					entity.getAnhoNacimiento(), 
-					entity.getValoracion()
+					entity.getValoracion(),
+					entity.getNumVotos()
 					);
 		}
 		return usuario;
@@ -71,6 +72,7 @@ public class EntityMapper {
 					entity.getTitulo(), 
 					entity.getUbicacion(), 
 					entity.getValoracion(), 
+					entity.getNumVotos(),
 					entity.getWifi());
 		}
 		return piso;
@@ -82,7 +84,8 @@ public class EntityMapper {
 			
 			Usuario propietario = this.toDomainSimpleUsuario(entity.getPropietario());
 			
-			List<Usuario> usuariosInteresados = entity.getUsuarios_interesados().stream()
+			List<Usuario> usuariosInteresados = entity.getUsuariosInteresados().stream()
+					.map(WatchlistEntity::getUsuario)
 					.map(this::toDomainSimpleUsuario)
 					.collect(Collectors.toList());
 			
@@ -112,6 +115,7 @@ public class EntityMapper {
 					entity.getTitulo(), 
 					entity.getUbicacion(), 
 					entity.getValoracion(), 
+					entity.getNumVotos(),
 					entity.getWifi(),
 					propietario,
 					usuariosInteresados,
@@ -131,7 +135,8 @@ public class EntityMapper {
 					.map(this::toDomainSimplePiso)
 					.collect(Collectors.toList());
 			
-			List<Piso> pisosInteres = entity.getPisosInteres().stream()
+			List<Piso> pisosInteres = entity.getWatchlists().stream()
+					.map(WatchlistEntity::getPiso)
 					.map(this::toDomainSimplePiso) 
 					.collect(Collectors.toList());
 			
@@ -151,6 +156,7 @@ public class EntityMapper {
 					entity.getFechaUltimoAlquiler(),
 					entity.getAnhoNacimiento(),
 					entity.getValoracion(),
+					entity.getNumVotos(),
 					propiedades,
 					pisosInteres,
 					pisoActual
@@ -226,17 +232,17 @@ public class EntityMapper {
 			pe.setWifi(domain.isWifi());
 
 			if (recursion) {
-				List<UsuarioEntity> usuariosInteresado = new ArrayList<UsuarioEntity>();
+				List<UsuarioEntity> usuariosInteresados = new ArrayList<UsuarioEntity>();
 				List<UsuarioEntity> inquilinos = new ArrayList<UsuarioEntity>();
 				
 				UsuarioEntity propietario = this.toEntityUsuario(domain.getPropietario(), false);
 				pe.setPropietario(propietario);
 
 				if(domain.getUsuariosInteresados() != null) {
-					usuariosInteresado = domain.getUsuariosInteresados().stream()
+					usuariosInteresados = domain.getUsuariosInteresados().stream()
 							.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
 				}
-				pe.setUsuarios_interesados(usuariosInteresado);
+				pe.setUsuarios_interesados(usuariosInteresados);
 				
 				if(domain.getInquilinos() != null) {
 					inquilinos = domain.getInquilinos().stream()

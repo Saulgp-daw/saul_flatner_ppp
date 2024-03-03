@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,14 +93,15 @@ public class PisoEntityService implements IPisoDomainRepository {
 			Optional<PisoEntity> opt = peRepository.findById(id);
 			if (opt.isPresent()) {
 				PisoEntity pisoEntity = opt.get();
-				List<UsuarioEntity> usuariosInteresados = pisoEntity.getUsuarios_interesados();
+				List<WatchlistEntity> watchlists = pisoEntity.getWatchlists();
 				List<UsuarioEntity> inquilinos = pisoEntity.getInquilinos();
 
-				if (usuariosInteresados != null) {
-					for (UsuarioEntity interesado : usuariosInteresados) {
-						interesado.getPisosInteres().remove(pisoEntity);
+				if (watchlists != null) {
+					for (WatchlistEntity watchlist : new ArrayList<>(watchlists)) {
+						UsuarioEntity interesado = watchlist.getUsuario();
+				        interesado.getWatchlists().remove(watchlist);
+				        watchlists.remove(watchlist);
 					}
-					usuariosInteresados.clear();
 				}
 
 				if (inquilinos != null) {

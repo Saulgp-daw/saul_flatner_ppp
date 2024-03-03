@@ -28,10 +28,9 @@ public class UsuarioEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private String email;
 
-	private byte active;
+	private boolean active;
 
 	@Column(name="anho_nacimiento")
 	private int anhoNacimiento;
@@ -62,20 +61,20 @@ public class UsuarioEntity implements Serializable {
 
 	private BigDecimal valoracion;
 
-	private byte verified;
+	private boolean verified;
 
 	//bi-directional many-to-one association to PisoEntity
-	@OneToMany(mappedBy="usuario")
-	private List<PisoEntity> pisos;
+	@OneToMany(mappedBy="propietario")
+	private List<PisoEntity> propiedades;
 
 	//bi-directional many-to-one association to PisoEntity
 	@ManyToOne
 	@JoinColumn(name="id_piso_actual")
-	private PisoEntity piso;
+	private PisoEntity pisoActual;
 
 	//bi-directional many-to-one association to WatchlistEntity
 	@OneToMany(mappedBy="usuario")
-	private List<WatchlistEntity> watchlists;
+	private List<WatchlistEntity> pisosInteres;
 
 	public UsuarioEntity() {
 	}
@@ -88,11 +87,11 @@ public class UsuarioEntity implements Serializable {
 		this.email = email;
 	}
 
-	public byte getActive() {
+	public boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
@@ -192,50 +191,50 @@ public class UsuarioEntity implements Serializable {
 		this.valoracion = valoracion;
 	}
 
-	public byte getVerified() {
+	public boolean getVerified() {
 		return this.verified;
 	}
 
-	public void setVerified(byte verified) {
+	public void setVerified(boolean verified) {
 		this.verified = verified;
 	}
 
-	public List<PisoEntity> getPisos() {
-		return this.pisos;
+	public List<PisoEntity> getPropiedades() {
+		return this.propiedades;
 	}
 
-	public void setPisos(List<PisoEntity> pisos) {
-		this.pisos = pisos;
+	public void setPropiedades(List<PisoEntity> pisos) {
+		this.propiedades = pisos;
 	}
 
 	public PisoEntity addPiso(PisoEntity piso) {
-		getPisos().add(piso);
-		piso.setUsuario(this);
+		getPropiedades().add(piso);
+		piso.setPropietario(this);
 
 		return piso;
 	}
 
 	public PisoEntity removePiso(PisoEntity piso) {
-		getPisos().remove(piso);
-		piso.setUsuario(null);
+		getPropiedades().remove(piso);
+		piso.setPropietario(null);
 
 		return piso;
 	}
 
-	public PisoEntity getPiso() {
-		return this.piso;
+	public PisoEntity getPisoActual() {
+		return this.pisoActual;
 	}
 
-	public void setPiso(PisoEntity piso) {
-		this.piso = piso;
+	public void setPisoActual(PisoEntity piso) {
+		this.pisoActual = piso;
 	}
 
 	public List<WatchlistEntity> getWatchlists() {
-		return this.watchlists;
+		return this.pisosInteres;
 	}
 
 	public void setWatchlists(List<WatchlistEntity> watchlists) {
-		this.watchlists = watchlists;
+		this.pisosInteres = watchlists;
 	}
 
 	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
