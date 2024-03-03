@@ -7,11 +7,10 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -29,9 +28,10 @@ public class UsuarioEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private String email;
 
-	private boolean active;
+	private byte active;
 
 	@Column(name="anho_nacimiento")
 	private int anhoNacimiento;
@@ -51,6 +51,9 @@ public class UsuarioEntity implements Serializable {
 
 	private String nombre;
 
+	@Column(name="num_votos")
+	private int numVotos;
+
 	private String password;
 
 	private String rol;
@@ -59,30 +62,20 @@ public class UsuarioEntity implements Serializable {
 
 	private BigDecimal valoracion;
 
-	//bi-directional many-to-one association to PisoEntity
-	@OneToMany(mappedBy="propietario")
-	private List<PisoEntity> propiedades;
+	private byte verified;
 
-	//bi-directional many-to-many association to PisoEntity
-//	@ManyToMany(mappedBy="usuarios_interesados")
-//	private List<PisoEntity> pisos_interes;
-	
-	@ManyToMany(fetch= FetchType.LAZY)
-	@JoinTable(
-		name="watchlists"
-		,joinColumns={
-			@JoinColumn(name="email_usuario")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="id_piso")
-			}
-		)
-	private List<PisoEntity> pisosInteres;
+	//bi-directional many-to-one association to PisoEntity
+	@OneToMany(mappedBy="usuario")
+	private List<PisoEntity> pisos;
 
 	//bi-directional many-to-one association to PisoEntity
 	@ManyToOne
 	@JoinColumn(name="id_piso_actual")
-	private PisoEntity pisoActual;
+	private PisoEntity piso;
+
+	//bi-directional many-to-one association to WatchlistEntity
+	@OneToMany(mappedBy="usuario")
+	private List<WatchlistEntity> watchlists;
 
 	public UsuarioEntity() {
 	}
@@ -95,11 +88,11 @@ public class UsuarioEntity implements Serializable {
 		this.email = email;
 	}
 
-	public boolean getActive() {
+	public byte getActive() {
 		return this.active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(byte active) {
 		this.active = active;
 	}
 
@@ -159,6 +152,14 @@ public class UsuarioEntity implements Serializable {
 		this.nombre = nombre;
 	}
 
+	public int getNumVotos() {
+		return this.numVotos;
+	}
+
+	public void setNumVotos(int numVotos) {
+		this.numVotos = numVotos;
+	}
+
 	public String getPassword() {
 		return this.password;
 	}
@@ -191,42 +192,64 @@ public class UsuarioEntity implements Serializable {
 		this.valoracion = valoracion;
 	}
 
-	public List<PisoEntity> getPropiedades() {
-		return this.propiedades;
+	public byte getVerified() {
+		return this.verified;
 	}
 
-	public void setPropiedades(List<PisoEntity> propiedades) {
-		this.propiedades = propiedades;
+	public void setVerified(byte verified) {
+		this.verified = verified;
 	}
 
-	public PisoEntity addPropiedade(PisoEntity propiedade) {
-		getPropiedades().add(propiedade);
-		propiedade.setPropietario(this);
-
-		return propiedade;
+	public List<PisoEntity> getPisos() {
+		return this.pisos;
 	}
 
-	public PisoEntity removePropiedade(PisoEntity propiedade) {
-		getPropiedades().remove(propiedade);
-		propiedade.setPropietario(null);
-
-		return propiedade;
+	public void setPisos(List<PisoEntity> pisos) {
+		this.pisos = pisos;
 	}
 
-	public List<PisoEntity> getPisosInteres() {
-		return this.pisosInteres;
+	public PisoEntity addPiso(PisoEntity piso) {
+		getPisos().add(piso);
+		piso.setUsuario(this);
+
+		return piso;
 	}
 
-	public void setPisosInteres(List<PisoEntity> pisos_interes) {
-		this.pisosInteres = pisos_interes;
+	public PisoEntity removePiso(PisoEntity piso) {
+		getPisos().remove(piso);
+		piso.setUsuario(null);
+
+		return piso;
 	}
 
-	public PisoEntity getPisoActual() {
-		return this.pisoActual;
+	public PisoEntity getPiso() {
+		return this.piso;
 	}
 
-	public void setPisoActual(PisoEntity pisoActual) {
-		this.pisoActual = pisoActual;
+	public void setPiso(PisoEntity piso) {
+		this.piso = piso;
+	}
+
+	public List<WatchlistEntity> getWatchlists() {
+		return this.watchlists;
+	}
+
+	public void setWatchlists(List<WatchlistEntity> watchlists) {
+		this.watchlists = watchlists;
+	}
+
+	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
+		getWatchlists().add(watchlist);
+		watchlist.setUsuario(this);
+
+		return watchlist;
+	}
+
+	public WatchlistEntity removeWatchlist(WatchlistEntity watchlist) {
+		getWatchlists().remove(watchlist);
+		watchlist.setUsuario(null);
+
+		return watchlist;
 	}
 
 }

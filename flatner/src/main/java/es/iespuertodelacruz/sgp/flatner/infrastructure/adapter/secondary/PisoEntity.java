@@ -4,15 +4,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -34,7 +31,7 @@ public class PisoEntity implements Serializable {
 	@Column(name="id_piso")
 	private int idPiso;
 
-	private boolean ascensor;
+	private byte ascensor;
 
 	private String descripcion;
 
@@ -45,15 +42,15 @@ public class PisoEntity implements Serializable {
 
 	private String fotos;
 
-	private boolean fumar;
+	private byte fumar;
 
 	@Column(name="gas_incluido")
-	private boolean gasIncluido;
+	private byte gasIncluido;
 
-	private boolean jardin;
+	private byte jardin;
 
 	@Column(name="luz_incluida")
-	private boolean luzIncluida;
+	private byte luzIncluida;
 
 	@Column(name="m_cuadrados")
 	private int mCuadrados;
@@ -61,20 +58,23 @@ public class PisoEntity implements Serializable {
 	@Column(name="maps_link")
 	private String mapsLink;
 
-	private boolean mascotas;
+	private byte mascotas;
 
 	@Column(name="num_habitaciones")
 	private int numHabitaciones;
 
-	private boolean parejas;
+	@Column(name="num_votos")
+	private int numVotos;
+
+	private byte parejas;
 
 	@Column(name="precio_mes")
 	private BigDecimal precioMes;
 
 	@Column(name="propietario_reside")
-	private boolean propietarioReside;
+	private byte propietarioReside;
 
-	private boolean terraza;
+	private byte terraza;
 
 	private String titulo;
 
@@ -82,24 +82,22 @@ public class PisoEntity implements Serializable {
 
 	private BigDecimal valoracion;
 
-	private boolean wifi;
+	private byte verified;
+
+	private byte wifi;
 
 	//bi-directional many-to-one association to UsuarioEntity
 	@ManyToOne
 	@JoinColumn(name="email_propietario")
-	private UsuarioEntity propietario;
-
-	//bi-directional many-to-many association to UsuarioEntity
-//	@ManyToMany
-//	@JoinColumn(name="id_piso")
-//	private List<UsuarioEntity> usuarios_interesados;
-	@JsonIgnore
-	@ManyToMany(mappedBy = "pisosInteres")
-	private List<UsuarioEntity> usuariosInteresados;
+	private UsuarioEntity usuario;
 
 	//bi-directional many-to-one association to UsuarioEntity
-	@OneToMany(mappedBy="pisoActual")
-	private List<UsuarioEntity> inquilinos;
+	@OneToMany(mappedBy="piso")
+	private List<UsuarioEntity> usuarios;
+
+	//bi-directional many-to-one association to WatchlistEntity
+	@OneToMany(mappedBy="piso")
+	private List<WatchlistEntity> watchlists;
 
 	public PisoEntity() {
 	}
@@ -112,11 +110,11 @@ public class PisoEntity implements Serializable {
 		this.idPiso = idPiso;
 	}
 
-	public boolean getAscensor() {
+	public byte getAscensor() {
 		return this.ascensor;
 	}
 
-	public void setAscensor(boolean ascensor) {
+	public void setAscensor(byte ascensor) {
 		this.ascensor = ascensor;
 	}
 
@@ -152,35 +150,35 @@ public class PisoEntity implements Serializable {
 		this.fotos = fotos;
 	}
 
-	public boolean getFumar() {
+	public byte getFumar() {
 		return this.fumar;
 	}
 
-	public void setFumar(boolean fumar) {
+	public void setFumar(byte fumar) {
 		this.fumar = fumar;
 	}
 
-	public boolean getGasIncluido() {
+	public byte getGasIncluido() {
 		return this.gasIncluido;
 	}
 
-	public void setGasIncluido(boolean gasIncluido) {
+	public void setGasIncluido(byte gasIncluido) {
 		this.gasIncluido = gasIncluido;
 	}
 
-	public boolean getJardin() {
+	public byte getJardin() {
 		return this.jardin;
 	}
 
-	public void setJardin(boolean jardin) {
+	public void setJardin(byte jardin) {
 		this.jardin = jardin;
 	}
 
-	public boolean getLuzIncluida() {
+	public byte getLuzIncluida() {
 		return this.luzIncluida;
 	}
 
-	public void setLuzIncluida(boolean luzIncluida) {
+	public void setLuzIncluida(byte luzIncluida) {
 		this.luzIncluida = luzIncluida;
 	}
 
@@ -200,11 +198,11 @@ public class PisoEntity implements Serializable {
 		this.mapsLink = mapsLink;
 	}
 
-	public boolean getMascotas() {
+	public byte getMascotas() {
 		return this.mascotas;
 	}
 
-	public void setMascotas(boolean mascotas) {
+	public void setMascotas(byte mascotas) {
 		this.mascotas = mascotas;
 	}
 
@@ -216,11 +214,19 @@ public class PisoEntity implements Serializable {
 		this.numHabitaciones = numHabitaciones;
 	}
 
-	public boolean getParejas() {
+	public int getNumVotos() {
+		return this.numVotos;
+	}
+
+	public void setNumVotos(int numVotos) {
+		this.numVotos = numVotos;
+	}
+
+	public byte getParejas() {
 		return this.parejas;
 	}
 
-	public void setParejas(boolean parejas) {
+	public void setParejas(byte parejas) {
 		this.parejas = parejas;
 	}
 
@@ -232,19 +238,19 @@ public class PisoEntity implements Serializable {
 		this.precioMes = precioMes;
 	}
 
-	public boolean getPropietarioReside() {
+	public byte getPropietarioReside() {
 		return this.propietarioReside;
 	}
 
-	public void setPropietarioReside(boolean propietarioReside) {
+	public void setPropietarioReside(byte propietarioReside) {
 		this.propietarioReside = propietarioReside;
 	}
 
-	public boolean getTerraza() {
+	public byte getTerraza() {
 		return this.terraza;
 	}
 
-	public void setTerraza(boolean terraza) {
+	public void setTerraza(byte terraza) {
 		this.terraza = terraza;
 	}
 
@@ -272,50 +278,72 @@ public class PisoEntity implements Serializable {
 		this.valoracion = valoracion;
 	}
 
-	public boolean getWifi() {
+	public byte getVerified() {
+		return this.verified;
+	}
+
+	public void setVerified(byte verified) {
+		this.verified = verified;
+	}
+
+	public byte getWifi() {
 		return this.wifi;
 	}
 
-	public void setWifi(boolean wifi) {
+	public void setWifi(byte wifi) {
 		this.wifi = wifi;
 	}
 
-	public UsuarioEntity getPropietario() {
-		return this.propietario;
+	public UsuarioEntity getUsuario() {
+		return this.usuario;
 	}
 
-	public void setPropietario(UsuarioEntity propietario) {
-		this.propietario = propietario;
+	public void setUsuario(UsuarioEntity usuario) {
+		this.usuario = usuario;
 	}
 
-	public List<UsuarioEntity> getUsuarios_interesados() {
-		return this.usuariosInteresados;
+	public List<UsuarioEntity> getUsuarios() {
+		return this.usuarios;
 	}
 
-	public void setUsuarios_interesados(List<UsuarioEntity> usuarios_interesados) {
-		this.usuariosInteresados = usuarios_interesados;
+	public void setUsuarios(List<UsuarioEntity> usuarios) {
+		this.usuarios = usuarios;
 	}
 
-	public List<UsuarioEntity> getInquilinos() {
-		return this.inquilinos;
+	public UsuarioEntity addUsuario(UsuarioEntity usuario) {
+		getUsuarios().add(usuario);
+		usuario.setPiso(this);
+
+		return usuario;
 	}
 
-	public void setInquilinos(List<UsuarioEntity> inquilinos) {
-		this.inquilinos = inquilinos;
+	public UsuarioEntity removeUsuario(UsuarioEntity usuario) {
+		getUsuarios().remove(usuario);
+		usuario.setPiso(null);
+
+		return usuario;
 	}
 
-	public UsuarioEntity addInquilino(UsuarioEntity inquilino) {
-		getInquilinos().add(inquilino);
-		inquilino.setPisoActual(this);
-
-		return inquilino;
+	public List<WatchlistEntity> getWatchlists() {
+		return this.watchlists;
 	}
 
-	public UsuarioEntity removeInquilino(UsuarioEntity inquilino) {
-		getInquilinos().remove(inquilino);
-		inquilino.setPisoActual(null);
+	public void setWatchlists(List<WatchlistEntity> watchlists) {
+		this.watchlists = watchlists;
+	}
 
-		return inquilino;
+	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
+		getWatchlists().add(watchlist);
+		watchlist.setPiso(this);
+
+		return watchlist;
+	}
+
+	public WatchlistEntity removeWatchlist(WatchlistEntity watchlist) {
+		getWatchlists().remove(watchlist);
+		watchlist.setPiso(null);
+
+		return watchlist;
 	}
 
 }

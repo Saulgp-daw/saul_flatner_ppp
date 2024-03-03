@@ -47,7 +47,7 @@ public class AuthService {
 		}
 		String generateToken = null;
 		if (userlogin != null) {
-			generateToken = jwtService.generateToken(userentity.getEmail(), userentity.getRol());
+			generateToken = jwtService.generateToken(userentity.getEmail(), userentity.getPassword());
 		}
 		return generateToken;
 	}
