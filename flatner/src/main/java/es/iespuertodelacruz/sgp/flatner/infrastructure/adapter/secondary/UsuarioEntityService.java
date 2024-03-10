@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
+import es.iespuertodelacruz.sgp.flatner.domain.model.Watchlist;
 import es.iespuertodelacruz.sgp.flatner.domain.port.secondary.IUsuarioDomainRepository;
 import jakarta.transaction.Transactional;
 
@@ -71,8 +71,8 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 					.map(piso -> mapper.toEntityPiso(piso, false))
 					.collect(Collectors.toList());
 			
-			List<PisoEntity> pisosInteres = domain.getPisosInteres().stream()
-					.map(piso -> mapper.toEntityPiso(piso, false))
+			List<WatchlistEntity> pisosInteres = domain.getPisosInteres().stream()
+					.map(watchlist -> mapper.toEntityWatchlist(watchlist))
 					.collect(Collectors.toList());
 			
 			ue.setNombre(domain.getNombre());
@@ -111,11 +111,11 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 		if(opt.isPresent()) {
 			UsuarioEntity usuarioEntity = opt.get();
 			List<PisoEntity> propiedades = usuarioEntity.getPropiedades();
-			List<PisoEntity> pisosInteres = usuarioEntity.getPisosInteres();
+			List<WatchlistEntity> pisosInteres = usuarioEntity.getPisosInteres();
 			
 			//Aunque tenga many to many y no tenga borrado en cascada borra la tabla intermedia
-			for(PisoEntity piso : pisosInteres) {
-				System.out.println("----------------------------"+piso.getIdPiso());
+			for(WatchlistEntity piso : pisosInteres) {
+				System.out.println("----------------------------"+piso.getPiso().getIdPiso());
 			}
 			
 			if(propiedades != null) {

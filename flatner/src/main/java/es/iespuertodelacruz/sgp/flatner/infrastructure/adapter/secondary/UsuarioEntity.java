@@ -76,6 +76,18 @@ public class UsuarioEntity implements Serializable {
 	@OneToMany(mappedBy="usuario")
 	private List<WatchlistEntity> pisosInteres;
 
+	//bi-directional many-to-one association to PisoReporteEntity
+	@OneToMany(mappedBy="denunciante")
+	private List<PisoReporteEntity> pisoReportes;
+
+	//bi-directional many-to-one association to UsuarioReporteEntity
+	@OneToMany(mappedBy="denunciante")
+	private List<UsuarioReporteEntity> denunciante;
+
+	//bi-directional many-to-one association to UsuarioReporteEntity
+	@OneToMany(mappedBy="reportado")
+	private List<UsuarioReporteEntity> reportado;
+
 	public UsuarioEntity() {
 	}
 
@@ -203,22 +215,22 @@ public class UsuarioEntity implements Serializable {
 		return this.propiedades;
 	}
 
-	public void setPropiedades(List<PisoEntity> pisos) {
-		this.propiedades = pisos;
+	public void setPropiedades(List<PisoEntity> propiedades) {
+		this.propiedades = propiedades;
 	}
 
-	public PisoEntity addPiso(PisoEntity piso) {
-		getPropiedades().add(piso);
-		piso.setPropietario(this);
+	public PisoEntity addPropiedade(PisoEntity propiedade) {
+		getPropiedades().add(propiedade);
+		propiedade.setPropietario(this);
 
-		return piso;
+		return propiedade;
 	}
 
-	public PisoEntity removePiso(PisoEntity piso) {
-		getPropiedades().remove(piso);
-		piso.setPropietario(null);
+	public PisoEntity removePropiedade(PisoEntity propiedade) {
+		getPropiedades().remove(propiedade);
+		propiedade.setPropietario(null);
 
-		return piso;
+		return propiedade;
 	}
 
 	public PisoEntity getPisoActual() {
@@ -229,26 +241,92 @@ public class UsuarioEntity implements Serializable {
 		this.pisoActual = piso;
 	}
 
-	public List<WatchlistEntity> getWatchlists() {
+	public List<WatchlistEntity> getPisosInteres() {
 		return this.pisosInteres;
 	}
 
-	public void setWatchlists(List<WatchlistEntity> watchlists) {
-		this.pisosInteres = watchlists;
+	public void setPisosInteres(List<WatchlistEntity> pisosInteres) {
+		this.pisosInteres = pisosInteres;
 	}
 
-	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
-		getWatchlists().add(watchlist);
-		watchlist.setUsuario(this);
+	public WatchlistEntity addPisosIntere(WatchlistEntity pisosIntere) {
+		getPisosInteres().add(pisosIntere);
+		pisosIntere.setUsuario(this);
 
-		return watchlist;
+		return pisosIntere;
 	}
 
-	public WatchlistEntity removeWatchlist(WatchlistEntity watchlist) {
-		getWatchlists().remove(watchlist);
-		watchlist.setUsuario(null);
+	public WatchlistEntity removePisosIntere(WatchlistEntity pisosIntere) {
+		getPisosInteres().remove(pisosIntere);
+		pisosIntere.setUsuario(null);
 
-		return watchlist;
+		return pisosIntere;
+	}
+
+	public List<PisoReporteEntity> getPisoReportes() {
+		return this.pisoReportes;
+	}
+
+	public void setPisoReportes(List<PisoReporteEntity> pisoReportes) {
+		this.pisoReportes = pisoReportes;
+	}
+
+	public PisoReporteEntity addPisoReporte(PisoReporteEntity pisoReporte) {
+		getPisoReportes().add(pisoReporte);
+		pisoReporte.setDenunciante(this);
+
+		return pisoReporte;
+	}
+
+	public PisoReporteEntity removePisoReporte(PisoReporteEntity pisoReporte) {
+		getPisoReportes().remove(pisoReporte);
+		pisoReporte.setDenunciante(null);
+
+		return pisoReporte;
+	}
+
+	public List<UsuarioReporteEntity> getDenunciante() {
+		return this.denunciante;
+	}
+
+	public void setDenunciante(List<UsuarioReporteEntity> denunciante) {
+		this.denunciante = denunciante;
+	}
+
+	public UsuarioReporteEntity addDenunciante(UsuarioReporteEntity denunciante) {
+		getDenunciante().add(denunciante);
+		denunciante.setDenunciante(this);
+
+		return denunciante;
+	}
+
+	public UsuarioReporteEntity removeDenunciante(UsuarioReporteEntity denunciante) {
+		getDenunciante().remove(denunciante);
+		denunciante.setDenunciante(null);
+
+		return denunciante;
+	}
+
+	public List<UsuarioReporteEntity> getReportado() {
+		return this.reportado;
+	}
+
+	public void setReportado(List<UsuarioReporteEntity> reportado) {
+		this.reportado = reportado;
+	}
+
+	public UsuarioReporteEntity addReportado(UsuarioReporteEntity reportado) {
+		getReportado().add(reportado);
+		reportado.setReportado(this);
+
+		return reportado;
+	}
+
+	public UsuarioReporteEntity removeReportado(UsuarioReporteEntity reportado) {
+		getReportado().remove(reportado);
+		reportado.setReportado(null);
+
+		return reportado;
 	}
 
 }

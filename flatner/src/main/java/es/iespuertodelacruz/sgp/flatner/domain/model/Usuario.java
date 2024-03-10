@@ -21,7 +21,7 @@ public class Usuario {
 	private BigDecimal valoracion;
 	private int numVotos;
 	private List<Piso> propiedades;
-	private List<Piso> pisosInteres;
+	private List<Watchlist> pisosInteres;
 	private Piso pisoActual;
 	
 	public Usuario() {
@@ -50,7 +50,7 @@ public class Usuario {
 	
 	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
 			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
-			int anhoNacimiento, BigDecimal valoracion, int numVotos, List<Piso> propiedades, List<Piso> pisosInteres,
+			int anhoNacimiento, BigDecimal valoracion, int numVotos, List<Piso> propiedades, List<Watchlist> pisosInteres,
 			Piso pisoActual) {
 		super();
 		this.email = email;
@@ -194,11 +194,11 @@ public class Usuario {
 		this.propiedades = propiedades;
 	}
 
-	public List<Piso> getPisosInteres() {
+	public List<Watchlist> getPisosInteres() {
 		return pisosInteres;
 	}
 
-	public void setPisosInteres(List<Piso> pisosInteres) {
+	public void setPisosInteres(List<Watchlist> pisosInteres) {
 		this.pisosInteres = pisosInteres;
 	}
 
@@ -210,16 +210,18 @@ public class Usuario {
 		this.pisoActual = pisoActual;
 	}
 
+	
 	public void eliminarPisoPorId(int idPiso) {
-	    Iterator<Piso> iterador = pisosInteres.iterator();
+	    Iterator<Watchlist> iterador = pisosInteres.iterator();
 	    while (iterador.hasNext()) {
-	        Piso piso = iterador.next();
-	        if (piso.getIdPiso() == idPiso) {
+	        Watchlist piso = iterador.next();
+	        if (piso.getPiso().getIdPiso() == idPiso) {
 	            iterador.remove();
 	            break;
 	        }
 	    }
 	}
+	
 	
 	
 }

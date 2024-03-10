@@ -30,6 +30,7 @@ CREATE TABLE pisos (
     propietario_reside tinyint(1) DEFAULT 0,
     wifi tinyint(1) DEFAULT 0,
     verified tinyint(1) DEFAULT 0,
+    reportes int DEFAULT 0,
     CONSTRAINT pk_pisos PRIMARY KEY(id_piso)
 );
 
@@ -50,6 +51,7 @@ CREATE TABLE usuarios (
     id_piso_actual int DEFAULT NULL,
     fecha_ultima_estancia bigint DEFAULT NULL,
     fecha_ultimo_alquiler bigint DEFAULT NULL,
+    reportes int DEFAULT 0,
     CONSTRAINT pk_usuarios PRIMARY KEY(email)
 );
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
+import es.iespuertodelacruz.sgp.flatner.domain.model.Watchlist;
 
 @Component
 public class EntityMapper {
@@ -84,9 +85,8 @@ public class EntityMapper {
 			
 			Usuario propietario = this.toDomainSimpleUsuario(entity.getPropietario());
 			
-			List<Usuario> usuariosInteresados = entity.getUsuariosInteresados().stream()
-					.map(WatchlistEntity::getUsuario)
-					.map(this::toDomainSimpleUsuario)
+			List<Watchlist> usuariosInteresados = entity.getUsuariosInteresados().stream()
+					.map(this::toDomainWatchlist)
 					.collect(Collectors.toList());
 			
 			List<Usuario> inquilinos = entity.getInquilinos().stream()
@@ -125,6 +125,20 @@ public class EntityMapper {
 		return piso;
 	}
 	
+	public Watchlist toDomainWatchlist(WatchlistEntity entity) {
+		Watchlist watchlist = null;
+		if(entity != null) {
+			watchlist = new Watchlist();
+			watchlist.setId(entity.getIdWatchlist());
+			watchlist.setPiso(toDomainSimplePiso(entity.getPiso()));
+			watchlist.setUsuario(toDomainSimpleUsuario(entity.getUsuario()));
+			watchlist.setAnotaciones(entity.getAnotaciones());
+		}
+		
+		return watchlist;
+		
+	}
+	
 	public Usuario toDomainUsuario(UsuarioEntity entity) {
 		Usuario usuario = null;
 		if(entity != null) {
@@ -135,9 +149,8 @@ public class EntityMapper {
 					.map(this::toDomainSimplePiso)
 					.collect(Collectors.toList());
 			
-			List<Piso> pisosInteres = entity.getWatchlists().stream()
-					.map(WatchlistEntity::getPiso)
-					.map(this::toDomainSimplePiso) 
+			List<Watchlist> pisosInteres = entity.getPisosInteres().stream()
+					.map(this::toDomainWatchlist) 
 					.collect(Collectors.toList());
 			
 			Piso pisoActual = this.toDomainSimplePiso(entity.getPisoActual());
@@ -192,8 +205,8 @@ public class EntityMapper {
 						.collect(Collectors.toList());
 				ue.setPropiedades(propiedades);
 				
-				List<PisoEntity> pisosInteres = domain.getPisosInteres().stream()
-						.map(piso -> this.toEntityPiso(piso, false))
+				List<WatchlistEntity> pisosInteres = domain.getPisosInteres().stream()
+						.map(this::toEntityWatchlist)
 						.collect(Collectors.toList());
 				
 				ue.setPisosInteres(pisosInteres);
@@ -201,6 +214,17 @@ public class EntityMapper {
 		
 		}
 		return ue;
+	}
+	
+	protected WatchlistEntity toEntityWatchlist(Watchlist domain) {
+		WatchlistEntity wle = null;
+		if(domain != null) {
+			wle.setIdWatchlist(domain.getId());
+			wle.setPiso(toEntityPiso(domain.getPiso(), false));
+			wle.setUsuario(toEntityUsuario(domain.getUsuario(), false));
+			wle.setAnotaciones(domain.getAnotaciones());
+		}
+		return wle;
 	}
 	
 	protected PisoEntity toEntityPiso(Piso domain, boolean recursion) {
@@ -232,17 +256,20 @@ public class EntityMapper {
 			pe.setWifi(domain.isWifi());
 
 			if (recursion) {
-				List<UsuarioEntity> usuariosInteresados = new ArrayList<UsuarioEntity>();
 				List<UsuarioEntity> inquilinos = new ArrayList<UsuarioEntity>();
+				List<WatchlistEntity> usuariosInteresados = new ArrayList<WatchlistEntity>();
 				
 				UsuarioEntity propietario = this.toEntityUsuario(domain.getPropietario(), false);
 				pe.setPropietario(propietario);
 
 				if(domain.getUsuariosInteresados() != null) {
+					
 					usuariosInteresados = domain.getUsuariosInteresados().stream()
-							.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
+							.map(this::toEntityWatchlist)
+							.collect(Collectors.toList());
+
 				}
-				pe.setUsuarios_interesados(usuariosInteresados);
+				pe.setUsuariosInteresados(usuariosInteresados);
 				
 				if(domain.getInquilinos() != null) {
 					inquilinos = domain.getInquilinos().stream()

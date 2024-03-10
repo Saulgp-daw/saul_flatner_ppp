@@ -68,6 +68,10 @@ public class LoginRESTController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> authenticate(@RequestBody LoginDTO request) {
+		Usuario login = usuarioService.findById(request.getEmail());
+		if(!login.isActive()) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Verifícate mediante el correo antes de entrar");
+		}
 		String token = service.authenticate(request);
 		if (token == null)
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");

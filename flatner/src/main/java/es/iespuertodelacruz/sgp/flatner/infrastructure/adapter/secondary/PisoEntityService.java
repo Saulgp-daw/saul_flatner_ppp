@@ -93,13 +93,13 @@ public class PisoEntityService implements IPisoDomainRepository {
 			Optional<PisoEntity> opt = peRepository.findById(id);
 			if (opt.isPresent()) {
 				PisoEntity pisoEntity = opt.get();
-				List<WatchlistEntity> watchlists = pisoEntity.getWatchlists();
+				List<WatchlistEntity> watchlists = pisoEntity.getUsuariosInteresados();
 				List<UsuarioEntity> inquilinos = pisoEntity.getInquilinos();
 
 				if (watchlists != null) {
 					for (WatchlistEntity watchlist : new ArrayList<>(watchlists)) {
 						UsuarioEntity interesado = watchlist.getUsuario();
-				        interesado.getWatchlists().remove(watchlist);
+						interesado.getPisosInteres().remove(watchlist);
 				        watchlists.remove(watchlist);
 					}
 				}

@@ -162,20 +162,20 @@ public class UsuarioRESTController {
 	@PostMapping("/{email}/watchlist/{id}")
 	public ResponseEntity<?> agregarWatchlist(@PathVariable String email, @PathVariable Integer id) {
 		Usuario inquilino = usuarioDomainService.findById(email);
+	    Piso piso = pisoDomainService.findById(id);
+	    
+	    if (inquilino == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+	    }
 
-		if (inquilino != null) {
-			Piso encontrado = pisoDomainService.findById(id);
-			if (encontrado != null) {
-				inquilino.getPisosInteres().add(encontrado);
-				Usuario update = usuarioDomainService.update(inquilino);
-				if (update != null) {
-					return ResponseEntity.ok().body(inquilino);
-				}
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el usuario");
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+	    if (piso == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
+	    }
+	    
+		return null;
+	    
+
+		
 	}
 	
 	@DeleteMapping("/{email}/watchlist/{id}")
@@ -187,12 +187,11 @@ public class UsuarioRESTController {
 				inquilino.eliminarPisoPorId(piso.getIdPiso());
 				Usuario update = usuarioDomainService.update(inquilino);
 				if (update != null) {
-					return ResponseEntity.ok().body(inquilino);
+					return ResponseEntity.ok().body(update);
 				}
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el usuario");
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
-
 	}
 
 	@PostMapping("/{email}/pisos")
@@ -201,11 +200,13 @@ public class UsuarioRESTController {
 
 		if (propietarioFind != null) {
 			Piso piso = new Piso(0, pisoDTO.isAscensor(), pisoDTO.getDescripcion(), pisoDTO.getElectrodomesticos(),
-					pisoDTO.getEstanciaMinimaDias(), stringAList(pisoDTO.getFotos()), pisoDTO.isFumar(),
-					pisoDTO.isGasIncluido(), pisoDTO.isJardin(), pisoDTO.isLuzIncluida(), pisoDTO.getmCuadrados(),
-					pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(),
-					pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(),
-					pisoDTO.getUbicacion(), pisoDTO.getValoracion(), pisoDTO.isWifi(), propietarioFind);
+                    pisoDTO.getEstanciaMinimaDias(), stringAList(pisoDTO.getFotos()), pisoDTO.isFumar(),
+                    pisoDTO.isGasIncluido(), pisoDTO.isJardin(), pisoDTO.isLuzIncluida(), pisoDTO.getmCuadrados(),
+                    pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(),
+                    pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(),
+                    pisoDTO.getUbicacion(), pisoDTO.getValoracion(), 1,
+                    pisoDTO.isWifi(), propietarioFind);
+
 			
 			String codedPhoto = pisoDTO.getFotoBase64();
 			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);

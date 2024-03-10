@@ -99,6 +99,10 @@ public class PisoEntity implements Serializable {
 	@OneToMany(mappedBy="piso")
 	private List<WatchlistEntity> usuariosInteresados;
 
+	//bi-directional many-to-one association to PisoReporteEntity
+	@OneToMany(mappedBy="piso_reportado")
+	private List<PisoReporteEntity> pisoReportes;
+
 	public PisoEntity() {
 	}
 
@@ -298,52 +302,74 @@ public class PisoEntity implements Serializable {
 		return this.propietario;
 	}
 
-	public void setPropietario(UsuarioEntity usuario) {
-		this.propietario = usuario;
+	public void setPropietario(UsuarioEntity propietario) {
+		this.propietario = propietario;
 	}
 
 	public List<UsuarioEntity> getInquilinos() {
 		return this.inquilinos;
 	}
 
-	public void setInquilinos(List<UsuarioEntity> usuarios) {
-		this.inquilinos = usuarios;
+	public void setInquilinos(List<UsuarioEntity> inquilinos) {
+		this.inquilinos = inquilinos;
 	}
 
-	public UsuarioEntity addUsuario(UsuarioEntity usuario) {
-		getInquilinos().add(usuario);
-		usuario.setPisoActual(this);
+	public UsuarioEntity addInquilino(UsuarioEntity inquilino) {
+		getInquilinos().add(inquilino);
+		inquilino.setPisoActual(this);
 
-		return usuario;
+		return inquilino;
 	}
 
-	public UsuarioEntity removeUsuario(UsuarioEntity usuario) {
-		getInquilinos().remove(usuario);
-		usuario.setPisoActual(null);
+	public UsuarioEntity removeInquilino(UsuarioEntity inquilino) {
+		getInquilinos().remove(inquilino);
+		inquilino.setPisoActual(null);
 
-		return usuario;
+		return inquilino;
 	}
 
 	public List<WatchlistEntity> getUsuariosInteresados() {
 		return this.usuariosInteresados;
 	}
 
-	public void setUsuariosInteresados(List<WatchlistEntity> watchlists) {
-		this.usuariosInteresados = watchlists;
+	public void setUsuariosInteresados(List<WatchlistEntity> usuariosInteresados) {
+		this.usuariosInteresados = usuariosInteresados;
 	}
 
-	public WatchlistEntity addWatchlist(WatchlistEntity watchlist) {
-		getUsuariosInteresados().add(watchlist);
-		watchlist.setPiso(this);
+	public WatchlistEntity addUsuariosInteresado(WatchlistEntity usuariosInteresado) {
+		getUsuariosInteresados().add(usuariosInteresado);
+		usuariosInteresado.setPiso(this);
 
-		return watchlist;
+		return usuariosInteresado;
 	}
 
-	public WatchlistEntity removeWatchlist(WatchlistEntity watchlist) {
-		getUsuariosInteresados().remove(watchlist);
-		watchlist.setPiso(null);
+	public WatchlistEntity removeUsuariosInteresado(WatchlistEntity usuariosInteresado) {
+		getUsuariosInteresados().remove(usuariosInteresado);
+		usuariosInteresado.setPiso(null);
 
-		return watchlist;
+		return usuariosInteresado;
+	}
+
+	public List<PisoReporteEntity> getPisoReportes() {
+		return this.pisoReportes;
+	}
+
+	public void setPisoReportes(List<PisoReporteEntity> pisoReportes) {
+		this.pisoReportes = pisoReportes;
+	}
+
+	public PisoReporteEntity addPisoReporte(PisoReporteEntity pisoReporte) {
+		getPisoReportes().add(pisoReporte);
+		pisoReporte.setPiso_reportado(this);
+
+		return pisoReporte;
+	}
+
+	public PisoReporteEntity removePisoReporte(PisoReporteEntity pisoReporte) {
+		getPisoReportes().remove(pisoReporte);
+		pisoReporte.setPiso_reportado(null);
+
+		return pisoReporte;
 	}
 
 }

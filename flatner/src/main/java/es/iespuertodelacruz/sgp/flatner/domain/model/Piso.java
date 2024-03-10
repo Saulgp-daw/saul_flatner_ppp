@@ -28,7 +28,7 @@ public class Piso {
 	private int num_votos;
 	private boolean wifi;
 	private Usuario propietario;
-	private List<Usuario> usuariosInteresados;
+	private List<Watchlist> usuariosInteresados;
 	private List<Usuario> inquilinos;
 	
 	public Piso() {
@@ -106,7 +106,7 @@ public class Piso {
 			List<String> fotos, boolean fumar, boolean gasIncluido, boolean jardin, boolean luzIncluida, int mCuadrados,
 			boolean mascotas, int numHabitaciones, String mapsLink, boolean parejas, BigDecimal precioMes,
 			boolean propietarioReside, boolean terraza, String titulo, String ubicacion, BigDecimal valoracion,int num_votos,
-			boolean wifi, Usuario propietario, List<Usuario> usuariosInteresados, List<Usuario> inquilinos) {
+			boolean wifi, Usuario propietario, List<Watchlist> usuariosInteresados, List<Usuario> inquilinos) {
 		super();
 		this.idPiso = idPiso;
 		this.ascensor = ascensor;
@@ -328,11 +328,11 @@ public class Piso {
 		this.propietario = propietario;
 	}
 
-	public List<Usuario> getUsuariosInteresados() {
+	public List<Watchlist> getUsuariosInteresados() {
 		return usuariosInteresados;
 	}
 
-	public void setUsuariosInteresados(List<Usuario> usuariosInteresados) {
+	public void setUsuariosInteresados(List<Watchlist> usuariosInteresados) {
 		this.usuariosInteresados = usuariosInteresados;
 	}
 
