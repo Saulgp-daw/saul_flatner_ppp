@@ -21,6 +21,9 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 	@Autowired
 	IPisoEntityRepository peRepository;
 	
+	@Autowired
+	IWatchlistEntityRepository weRepository;
+	
 	EntityMapper mapper = new EntityMapper();
 
 	@Override
@@ -114,8 +117,9 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 			List<WatchlistEntity> pisosInteres = usuarioEntity.getPisosInteres();
 			
 			//Aunque tenga many to many y no tenga borrado en cascada borra la tabla intermedia
-			for(WatchlistEntity piso : pisosInteres) {
-				System.out.println("----------------------------"+piso.getPiso().getIdPiso());
+			for(WatchlistEntity we : pisosInteres) {
+				weRepository.deleteById(we.getIdWatchlist());
+				
 			}
 			
 			if(propiedades != null) {
