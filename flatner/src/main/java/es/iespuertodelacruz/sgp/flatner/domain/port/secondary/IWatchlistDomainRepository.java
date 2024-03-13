@@ -11,5 +11,6 @@ public interface IWatchlistDomainRepository {
 		Watchlist update(Watchlist domain);
 		boolean delete(Integer id);
 		boolean existsByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId);
+		boolean deleteByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId);
 
 }

@@ -81,8 +81,23 @@ public class WatchlistEntityService implements IWatchlistDomainRepository{
 
 	@Override
 	public boolean existsByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean existente = weRepository.existsByUsuarioEmailAndPisoIdPiso(emailUsuario, pisoId);
+		return existente;
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteByUsuarioEmailAndPisoId(String email, Integer pisoId) {
+		if (!weRepository.existsByUsuarioEmailAndPisoIdPiso(email, pisoId)) {
+	        return false; 
+	    }
+		try {
+			weRepository.deleteByUsuarioEmailAndPisoId(email, pisoId);
+	        return true;
+	    } catch (Exception e) {
+	        System.out.println(e.getMessage());
+	        return false;
+	    }
 	}
 
 }

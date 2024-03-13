@@ -50,4 +50,10 @@ public class WatchlistDomainService implements IWatchlistDomainService{
 		return watchlistRepository.existsByUsuarioEmailAndPisoId(emailUsuario, pisoId);
 	}
 
+	@Override
+	public boolean deleteByUsuarioEmailAndPisoId(String email, Integer pisoId) {
+		return watchlistRepository.deleteByUsuarioEmailAndPisoId(email, pisoId);
+		
+	}
+
 }

@@ -126,6 +126,7 @@ public class EntityMapper {
 	}
 	
 	public Watchlist toDomainWatchlist(WatchlistEntity entity) {
+		
 		Watchlist watchlist = null;
 		if(entity != null) {
 			watchlist = new Watchlist();
@@ -219,6 +220,7 @@ public class EntityMapper {
 	protected WatchlistEntity toEntityWatchlist(Watchlist domain) {
 		WatchlistEntity wle = null;
 		if(domain != null) {
+			wle = new WatchlistEntity();
 			wle.setIdWatchlist(domain.getId());
 			wle.setPiso(toEntityPiso(domain.getPiso(), false));
 			wle.setUsuario(toEntityUsuario(domain.getUsuario(), false));
@@ -276,9 +278,6 @@ public class EntityMapper {
 							.map(usuario ->  this.toEntityUsuario(usuario, false)).collect(Collectors.toList());
 				}
 				pe.setInquilinos(inquilinos);
-
-				
-
 			}
 
 		}

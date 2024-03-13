@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
+import es.iespuertodelacruz.sgp.flatner.domain.model.Watchlist;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IPisoDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IUsuarioDomainService;
+import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IWatchlistDomainService;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.PisoDTO;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.UsuarioDTO;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.FileStorageService;
@@ -41,7 +43,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v2/usuarios")
+@RequestMapping("/api/v1/usuarios")
 public class UsuarioRESTController {
 
 	@Autowired
@@ -51,24 +53,27 @@ public class UsuarioRESTController {
 	IPisoDomainService pisoDomainService;
 
 	@Autowired
+	IWatchlistDomainService watchlistDomainService;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@Autowired
 	private FileStorageService storageService;
 
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
 	}
-	
+
 	@GetMapping("/profile")
-	public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader){
-		//System.out.println("----------------------------------"+authorizationHeader);
+	public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader) {
+		// System.out.println("----------------------------------"+authorizationHeader);
 		String token = authorizationHeader.substring(7);
 		String email = jwtService.extractUsername(token);
-		//System.out.println("----------------------------------"+email);
+		// System.out.println("----------------------------------"+email);
 		Usuario usuario = usuarioDomainService.findById(email);
 		return ResponseEntity.ok(usuario);
 	}
@@ -158,40 +163,45 @@ public class UsuarioRESTController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
 	}
-	
+
 	@PostMapping("/{email}/watchlist/{id}")
 	public ResponseEntity<?> agregarWatchlist(@PathVariable String email, @PathVariable Integer id) {
-		Usuario inquilino = usuarioDomainService.findById(email);
-	    Piso piso = pisoDomainService.findById(id);
-	    
-	    if (inquilino == null) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
-	    }
+		Usuario interesado = usuarioDomainService.findById(email);
+		Piso piso = pisoDomainService.findById(id);
 
-	    if (piso == null) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
-	    }
-	    
-		return null;
-	    
+		if (interesado == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+		}
 
-		
+		if (piso == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
+		}
+
+		boolean existsByUsuarioEmailAndPisoId = watchlistDomainService.existsByUsuarioEmailAndPisoId(email, id);
+		if (existsByUsuarioEmailAndPisoId) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puedes poner la misma casa dos veces");
+		}
+
+		Watchlist save = watchlistDomainService.save(new Watchlist(0, piso, interesado, ""));
+		return ResponseEntity.ok().body(save);
+
 	}
-	
+
 	@DeleteMapping("/{email}/watchlist/{id}")
 	public ResponseEntity<?> borrarWatchlist(@PathVariable String email, @PathVariable Integer id) {
 		Usuario inquilino = usuarioDomainService.findById(email);
 		Piso piso = pisoDomainService.findById(id);
 
 		if (inquilino != null && piso != null) {
-				inquilino.eliminarPisoPorId(piso.getIdPiso());
-				Usuario update = usuarioDomainService.update(inquilino);
-				if (update != null) {
-					return ResponseEntity.ok().body(update);
-				}
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el usuario");
+
+			boolean borrado = watchlistDomainService.deleteByUsuarioEmailAndPisoId(email, id);
+			if (borrado) {
+				return ResponseEntity.ok().body("Watchlist eliminada correctamente");
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo borrar la entrada de la watchlist.");
 			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso o usario que no existe");
 	}
 
 	@PostMapping("/{email}/pisos")
@@ -200,17 +210,15 @@ public class UsuarioRESTController {
 
 		if (propietarioFind != null) {
 			Piso piso = new Piso(0, pisoDTO.isAscensor(), pisoDTO.getDescripcion(), pisoDTO.getElectrodomesticos(),
-                    pisoDTO.getEstanciaMinimaDias(), stringAList(pisoDTO.getFotos()), pisoDTO.isFumar(),
-                    pisoDTO.isGasIncluido(), pisoDTO.isJardin(), pisoDTO.isLuzIncluida(), pisoDTO.getmCuadrados(),
-                    pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(),
-                    pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(),
-                    pisoDTO.getUbicacion(), pisoDTO.getValoracion(), 1,
-                    pisoDTO.isWifi(), propietarioFind);
+					pisoDTO.getEstanciaMinimaDias(), stringAList(pisoDTO.getFotos()), pisoDTO.isFumar(),
+					pisoDTO.isGasIncluido(), pisoDTO.isJardin(), pisoDTO.isLuzIncluida(), pisoDTO.getmCuadrados(),
+					pisoDTO.isMascotas(), pisoDTO.getNumHabitaciones(), pisoDTO.getMapsLink(), pisoDTO.isParejas(),
+					pisoDTO.getPrecioMes(), pisoDTO.isPropietarioReside(), pisoDTO.isTerraza(), pisoDTO.getTitulo(),
+					pisoDTO.getUbicacion(), pisoDTO.getValoracion(), 1, pisoDTO.isWifi(), propietarioFind);
 
-			
 			String codedPhoto = pisoDTO.getFotoBase64();
 			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
-			
+
 			String nombreNuevoFichero = storageService.saveImagenPiso(email, pisoDTO.getFotos(), photoBytes);
 			piso.setFotos(stringAList(nombreNuevoFichero));
 			Piso save = pisoDomainService.save(piso);
@@ -236,15 +244,15 @@ public class UsuarioRESTController {
 			encontrado.setValoracion(BigDecimal.valueOf(2.5));
 			String generateToken = jwtService.generateToken(usuarioDto.getNombre(), usuarioDto.getPassword());
 			encontrado.setHash(generateToken);
-			
+
 			String codedPhoto = usuarioDto.getFotoBase64();
 			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
-			
-			
+
 			String perfilAntiguo = encontrado.getFotoPerfil();
-			String nombreNuevoFichero = storageService.savePerfil(email, perfilAntiguo,usuarioDto.getFotoPerfil(), photoBytes);
+			String nombreNuevoFichero = storageService.savePerfil(email, perfilAntiguo, usuarioDto.getFotoPerfil(),
+					photoBytes);
 			encontrado.setFotoPerfil(nombreNuevoFichero);
-			
+
 			Usuario update = usuarioDomainService.update(encontrado);
 			if (update != null) {
 				return ResponseEntity.ok(update);
@@ -252,7 +260,7 @@ public class UsuarioRESTController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
 	}
-	
+
 	@GetMapping("/{email}/images/{filename}")
 	public ResponseEntity<?> getFiles(@PathVariable String email, @PathVariable String filename) {
 		Resource resource = storageService.getPerfil(email, filename);
