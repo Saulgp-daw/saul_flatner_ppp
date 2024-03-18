@@ -18,6 +18,9 @@ jobs:
         distribution: 'temurin'
         server-id: github
         settings-path: ${{ github.workspace }}saul_flatner_ppp/flatner/ # location for the settings.xml file
+    - name: List files in directory
+      run: ls -la /home/saul/DAM/saul_flatner_ppp/flatner/
+
     - name: Build with Maven
       run: mvn -B clean package --file flatner/pom.xml
 
