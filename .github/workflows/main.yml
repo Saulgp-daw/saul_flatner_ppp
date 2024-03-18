@@ -3,7 +3,7 @@ name: Maven Package and Deploy
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
