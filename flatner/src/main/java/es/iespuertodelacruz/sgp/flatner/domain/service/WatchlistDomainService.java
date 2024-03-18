@@ -22,31 +22,26 @@ public class WatchlistDomainService implements IWatchlistDomainService{
 
 	@Override
 	public Watchlist findById(Integer id) {
-		// TODO Auto-generated method stub
 		return watchlistRepository.findById(id);
 	}
 
 	@Override
 	public Watchlist save(Watchlist domain) {
-		// TODO Auto-generated method stub
 		return watchlistRepository.save(domain);
 	}
 
 	@Override
 	public Watchlist update(Watchlist domain) {
-		// TODO Auto-generated method stub
 		return watchlistRepository.update(domain);
 	}
 
 	@Override
 	public boolean delete(Integer id) {
-		// TODO Auto-generated method stub
 		return watchlistRepository.delete(id);
 	}
 
 	@Override
 	public boolean existsByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId) {
-		// TODO Auto-generated method stub
 		return watchlistRepository.existsByUsuarioEmailAndPisoId(emailUsuario, pisoId);
 	}
 

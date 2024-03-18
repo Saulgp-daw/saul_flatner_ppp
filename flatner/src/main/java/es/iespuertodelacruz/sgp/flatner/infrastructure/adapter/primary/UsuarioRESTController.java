@@ -203,6 +203,21 @@ public class UsuarioRESTController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso o usario que no existe");
 	}
+	
+	@PutMapping("/watchlist/{id}")
+	public ResponseEntity<?> comentarioWatchlist(@PathVariable Integer id,@RequestBody String anotacion ){
+		Watchlist find = watchlistDomainService.findById(id);
+		if(find != null) {
+			find.setAnotaciones(anotacion);
+			Watchlist update = watchlistDomainService.update(find);
+			if(update != null){
+				return ResponseEntity.ok().body(update);
+			}
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la anotación");
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se encontró esa watchlist");
+		
+	}
 
 	@PostMapping("/{email}/pisos")
 	public ResponseEntity<?> save(@PathVariable String email, @RequestBody PisoDTO pisoDTO) {
