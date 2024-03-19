@@ -62,5 +62,5 @@ jobs:
           docker stop flatner-container;
           docker rm flatner-container;
           docker rmi flatner;
-          docker compose up -d;
+          docker compose up -d
 
