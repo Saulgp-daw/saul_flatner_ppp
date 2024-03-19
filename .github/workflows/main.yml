@@ -22,6 +22,9 @@ jobs:
     - name: List files in directory
       run: ls -la ${{ github.workspace }}/flatner/
 
+    - name: Eliminar artefacto anterior
+      run: rm -f ${{ github.workspace }}/flatner/target/*.jar
+
 
     - name: Build with Maven
       run: mvn -B clean package --file ${{ github.workspace }}/flatner/pom.xml
