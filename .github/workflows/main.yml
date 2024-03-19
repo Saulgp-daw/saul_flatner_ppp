@@ -59,15 +59,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          # Detener la aplicación si está en ejecución
-          sudo systemctl stop flatner.service || true
-          
-          # Eliminar la versión anterior de la aplicación
-          sudo rm -rf /opt/my-application/*
-          
-          # Descomprimir el archivo JAR en el directorio de despliegue
-          mkdir -p /opt/my-application
-          tar -xf target/*.tar.gz -C /opt/my-application
-          
-          # Iniciar la aplicación
-          sudo systemctl start flatner.service
+          docker stop flatner;
+          docker rm flatner;
+          docker rmi flatner;
+          docker compose up -d;
