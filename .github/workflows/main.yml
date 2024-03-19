@@ -19,11 +19,11 @@ jobs:
         server-id: github
         settings-path: ${{ github.workspace }}/flatner/ # location for the settings.xml file
     - name: List files in directory
-      run: ls -la ${{ github.workspace }}saul_flatner_ppp/flatner/
+      run: ls -la ${{ github.workspace }}/flatner/
 
 
     - name: Build with Maven
-      run: mvn -B clean package --file ${{ github.workspace }}saul_flatner_ppp/flatner/pom.xml
+      run: mvn -B clean package --file ${{ github.workspace }}/flatner/pom.xml
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
