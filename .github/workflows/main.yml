@@ -17,9 +17,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         server-id: github
-        settings-path: ${{ github.workspace }}/saul_flatner_ppp/flatner # location for the settings.xml file
+        settings-path: ${{ github.workspace }}/flatner/
+
     - name: List files in directory
-      run: ls -la ${{ github.workspace }}/saul_flatner_ppp/flatner/
+      run: ls -la ${{ github.workspace }}/flatner/
 
 
     - name: Build with Maven
