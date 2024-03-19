@@ -60,7 +60,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           # Detener la aplicación si está en ejecución
-          sudo systemctl stop my-application.service || true
+          sudo systemctl stop flatner.service || true
           
           # Eliminar la versión anterior de la aplicación
           sudo rm -rf /opt/my-application/*
@@ -70,4 +70,4 @@ jobs:
           tar -xf target/*.tar.gz -C /opt/my-application
           
           # Iniciar la aplicación
-          sudo systemctl start my-application.service
+          sudo systemctl start flatner.service
