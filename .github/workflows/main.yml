@@ -38,7 +38,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         host: ${{ secrets.SSH_HOST }}
         key: ${{ secrets.KEY }}
-        source: "Flatner/target/*.jar"
+        source: "flatner/target/*.jar"
         target: "~/"
         overwrite: true
 
