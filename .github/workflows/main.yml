@@ -35,8 +35,8 @@ jobs:
     - name: Upload to remote with SCP
       uses: appleboy/scp-action@v0.1.7
       with:
-        username: carlos
-        host: "appsiespuerto.myvnc.com"
+        username: ${{ secrets.SSH_USERNAME }}
+        host: ${{ secrets.SSH_HOST }}
         key: ${{ secrets.KEY }}
         source: "Flatner/target/*.jar"
         target: "~/"
