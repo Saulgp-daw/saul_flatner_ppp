@@ -17,7 +17,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         server-id: github
-        settings-path: ${{ github.workspace }}/flatner/ # location for the settings.xml file
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: List files in directory
       run: ls -la ${{ github.workspace }}/flatner/
 
