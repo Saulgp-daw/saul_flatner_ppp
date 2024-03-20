@@ -43,7 +43,7 @@ import es.iespuertodelacruz.sgp.flatner.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v2/usuarios")
 public class UsuarioRESTController {
 
 	@Autowired

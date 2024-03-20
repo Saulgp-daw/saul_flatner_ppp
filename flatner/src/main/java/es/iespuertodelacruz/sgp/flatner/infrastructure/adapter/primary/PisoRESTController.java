@@ -1,5 +1,7 @@
 package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,14 +12,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
-import es.iespuertodelacruz.sgp.flatner.domain.model.Usuario;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IPisoDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IUsuarioDomainService;
 import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.PisoDTO;
@@ -72,6 +72,9 @@ public class PisoRESTController {
 				encontrado.setTerraza(pisoDTO.isTerraza());
 				encontrado.setTitulo(pisoDTO.getTitulo());
 				encontrado.setUbicacion(pisoDTO.getUbicacion());
+				BigDecimal valoracion = this.calcularValoracion(encontrado.getNum_votos(), encontrado.getValoracion(), pisoDTO.getValoracion());
+				System.out.println(valoracion);
+				encontrado.setValoracion(valoracion);
 				
 				Piso update = pisoDomainService.update(encontrado);
 				if(update != null) {
@@ -96,6 +99,18 @@ public class PisoRESTController {
 			}
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
+	}
+	
+	public BigDecimal calcularValoracion(int numVotosActual, BigDecimal valoracionActual, BigDecimal valoracion) {;
+	    BigDecimal nuevaValoracion;
+	    
+	    numVotosActual += 1;
+	    
+	    // Calcular la nueva valoración
+	    BigDecimal sumaValoraciones = valoracionActual.add(valoracion);
+	    nuevaValoracion = sumaValoraciones.divide(BigDecimal.valueOf(numVotosActual), 2, RoundingMode.HALF_UP);
+	    
+	    return nuevaValoracion;
 	}
 	
 	
