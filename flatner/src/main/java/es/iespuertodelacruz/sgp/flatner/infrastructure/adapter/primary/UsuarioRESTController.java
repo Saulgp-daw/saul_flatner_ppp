@@ -164,61 +164,6 @@ public class UsuarioRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
 	}
 
-	@PostMapping("/{email}/watchlist/{id}")
-	public ResponseEntity<?> agregarWatchlist(@PathVariable String email, @PathVariable Integer id) {
-		Usuario interesado = usuarioDomainService.findById(email);
-		Piso piso = pisoDomainService.findById(id);
-
-		if (interesado == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
-		}
-
-		if (piso == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso que no existe");
-		}
-
-		boolean existsByUsuarioEmailAndPisoId = watchlistDomainService.existsByUsuarioEmailAndPisoId(email, id);
-		if (existsByUsuarioEmailAndPisoId) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puedes poner la misma casa dos veces");
-		}
-
-		Watchlist save = watchlistDomainService.save(new Watchlist(0, piso, interesado, ""));
-		return ResponseEntity.ok().body(save);
-
-	}
-
-	@DeleteMapping("/{email}/watchlist/{id}")
-	public ResponseEntity<?> borrarWatchlist(@PathVariable String email, @PathVariable Integer id) {
-		Usuario inquilino = usuarioDomainService.findById(email);
-		Piso piso = pisoDomainService.findById(id);
-
-		if (inquilino != null && piso != null) {
-
-			boolean borrado = watchlistDomainService.deleteByUsuarioEmailAndPisoId(email, id);
-			if (borrado) {
-				return ResponseEntity.ok().body("Watchlist eliminada correctamente");
-			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo borrar la entrada de la watchlist.");
-			}
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso o usario que no existe");
-	}
-	
-	@PutMapping("/watchlist/{id}")
-	public ResponseEntity<?> comentarioWatchlist(@PathVariable Integer id,@RequestBody String anotacion ){
-		Watchlist find = watchlistDomainService.findById(id);
-		if(find != null) {
-			find.setAnotaciones(anotacion);
-			Watchlist update = watchlistDomainService.update(find);
-			if(update != null){
-				return ResponseEntity.ok().body(update);
-			}
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la anotación");
-		}
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se encontró esa watchlist");
-		
-	}
-
 	@PostMapping("/{email}/pisos")
 	public ResponseEntity<?> save(@PathVariable String email, @RequestBody PisoDTO pisoDTO) {
 		Usuario propietarioFind = usuarioDomainService.findById(email);

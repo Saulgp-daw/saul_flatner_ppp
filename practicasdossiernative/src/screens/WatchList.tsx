@@ -6,6 +6,7 @@ import { useAppContext } from '../contexts/TokenContextProvider';
 import { ip } from '../../global';
 import useFindPiso from '../hooks/useFindPiso';
 import Icon from 'react-native-vector-icons/Ionicons';
+import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
 
 
 
@@ -17,6 +18,7 @@ const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { token, email } = useAppContext();
 	const { usuario, reload, setReload } = useFindUsuario(email);
+	useFindWatchlistByEmail(email);
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 

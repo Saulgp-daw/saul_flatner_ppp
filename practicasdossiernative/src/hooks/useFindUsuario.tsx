@@ -31,7 +31,6 @@ type Piso = {
 type Watchlist = {
     piso: Piso;
     anotaciones: string;
-
 }
 
 const useFindUsuario = (email: string) => {
