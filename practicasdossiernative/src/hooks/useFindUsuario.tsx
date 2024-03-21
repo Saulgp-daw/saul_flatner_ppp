@@ -42,7 +42,7 @@ const useFindUsuario = (email: string) => {
 
     let pisoActual: Piso = null;
     const pisosInteres: Piso[] = [];
-    //console.log("En find usuario");
+    console.log("En find usuario");
     
 
     
@@ -71,7 +71,7 @@ const useFindUsuario = (email: string) => {
                     };
                 }
 
-                console.log(response.data.pisosInteres[0].piso);
+                //console.log(response.data.pisosInteres[0].piso);
                 const pisosInteres: Piso[] = data.pisosInteres.map((pisoData: any) => {
                     const fotos: string[] = pisoData.piso.fotos.map((foto: string) => {
                         return foto;
@@ -84,7 +84,7 @@ const useFindUsuario = (email: string) => {
                         fotos: fotos, 
                     };
                 });
-                console.log(pisosInteres);
+                //console.log(pisosInteres);
                 
 
                 const propiedades: Piso[] = data.propiedades.map((pisoData: any) => {

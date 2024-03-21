@@ -21,7 +21,7 @@ const useWatchList = () => {
             try {
                 setLoading(true);
                 const response = await axios.post(ruta,{},{ headers: { 'Authorization': `Bearer ${token}` } });
-                console.log(response.data);
+                //console.log(response.data);
                 let status = response.status;
                 console.log(status);
                 if (status === 200) {

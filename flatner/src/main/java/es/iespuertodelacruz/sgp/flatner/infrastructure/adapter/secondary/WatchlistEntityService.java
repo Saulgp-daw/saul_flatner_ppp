@@ -100,4 +100,10 @@ public class WatchlistEntityService implements IWatchlistDomainRepository{
 	    }
 	}
 
+	@Override
+	public List<Watchlist> findAllByUsuarioEmail(String email) {
+		List<WatchlistEntity> lista = weRepository.findAllByUsuarioEmail(email);
+		return lista.stream().map(we -> mapper.toDomainWatchlist(we)).collect(Collectors.toList());
+	}
+
 }

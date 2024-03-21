@@ -73,7 +73,6 @@ public class PisoRESTController {
 				encontrado.setTitulo(pisoDTO.getTitulo());
 				encontrado.setUbicacion(pisoDTO.getUbicacion());
 				BigDecimal valoracion = this.calcularValoracion(encontrado.getNum_votos(), encontrado.getValoracion(), pisoDTO.getValoracion());
-				System.out.println(valoracion);
 				encontrado.setValoracion(valoracion);
 				
 				Piso update = pisoDomainService.update(encontrado);
@@ -101,12 +100,9 @@ public class PisoRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
 	}
 	
-	public BigDecimal calcularValoracion(int numVotosActual, BigDecimal valoracionActual, BigDecimal valoracion) {;
+	public BigDecimal calcularValoracion(int numVotosActual, BigDecimal valoracionActual, BigDecimal valoracion) {
 	    BigDecimal nuevaValoracion;
-	    
 	    numVotosActual += 1;
-	    
-	    // Calcular la nueva valoración
 	    BigDecimal sumaValoraciones = valoracionActual.add(valoracion);
 	    nuevaValoracion = sumaValoraciones.divide(BigDecimal.valueOf(numVotosActual), 2, RoundingMode.HALF_UP);
 	    
