@@ -18,7 +18,7 @@ const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { token, email } = useAppContext();
 	const { usuario, reload, setReload } = useFindUsuario(email);
-	useFindWatchlistByEmail(email);
+	const { watchlists } = useFindWatchlistByEmail(email);
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
@@ -31,7 +31,7 @@ const WatchList = ({ navigation }: Props) => {
 	}, [reload])
 
 
-	if (!usuario) {
+	if (!watchlists) {
 		return (
 			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color="#0000ff" />
@@ -39,7 +39,7 @@ const WatchList = ({ navigation }: Props) => {
 		);
 	}
 
-	if (!usuario || usuario.pisosInteres.length === 0) {
+	if (!watchlists || watchlists.length === 0) {
 		return (
 			<View style={styles.loadingContainer}>
 			  <Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
@@ -49,8 +49,12 @@ const WatchList = ({ navigation }: Props) => {
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
-			{usuario.pisosInteres.map((piso) => (
-				<PisoComponent key={piso.idPiso} pisoId={piso.idPiso} token={token} navigation={navigation} />
+			{watchlists.map((watchlist) => (
+				<>
+					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
+					<Text>{watchlist.anotaciones}</Text>
+				</>
+				
 			))}
 		</ScrollView>
 	);

@@ -41,7 +41,7 @@ const useFindUsuario = (email: string) => {
 
     let pisoActual: Piso = null;
     const pisosInteres: Piso[] = [];
-    console.log("En find usuario");
+    //console.log("En find usuario");
     
 
     
