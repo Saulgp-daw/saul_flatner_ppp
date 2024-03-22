@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import useFindUsuario from '../hooks/useFindUsuario';
@@ -7,6 +7,7 @@ import { ip } from '../../global';
 import useFindPiso from '../hooks/useFindPiso';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
+import ModalAnotacion from '../components/ModalAnotacion';
 
 
 
@@ -51,8 +52,9 @@ const WatchList = ({ navigation }: Props) => {
 		<ScrollView contentContainerStyle={styles.container}>
 			{watchlists.map((watchlist) => (
 				<>
+				
 					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
-					<Text>{watchlist.anotaciones}</Text>
+					<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones}/>
 				</>
 				
 			))}
