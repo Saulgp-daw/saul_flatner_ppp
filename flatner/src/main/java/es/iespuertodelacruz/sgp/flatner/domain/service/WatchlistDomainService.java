@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import es.iespuertodelacruz.sgp.flatner.domain.model.Watchlist;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IWatchlistDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.secondary.IWatchlistDomainRepository;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.WatchlistEntity;
 
 @Service
 public class WatchlistDomainService implements IWatchlistDomainService{
@@ -49,6 +50,11 @@ public class WatchlistDomainService implements IWatchlistDomainService{
 	public boolean deleteByUsuarioEmailAndPisoId(String email, Integer pisoId) {
 		return watchlistRepository.deleteByUsuarioEmailAndPisoId(email, pisoId);
 		
+	}
+
+	@Override
+	public List<Watchlist> findAllByUsuarioEmail(String email) {
+		return watchlistRepository.findAllByUsuarioEmail(email);
 	}
 
 }

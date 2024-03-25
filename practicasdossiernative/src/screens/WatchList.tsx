@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import useFindUsuario from '../hooks/useFindUsuario';
@@ -6,6 +6,8 @@ import { useAppContext } from '../contexts/TokenContextProvider';
 import { ip } from '../../global';
 import useFindPiso from '../hooks/useFindPiso';
 import Icon from 'react-native-vector-icons/Ionicons';
+import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
+import ModalAnotacion from '../components/ModalAnotacion';
 
 
 
@@ -17,6 +19,7 @@ const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { token, email } = useAppContext();
 	const { usuario, reload, setReload } = useFindUsuario(email);
+	const { watchlists } = useFindWatchlistByEmail(email);
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
@@ -29,7 +32,7 @@ const WatchList = ({ navigation }: Props) => {
 	}, [reload])
 
 
-	if (!usuario) {
+	if (!watchlists) {
 		return (
 			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color="#0000ff" />
@@ -37,7 +40,7 @@ const WatchList = ({ navigation }: Props) => {
 		);
 	}
 
-	if (!usuario || usuario.pisosInteres.length === 0) {
+	if (!watchlists || watchlists.length === 0) {
 		return (
 			<View style={styles.loadingContainer}>
 			  <Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
@@ -47,8 +50,13 @@ const WatchList = ({ navigation }: Props) => {
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
-			{usuario.pisosInteres.map((piso) => (
-				<PisoComponent key={piso.idPiso} pisoId={piso.idPiso} token={token} navigation={navigation} />
+			{watchlists.map((watchlist) => (
+				<>
+				
+					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
+					<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones}/>
+				</>
+				
 			))}
 		</ScrollView>
 	);

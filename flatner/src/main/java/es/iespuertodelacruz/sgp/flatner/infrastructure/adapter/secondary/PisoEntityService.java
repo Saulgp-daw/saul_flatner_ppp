@@ -77,6 +77,8 @@ public class PisoEntityService implements IPisoDomainRepository {
 			pe.setTerraza(domain.isTerraza());
 			pe.setTitulo(domain.getTitulo());
 			pe.setUbicacion(domain.getUbicacion());
+			pe.setNumVotos(domain.getNum_votos()+1);
+			pe.setValoracion(domain.getValoracion());
 			
 			PisoEntity update = peRepository.save(pe);
 			return mapper.toDomainPiso(update);

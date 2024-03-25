@@ -28,6 +28,11 @@ type Piso = {
     valoracion: number;
 }
 
+type Watchlist = {
+    piso: Piso;
+    anotaciones: string;
+}
+
 const useFindUsuario = (email: string) => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email;
     const { token, settoken } = useAppContext();
@@ -36,6 +41,8 @@ const useFindUsuario = (email: string) => {
 
     let pisoActual: Piso = null;
     const pisosInteres: Piso[] = [];
+    //console.log("En find usuario");
+    
 
     
     useEffect(() => {
@@ -47,7 +54,7 @@ const useFindUsuario = (email: string) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                //console.log(response.data);
+                
 
                 const data = response.data;
 
@@ -63,16 +70,16 @@ const useFindUsuario = (email: string) => {
                     };
                 }
 
-
+                //console.log(response.data.pisosInteres[0].piso);
                 const pisosInteres: Piso[] = data.pisosInteres.map((pisoData: any) => {
-                    const fotos: string[] = pisoData.fotos.map((foto: string) => {
+                    const fotos: string[] = pisoData.piso.fotos.map((foto: string) => {
                         return foto;
                     });
                 
                     return {
-                        idPiso: pisoData.idPiso,
-                        titulo: pisoData.titulo,
-                        valoracion: pisoData.valoracion,
+                        idPiso: pisoData.piso.idPiso,
+                        titulo: pisoData.piso.titulo,
+                        valoracion: pisoData.piso.valoracion,
                         fotos: fotos, 
                     };
                 });

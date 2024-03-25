@@ -15,13 +15,13 @@ const useWatchList = () => {
 
     function agregar(email: string, idPiso: number) {
         const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/watchlist/" + idPiso;
-        console.log(ruta);
+        //console.log(ruta);
         
         const axiospost = async () => {
             try {
                 setLoading(true);
                 const response = await axios.post(ruta,{},{ headers: { 'Authorization': `Bearer ${token}` } });
-                console.log(response.data);
+                //console.log(response.data);
                 let status = response.status;
                 console.log(status);
                 if (status === 200) {
