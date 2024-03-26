@@ -18,8 +18,8 @@ type Props = {
 const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { token, email } = useAppContext();
-	const { usuario, reload, setReload } = useFindUsuario(email);
-	const { watchlists } = useFindWatchlistByEmail(email);
+	const { usuario } = useFindUsuario(email);
+	const { watchlists, reload, setReload } = useFindWatchlistByEmail(email);
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
@@ -52,7 +52,6 @@ const WatchList = ({ navigation }: Props) => {
 		<ScrollView contentContainerStyle={styles.container}>
 			{watchlists.map((watchlist) => (
 				<>
-				
 					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
 					<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones}/>
 				</>
