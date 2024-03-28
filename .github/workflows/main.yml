@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: allartifacts
-        path: /home/saul/DAM/saul_flatner_ppp/flatner/target/*
+        path: ${{ github.workspace }}/flatner/target/*
         
     - name: Upload to remote with SCP
       uses: appleboy/scp-action@v0.1.7
