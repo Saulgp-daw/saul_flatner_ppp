@@ -54,10 +54,14 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          docker stop flatner-container_1 || true;
-          docker rm flatner-container_1 || true ;
-          docker rmi flatner;
-          docker build -t flatner -f /root/flatner . ;
-          docker-compose up -d;
+            if [ $(docker ps -aq -f name=^/flatner-container_1$) ]; then
+              docker stop flatner-container_1;
+              docker rm flatner-container_1;
+            fi
+            if [ $(docker images -q flatner) ]; then
+              docker rmi flatner;
+            fi
+            docker build -t flatner -f /root/flatner/Dockerfile . ;
+            docker-compose up -d;
 
 
