@@ -57,6 +57,7 @@ jobs:
           docker stop root_flatner-container_1;
           docker rm root_flatner-container_1;
           docker rmi flatner;
-          docker-compose up -d -y;
+          docker build -t flatner . ;
+          docker-compose up -d;
 
 
