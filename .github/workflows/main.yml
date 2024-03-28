@@ -55,7 +55,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           docker stop root_flatner-container_1;
-          docker rm rot_flatner-container_1;
+          docker rm root_flatner-container_1;
           docker rmi flatner;
           docker-compose up -d;
 
