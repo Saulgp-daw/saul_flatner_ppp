@@ -61,7 +61,7 @@ jobs:
             if [ $(docker images -q flatner) ]; then
               docker rmi flatner;
             fi
-            docker build -t flatner -f /root/flatner/Dockerfile . ;
+            docker build -t flatner -f flatner/ . ;
             docker-compose up -d;
 
 
