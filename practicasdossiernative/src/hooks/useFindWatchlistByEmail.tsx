@@ -27,7 +27,6 @@ const useFindWatchListByEmail = (email: string) => {
     const [watchlists, setWatchlists] = useState<Watchlist[]>([]);
 
     const ruta = "http://" + ip + "/api/v2/watchlists/" + email;
-    console.log("DENTRO DE FIND BY EMAIL");
     
 
     useEffect(() => {
@@ -48,18 +47,19 @@ const useFindWatchListByEmail = (email: string) => {
                 }));
                 setWatchlists(formattedWatchlists);
                 console.log("pisos formateados");
-                
+                setReload(false);
                 console.log(formattedWatchlists);
                 
                 
             }catch(error){
                 console.log(error);
+                setReload(false);
             }
         }
         axiosget();
     }, [reload]);
 
-    return { watchlists };
+    return { watchlists, reload, setReload };
 }
 
 export default useFindWatchListByEmail

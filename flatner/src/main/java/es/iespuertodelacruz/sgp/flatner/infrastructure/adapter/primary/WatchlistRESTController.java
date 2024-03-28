@@ -21,7 +21,7 @@ import es.iespuertodelacruz.sgp.flatner.domain.model.Watchlist;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IPisoDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IUsuarioDomainService;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IWatchlistDomainService;
-import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.secondary.WatchlistEntity;
+import es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary.dto.AnotacionDTO;
 
 @RestController
 @CrossOrigin
@@ -89,10 +89,10 @@ public class WatchlistRESTController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> comentarioWatchlist(@PathVariable Integer id,@RequestBody String anotacion ){
+	public ResponseEntity<?> comentarioWatchlist(@PathVariable Integer id, @RequestBody AnotacionDTO dto ){
 		Watchlist find = watchlistDomainService.findById(id);
 		if(find != null) {
-			find.setAnotaciones(anotacion);
+			find.setAnotaciones(dto.getAnotaciones());
 			Watchlist update = watchlistDomainService.update(find);
 			if(update != null){
 				return ResponseEntity.ok().body(update);

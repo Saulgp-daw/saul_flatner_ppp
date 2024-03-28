@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Modal, Button, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import useSaveAnotacion from '../hooks/useSaveAnotacion';
 
 type Props = {
     idWatchlist: number;
@@ -10,17 +11,24 @@ const ModalAnotacion = ({ idWatchlist, anotacion }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [id, setId] = useState(idWatchlist);
     const [miAnotacion, setMiAnotacion] = useState(anotacion);
+    const [anotacionLista, setAnotacionLista] = useState(anotacion);
+    const {guardarAnotacion} =  useSaveAnotacion();
 
     function resetearValores() {
         console.log("Cerrando modal...");
         setModalVisible(false);
-        setMiAnotacion(anotacion);
+    }
+
+    function guardar(){  
+        setModalVisible(false);
+        guardarAnotacion(idWatchlist, miAnotacion);
+        setAnotacionLista(miAnotacion);
     }
 
     return (
         <View>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={styles.annotationText} numberOfLines={1} ellipsizeMode='tail'>{miAnotacion}</Text>
+                <Text style={styles.annotationText} numberOfLines={1} ellipsizeMode='tail'>{anotacionLista}</Text>
             </TouchableOpacity>
 
 
@@ -36,9 +44,10 @@ const ModalAnotacion = ({ idWatchlist, anotacion }: Props) => {
                         style={styles.textArea}
                         placeholder="Escribe algo aquí..."
                         multiline
-                        numberOfLines={4} // Puedes ajustar el número de líneas iniciales
+                        numberOfLines={4} 
                         onChangeText={(text) => setMiAnotacion(text)}
-                        value={miAnotacion}
+                        defaultValue={anotacionLista}
+                        
                     />
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginTop: 30 }}>
                         <TouchableHighlight
@@ -49,7 +58,7 @@ const ModalAnotacion = ({ idWatchlist, anotacion }: Props) => {
 
                         <TouchableOpacity
                             style={[styles.button, { backgroundColor: 'green' }]}
-                            onPress={resetearValores}>
+                            onPress={guardar}>
                             <Text style={styles.buttonText}>Guardar</Text>
                         </TouchableOpacity>
 
