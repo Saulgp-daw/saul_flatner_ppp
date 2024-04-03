@@ -8,6 +8,7 @@ import useFindPiso from '../hooks/useFindPiso';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
 import ModalAnotacion from '../components/ModalAnotacion';
+import Navbar from '../components/Navbar';
 
 
 
@@ -42,22 +43,31 @@ const WatchList = ({ navigation }: Props) => {
 
 	if (!watchlists || watchlists.length === 0) {
 		return (
-			<View style={styles.loadingContainer}>
-			  <Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
-			</View>
+			<>
+				<Navbar navigation={navigation} />
+				<View style={styles.loadingContainer}>
+
+					<Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
+				</View>
+			</>
+
 		);
-	  }
+	}
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
-			{watchlists.map((watchlist) => (
-				<>
-					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
-					<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones}/>
-				</>
-				
-			))}
-		</ScrollView>
+		<>
+			<Navbar navigation={navigation} />
+			<ScrollView contentContainerStyle={styles.container}>
+				{watchlists.map((watchlist) => (
+					<View key={watchlist.piso.idPiso}>
+						<PisoComponent pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
+						<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones} />
+					</View>
+
+				))}
+			</ScrollView>
+		</>
+
 	);
 }
 
@@ -139,7 +149,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',
-	  },
+	},
 
 	valoracion: {
 		position: 'absolute',

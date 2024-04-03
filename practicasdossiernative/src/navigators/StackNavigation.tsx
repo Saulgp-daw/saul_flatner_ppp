@@ -22,10 +22,10 @@ const StackNavigation = (props: Props) => {
                     <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
                     <Stack.Screen name='Registro' component={Registro} options={{ headerShown: false }} />
                     <Stack.Screen name='DrawerFlatner' component={DrawerFlatner} options={{ headerShown: false }} />
-                    <Stack.Screen name='Busqueda' component={Busqueda} />
-                    <Stack.Screen name='Mi Perfil' component={PerfilPrivado} />
-                    <Stack.Screen name='Piso' component={Piso} />
-                    <Stack.Screen name='Perfil' component={PerfilPublico} /> 
+                    <Stack.Screen name='Busqueda' component={Busqueda} options={{ headerShown: false }}/>
+                    <Stack.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }}/>
+                    <Stack.Screen name='Piso' component={Piso} options={{ headerShown: false }} />
+                    <Stack.Screen name='Perfil' component={PerfilPublico} options={{ headerShown: false }} /> 
                 </Stack.Navigator>
         </TokenContextProvider>
     )

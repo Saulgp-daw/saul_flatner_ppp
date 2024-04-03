@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, ActivityIndicator, Button, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 import PerfilPublico from './PerfilPublico';
@@ -21,25 +21,22 @@ type RouteParams = {
 
 const Piso = ({ navigation }: Props) => {
     console.log(navigation ? true : false);
-
-
-
     const route = useRoute();
     const { pisoId } = route.params as RouteParams;
     console.log(pisoId);
-    
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { piso, reload, setReload } = useFindById(pisoId);
     const { informacionUsuario } = usePerfilPrivado();
     const { agregar } = useWatchList();
 
     useEffect(() => {
-		const onFocus = navigation.addListener('focus', () => {
-			setReload(true);
-		});
-		return onFocus;
+        const onFocus = navigation.addListener('focus', () => {
+            setReload(true);
+        });
+        return onFocus;
 
-	}, [reload])
+    }, [reload])
 
     if (!piso) {
         return (
@@ -63,93 +60,93 @@ const Piso = ({ navigation }: Props) => {
                     email={piso.propietario.email}
                 />
 
-                <View style={styles.datosContainer}>
-                    <Text style={styles.infoRelevante} >{piso.titulo}</Text>
-                    <Text style={styles.infoRelevante}>{piso.precioMes} €</Text>
-                </View>
-                <View style={styles.datosContainer}>
-                    <Text>Nº Hab: {piso.numHabitaciones}</Text>
-                    <Text>Nº inquilinos: {piso.inquilinos.length}</Text>
-                    <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
-                </View>
-                <View style={{ marginVertical: 30 }}>
-                    <Text>{piso.descripcion}</Text>
-                </View>
-                <View>
-                    <Text>Información esencial: </Text>
-                    <View style={styles.detalles}>
-                        {Object.entries(piso).map(([key, value], index) => {
-                            if (typeof value === 'boolean' && value && key != "propietarioReside") {
-                                return (
-                                    <View key={key} style={styles.columnaDetalles}>
-                                        <Text style={styles.itemDetalles}>{key.toUpperCase()}</Text>
-                                    </View>
-                                );
-                            }
-                            return null; // Si el campo no es booleano o es false, no renderizar nada
-                        })}
+                <View style={styles.details}>
+                    <View style={styles.datosContainer}>
+                        <Text><Icon name="bookmark" size={20} /></Text>
+                        <Text style={styles.infoRelevante} >{piso.titulo}</Text>
+                        <Text style={styles.infoRelevante}>{piso.precioMes} €</Text>
                     </View>
-                </View>
+                    <View style={styles.datosContainer}>
+                        <Text><Icon name="bed" size={20}/> {piso.numHabitaciones}</Text>
+                        <Text><Icon name="person-sharp" size={20} /> {piso.inquilinos.length}</Text>
+                        <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
+                    </View>
+                    <View style={{ marginVertical: 30 }}>
+                        <Text>{piso.descripcion}</Text>
+                    </View>
+                    <View>
+                        <Text>Información esencial: </Text>
+                        <View style={styles.detalles}>
+                            {Object.entries(piso).map(([key, value], index) => {
+                                if (typeof value === 'boolean' && value && key != "propietarioReside") {
+                                    return (
+                                        <View key={key} style={styles.columnaDetalles}>
+                                            <Text style={styles.itemDetalles}>{key.toUpperCase()}</Text>
+                                        </View>
+                                    );
+                                }
+                                return null; // Si el campo no es booleano o es false, no renderizar nada
+                            })}
+                        </View>
+                    </View>
 
 
-                <View>
-                    {piso.electrodomesticos && piso.electrodomesticos.trim() !== '' && (
-                        <>
-                            <Text>Electrodomésticos: </Text>
-                            <View style={styles.detallesContainer}>
-                                {piso.electrodomesticos.split(';;').map((electro, index) => (
-                                    <View key={index} style={styles.itemContainer}>
-                                        <CheckBox
-                                            value={true}
-                                        />
-                                        <Text style={styles.itemText}>{electro}</Text>
-                                    </View>
+                    <View>
+                        {piso.electrodomesticos && piso.electrodomesticos.trim() !== '' && (
+                            <>
+                                <Text>Electrodomésticos: </Text>
+                                <View style={styles.detallesContainer}>
+                                    {piso.electrodomesticos.split(';;').map((electro, index) => (
+                                        <View key={index} style={styles.itemContainer}>
+                                            <CheckBox
+                                                value={true}
+                                            />
+                                            <Text style={styles.itemText}>{electro}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </>
+                        )}
+                    </View>
+
+                    <View>
+                        {piso.inquilinos && piso.inquilinos.length > 0 && (
+                            <>
+                                <Text>Inquilinos actuales: </Text>
+                                {piso.inquilinos.map(inquilino => (
+                                    <TouchableHighlight key={inquilino.nombre} onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
+                                        <Text style={{ padding: 10, color: "#73FF8C" }}>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
+                                    </TouchableHighlight>
+
                                 ))}
-                            </View>
-                        </>
-                    )}
-                </View>
+                            </>
+                        )}
 
-                <View>
-                    {piso.inquilinos && piso.inquilinos.length > 0 && (
-                        <>
-                            <Text>Inquilinos actuales: </Text>
-                            {piso.inquilinos.map(inquilino => (
-                                <TouchableHighlight key={inquilino.nombre} onPress={() => navigation.navigate("Perfil", { email: inquilino.email })} >
-                                    <Text style={{ padding: 10, color: "#73FF8C" }}>{inquilino.nombre} {inquilino.valoracion ?? " NO RATING"} ⭐</Text>
-                                </TouchableHighlight>
+                    </View>
+                    <View>
+                        {piso.usuariosInteresados && piso.usuariosInteresados.length > 0 && (
+                            <>
+                                <Text>Usuarios interesados: </Text>
+                                {piso.usuariosInteresados.map(usuario => (
+                                    <TouchableHighlight key={usuario.nombre} onPress={() => navigation.navigate("Perfil", { email: usuario.email })} >
+                                        <Text style={{ padding: 10, color: "#73FF8C" }}>{usuario.nombre} {usuario.valoracion ?? " NO RATING"} ⭐</Text>
+                                    </TouchableHighlight>
 
-                            ))}
-                        </>
-                    )}
+                                ))}
+                            </>
+                        )}
 
-                </View>
-                <View>
-                    {piso.usuariosInteresados && piso.usuariosInteresados.length > 0 && (
-                        <>
-                            <Text>Usuarios interesados: </Text>
-                            {piso.usuariosInteresados.map(usuario => (
-                                <TouchableHighlight key={usuario.nombre} onPress={() => navigation.navigate("Perfil", { email: usuario.email })} >
-                                    <Text style={{ padding: 10, color: "#73FF8C" }}>{usuario.nombre} {usuario.valoracion ?? " NO RATING"} ⭐</Text>
-                                </TouchableHighlight>
-
-                            ))}
-                        </>
-                    )}
-
-                </View>
-                <View >
-                    <Text>Propietario: </Text>
-                    <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: piso.propietario.email })} >
-                        <Text style={{ padding: 10, color: "#73FF8C" }}>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
-                    </TouchableHighlight>
+                    </View>
+                    <View >
+                        <Text>Propietario: </Text>
+                        <TouchableHighlight onPress={() => navigation.navigate("Perfil", { email: piso.propietario.email })} >
+                            <Text style={{ padding: 10, color: "#73FF8C" }}>{piso.propietario.nombre} {piso.propietario.valoracion ?? " NO RATING"}⭐</Text>
+                        </TouchableHighlight>
+                    </View>
                 </View>
 
                 <View>
                     <Button title="Estoy interesado" onPress={() => agregar(informacionUsuario.email, piso.idPiso)} />
-                </View>
-                <View>
-                    <Button title="Abrir Drawer" onPress={() => navigation?.dispatch(DrawerActions.openDrawer())} />
                 </View>
             </ScrollView>
 
@@ -161,17 +158,19 @@ export default Piso
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+    },
+    details: {
+        margin: 20
     },
     datosContainer: {
-        marginTop: 10,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
     infoRelevante: {
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: 20,
     },
     detallesContainer: {
         display: 'flex',

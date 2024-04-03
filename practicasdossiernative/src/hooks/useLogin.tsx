@@ -16,7 +16,7 @@ const useLogin = () => {
     const ruta = "http://"+ip+"/api/login";
     const {token, settoken, email, setemail} = useAppContext();
     const [loading, setLoading] = useState(false);
-    const [valido, setValido] = useState(false);
+    const [valido, setValido] = useState(null);
     const [error, setError] = useState("");
 
     // useEffect(() => {
@@ -39,7 +39,7 @@ const useLogin = () => {
     // }, []);
     
     async function login(email: string, password: string) {
-        setValido(false);
+        setValido(null);
         const nuevoLogin: iLogin = {
             email: email,
             password: password
