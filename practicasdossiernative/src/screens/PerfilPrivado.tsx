@@ -59,7 +59,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
         }
     };
 
-    if (!informacionUsuario) {
+    if (!usuario) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />
@@ -69,35 +69,29 @@ const PerfilPrivado = ({ navigation }: Props) => {
 
     return (
         <>
-             <Navbar navigation={navigation} />
+            <Navbar navigation={navigation} />
             <ScrollView contentContainerStyle={styles.container}>
 
                 <View style={styles.profileImageContainer}>
-                    <Image
-                        source={{
-                            uri: ruta + usuario.fotoPerfil,
-                            method: "GET",
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        }}
-                        style={styles.profileImage}
-                        onError={(e) => {
-                            console.log(ruta + usuario.fotoPerfil);
-
-                            setError(true);
-                        }}
-                        onLoad={() => {
-                            setError(false);
-                        }}
-                    />
-                    {error == true ??
-
+                    {usuario.fotoPerfil && !error ? (
+                        <Image
+                            source={{
+                                uri: ruta + usuario.fotoPerfil,
+                                method: "GET",
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            }}
+                            style={styles.profileImage}
+                            onError={() => setError(true)}
+                        />
+                    ) : (
                         <Image source={require(imagenDefecto)} style={styles.profileImage} />
-                    }
+                    )}
                 </View>
+
                 <View style={styles.row}>
                     <View style={styles.column}>
                         <Text style={styles.label}>Email:</Text>
-                        <TextInput style={styles.disabledInput } defaultValue={usuario ? usuario.email || "Email" : "Email"} editable={false} />
+                        <TextInput style={styles.disabledInput} defaultValue={usuario ? usuario.email || "Email" : "Email"} editable={false} />
                     </View>
 
                     <View style={styles.column}>

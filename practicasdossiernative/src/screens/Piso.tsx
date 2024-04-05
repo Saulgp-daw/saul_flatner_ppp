@@ -129,7 +129,7 @@ const Piso = ({ navigation }: Props) => {
                                 <Text>Usuarios interesados: </Text>
                                 {piso.usuariosInteresados.map(usuario => (
                                     <TouchableHighlight key={usuario.nombre} onPress={() => navigation.navigate("Perfil", { email: usuario.email })} >
-                                        <Text style={{ padding: 10, color: "#73FF8C" }}>{usuario.nombre} {usuario.valoracion ?? " NO RATING"} ⭐</Text>
+                                        <Text style={{ padding: 10, color: "#73FF8C" }}>{usuario.email} {usuario.valoracion ?? " NO RATING"} ⭐</Text>
                                     </TouchableHighlight>
 
                                 ))}

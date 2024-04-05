@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import Busqueda from './Busqueda';
 import useLogin from '../hooks/useLogin';
+import Toast from 'react-native-toast-message';
 
 type Props = {
 	navigation: any;
@@ -24,39 +25,32 @@ const Login = ({ navigation }: Props) => {
 	}, [valido, navigation]);
 
 	useEffect(() => {
-		if(valido == false){
-			handleError();
+		if (valido === false && error) {
+			errorLogin();
+		}else if(valido === true){
+			successLogin();
 		}
-	}, [valido])
+	}, [valido]);
+	
 
-	const handleError = () => {
-		// Muestra el modal
-		setModalVisible(true);
+	const errorLogin = () => {
+		Toast.show({
+			type: 'error',
+			text1: '¡Ha habido un error!',
+			text2: error
+		});
+	}
 
-		// Oculta el modal después de 3 segundos
-		setTimeout(() => {
-			setModalVisible(false);
-		}, 3000);
-	};
+	function successLogin(){
+		Toast.show({
+			type: 'success',
+			text1: '¡Bienvenido de nuevo!'
+		});
+	}
 
 
 	return (
 		<>
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					setModalVisible(!modalVisible);
-				}}
-			>
-				<View style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<Text style={styles.modalText}>{error}</Text>
-					</View>
-				</View>
-
-			</Modal>
 			<ScrollView style={styles.container}>
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
@@ -110,7 +104,6 @@ const Login = ({ navigation }: Props) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-
 				{/*error ? <Text style={{ color: 'red' }}>{error}</Text> : null*/}
 			</ScrollView>
 		</>
@@ -139,13 +132,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
-		  width: 0,
-		  height: 2,
+			width: 0,
+			height: 2,
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
-	  },
+	},
 	modalText: {
 		textAlign: "center",
 		color: "red"

@@ -71,7 +71,7 @@ public class WatchlistRESTController {
 		return ResponseEntity.ok().body(save);
 	}
 	
-	@DeleteMapping("/{email}/watchlist/{idPiso}")
+	@DeleteMapping("/{email}/piso/{idPiso}")
 	public ResponseEntity<?> borrarWatchlist(@PathVariable String email, @PathVariable Integer idPiso) {
 		Usuario inquilino = usuarioDomainService.findById(email);
 		Piso piso = pisoDomainService.findById(idPiso);

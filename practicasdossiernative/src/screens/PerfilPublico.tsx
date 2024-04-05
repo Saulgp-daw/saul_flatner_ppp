@@ -26,7 +26,11 @@ const PerfilPublico = ({ navigation }: Props) => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
     const imagenDefecto = "../resources/user_default.jpg";
 
+    console.log(email);
+    
     if (!usuario) {
+        console.log(usuario);
+        
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />

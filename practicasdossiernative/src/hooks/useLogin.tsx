@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Usuario } from '../types/Usuario';
+import { Piso } from '../types/Piso';
 
 type Props = {}
 
@@ -42,6 +43,7 @@ const useLogin = () => {
 
     async function login(email: string, password: string) {
         setValido(null);
+        setError("");
         const nuevoLogin: iLogin = {
             email: email,
             password: password
@@ -73,11 +75,13 @@ const useLogin = () => {
                 setError(error.response.data || "Error desconocido");
             } finally {
                 setLoading(false);
+
                 setValido(false);
             }
         }
 
         async function getUser(token: string) {
+            
             try {
                 const response = await axios.get(rutaGetUser + email, {
                     headers: {
@@ -100,9 +104,10 @@ const useLogin = () => {
                     anhoNacimiento: data.anhoNacimiento,
                     valoracion: data.valoracion,
                     numVotos: data.numVotos,
+                    active: data.active,
                     // Mapeo de propiedades si se proporciona, de lo contrario un array vacío
                     propiedades: data.propiedades ? data.propiedades.map((piso: any) => ({
-                        id: piso.idPiso,
+                        id: piso.id,
                         titulo: piso.titulo,
                         descripcion: piso.descripcion,
                         electrodomesticos: piso.electrodomesticos,
@@ -126,38 +131,40 @@ const useLogin = () => {
                         wifi: piso.wifi,
                         ascensor: piso.ascensor,
                     })) : [],
-                    pisosInteres: data.pisosInteres ? data.pisosInteres.map((piso: any) => ({
-                        id: piso.idPiso,
-                        titulo: piso.titulo,
-                        descripcion: piso.descripcion,
-                        electrodomesticos: piso.electrodomesticos,
-                        estanciaMinimaDias: piso.estanciaMinimaDias,
-                        fotos: piso.fotos,
-                        fumar: piso.fumar,
-                        gasIncluido: piso.gasIncluido,
-                        jardin: piso.jardin,
-                        luzIncluida: piso.luzIncluida,
-                        mCuadrados: piso.mCuadrados,
-                        mascotas: piso.mascotas,
-                        numHabitaciones: piso.numHabitaciones,
-                        mapsLink: piso.mapsLink,
-                        parejas: piso.parejas,
-                        precioMes: piso.precioMes,
-                        propietarioReside: piso.propietarioReside,
-                        terraza: piso.terraza,
-                        ubicacion: piso.ubicacion,
-                        valoracion: piso.valoracion,
-                        num_votos: piso.num_votos,
-                        wifi: piso.wifi,
-                        ascensor: piso.ascensor,
+                    pisosInteres: data.pisosInteres ? data.pisosInteres.map((watchlist: any) => ({
+                        id: watchlist.piso.idPiso,
+                        titulo: watchlist.piso.titulo,
+                        descripcion: watchlist.piso.descripcion,
+                        electrodomesticos: watchlist.piso.electrodomesticos,
+                        estanciaMinimaDias: watchlist.piso.estanciaMinimaDias,
+                        fotos: watchlist.piso.fotos,
+                        fumar: watchlist.piso.fumar,
+                        gasIncluido: watchlist.piso.gasIncluido,
+                        jardin: watchlist.piso.jardin,
+                        luzIncluida: watchlist.piso.luzIncluida,
+                        mCuadrados: watchlist.piso.mCuadrados,
+                        mascotas: watchlist.piso.mascotas,
+                        numHabitaciones: watchlist.piso.numHabitaciones,
+                        mapsLink: watchlist.piso.mapsLink,
+                        parejas: watchlist.piso.parejas,
+                        precioMes: watchlist.piso.precioMes,
+                        propietarioReside: watchlist.piso.propietarioReside,
+                        terraza: watchlist.piso.terraza,
+                        ubicacion: watchlist.piso.ubicacion,
+                        valoracion: watchlist.piso.valoracion,
+                        num_votos: watchlist.piso.num_votos,
+                        wifi: watchlist.piso.wifi,
+                        ascensor: watchlist.piso.ascensor,
+                        anotaciones: watchlist.anotaciones,
+                        idAnotacion: watchlist.id
                     })) : [],
                     pisoActual: data.pisoActual ?? null
                 };
-
-                console.log("Usuario loggeado: ");
-
-                console.log(usuarioLoggeado);
                 setusuario(usuarioLoggeado);
+                console.log("Datos del usuario loggeado: ------------------------------------\n");
+                
+                console.log(usuarioLoggeado);
+                
 
 
             } catch (error) {

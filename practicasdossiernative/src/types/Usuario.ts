@@ -1,4 +1,5 @@
 import { Piso } from "./Piso";
+import { Watchlist } from "./Watchlist";
 
 export interface Usuario { 
     email: string;
@@ -12,6 +13,7 @@ export interface Usuario {
     anhoNacimiento: number;
     valoracion: number;
     numVotos: number;
+    active: boolean;
     propiedades: Piso[];
     pisosInteres: Piso[];
     pisoActual: Piso;

@@ -22,5 +22,7 @@ export interface Piso {
     num_votos: number,
     wifi: boolean,
     ascensor: boolean;
+    anotaciones: string;
+    idAnotacion: number;
 
 }
