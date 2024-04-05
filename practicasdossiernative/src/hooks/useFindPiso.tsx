@@ -54,7 +54,9 @@ const useFindPiso = (idPiso: number) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response.data);
+                
+                console.log("RESPONSE DATA: -----------------------\n");
+                console.log(response.data.usuariosInteresados[0].usuario);
 
                 const data = response.data;
 
@@ -64,11 +66,22 @@ const useFindPiso = (idPiso: number) => {
                     valoracion: data.propietario.valoracion,
                 };
 
-                const usuariosInteresados: Usuario[] = data.usuariosInteresados.map((usuarioData: any) => ({ 
-                    email: usuarioData.email,
-                    nombre: usuarioData.nombre,
-                    valoracion: usuarioData.valoracion,
+                console.log("TEST: -----------------------\n");
+
+                const test: Usuario[] = data.usuariosInteresados.map((watchlist: any) => {
+                    console.log(watchlist);
+                    
+                 });
+
+                const usuariosInteresados: Usuario[] = data.usuariosInteresados.map((watchlist: any) => ({ 
+                    email: watchlist.usuario.email,
+                    nombre: watchlist.usuario.nombre,
+                    valoracion: watchlist.usuario.valoracion,
                 }));
+                console.log("Usuarios interesados: -----------------------\n");
+                console.log(usuariosInteresados);
+                
+                
 
                 const inquilinos: Usuario[] = data.inquilinos.map((inquilinoData: any) => ({ 
                     email: inquilinoData.email,
