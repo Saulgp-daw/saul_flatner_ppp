@@ -14,19 +14,22 @@ const useWatchList = () => {
     const { token, settoken } = useAppContext();
 
     function agregar(email: string, idPiso: number) {
-        const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/watchlist/" + idPiso;
+        const ruta = "http://" + ip + "/api/v2/watchlists/" + email + "/piso/" + idPiso;
         //console.log(ruta);
+
+        //console.log("Pulsaste agregar");
         
-        const axiospost = async () => {
+        
+        async function axiospost () {
             try {
                 setLoading(true);
                 const response = await axios.post(ruta,{},{ headers: { 'Authorization': `Bearer ${token}` } });
                 //console.log(response.data);
+                
                 let status = response.status;
-                console.log(status);
+                //console.log(status);
                 if (status === 200) {
-
-                    console.log("todo correcto");
+                    //console.log("todo correcto");
                     Alert.alert("Piso añadido", "Respuesta: " + response.status);
                 }
 
@@ -52,7 +55,7 @@ const useWatchList = () => {
         }
         axiospost();
     }
-    return { agregar, error,  }
+    return { agregar, error  }
 }
 
 export default useWatchList

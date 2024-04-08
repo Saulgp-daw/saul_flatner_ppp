@@ -20,12 +20,12 @@ const DrawerFlatner = () => {
   const hide = true;
   return (
     <Drawer.Navigator initialRouteName="Pisos" drawerContent={(props) => <CustomDrawer {...props} />}>
-      <Drawer.Screen name='Mi Perfil' component={PerfilPrivado} />
+      <Drawer.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }}/>
       <Drawer.Screen name="Pisos" component={TabPisos} options={{ headerShown: false }}/>
-      <Drawer.Screen name='WatchList' component={WatchList} /> 
-      <Drawer.Screen name='Mensajes' component={Mensajes} />
-      <Drawer.Screen name='Historial' component={Historial} />
-      <Drawer.Screen name='F.A.Q' component={FAQ} />
+      <Drawer.Screen name='WatchList' component={WatchList} options={{ headerShown: false }}/> 
+      <Drawer.Screen name='Mensajes' component={Mensajes} options={{ headerShown: false }}/>
+      <Drawer.Screen name='Historial' component={Historial} options={{ headerShown: false }}/>
+      <Drawer.Screen name='F.A.Q' component={FAQ} options={{ headerShown: false }}/>
       {
         //<Drawer.Screen name='Piso' component={Piso} options={{ headerShown: false, drawerLabelStyle: {display: "none"} }}/> 
       }

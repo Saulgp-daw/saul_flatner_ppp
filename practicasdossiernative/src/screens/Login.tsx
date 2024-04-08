@@ -1,8 +1,9 @@
-import { Image, StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { Modal, Image, StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react'
 
 import Busqueda from './Busqueda';
 import useLogin from '../hooks/useLogin';
+import Toast from 'react-native-toast-message';
 
 type Props = {
 	navigation: any;
@@ -12,6 +13,7 @@ const Login = ({ navigation }: Props) => {
 	const { login, loading, valido, error } = useLogin();
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
+	const [modalVisible, setModalVisible] = useState(false);
 
 	const logo = "../resources/logo.jpeg";
 
@@ -22,63 +24,90 @@ const Login = ({ navigation }: Props) => {
 		}
 	}, [valido, navigation]);
 
+	useEffect(() => {
+		if (valido === false && error) {
+			errorLogin();
+		}else if(valido === true){
+			successLogin();
+		}
+	}, [valido]);
+	
+
+	const errorLogin = () => {
+		Toast.show({
+			type: 'error',
+			text1: '¡Ha habido un error!',
+			text2: error
+		});
+	}
+
+	function successLogin(){
+		Toast.show({
+			type: 'success',
+			text1: '¡Bienvenido de nuevo!'
+		});
+	}
+
+
 	return (
-		<ScrollView style={styles.container}>
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Image source={require(logo)} style={styles.logo} />
+		<>
+			<ScrollView style={styles.container}>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Image source={require(logo)} style={styles.logo} />
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.h2}>Login</Text>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.h2}>Login</Text>
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.h3} >Bienvenido de vuelta</Text>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.h3} >Bienvenido de vuelta</Text>
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text>Email</Text>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text>Email</Text>
+					</View>
 				</View>
-			</View>
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<TextInput placeholder='Ejm. marcelino@gmail.com' style={styles.textInput} onChangeText={(texto) => setEmail(texto)} />
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<TextInput placeholder='Ejm. marcelino@gmail.com' style={styles.textInput} onChangeText={(texto) => setEmail(texto)} />
+					</View>
 				</View>
-			</View>
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text>Contraseña</Text>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text>Contraseña</Text>
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<TextInput placeholder='*************' style={styles.textInput} secureTextEntry={true} onChangeText={(texto) => setPassword(texto)} />
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<TextInput placeholder='*************' style={styles.textInput} secureTextEntry={true} onChangeText={(texto) => setPassword(texto)} />
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<TouchableOpacity style={styles.btnEntrar} onPress={() => login(email, password)} >
-						<Text style={{ textAlign: 'center' }}>{loading ? 'Un momento...' : 'Entrar'}</Text>
-					</TouchableOpacity>
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<TouchableOpacity style={styles.btnEntrar} onPress={() => login(email, password)} >
+							<Text style={{ textAlign: 'center' }}>{loading ? 'Un momento...' : 'Entrar'}</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.column}>
+						<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Registro")} >
+							<Text style={{ textAlign: 'center' }}>Ir a Registro</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-				<View style={styles.column}>
-					<TouchableOpacity style={styles.btnEntrar} onPress={() => navigation.navigate("Registro")} >
-						<Text style={{ textAlign: 'center' }}>Ir a Registro</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
+				{/*error ? <Text style={{ color: 'red' }}>{error}</Text> : null*/}
+			</ScrollView>
+		</>
 
-			{error ? <Text style={{ color: 'red' }}>{error}</Text> : null}
-		</ScrollView>
 	);
 };
 
@@ -88,6 +117,31 @@ const styles = StyleSheet.create({
 	container: {
 		flexGrow: 1,
 		padding: 20,
+	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "flex-start",
+		alignItems: "center",
+		marginTop: 22,
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: 'white',
+		borderRadius: 20,
+		padding: 35,
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	modalText: {
+		textAlign: "center",
+		color: "red"
 	},
 	row: {
 		flexDirection: 'row',

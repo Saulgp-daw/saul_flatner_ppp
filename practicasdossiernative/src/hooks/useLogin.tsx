@@ -4,6 +4,8 @@ import { ip } from '../../global';
 import axios from 'axios';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Usuario } from '../types/Usuario';
+import { Piso } from '../types/Piso';
 
 type Props = {}
 
@@ -13,10 +15,11 @@ export interface iLogin {
 }
 
 const useLogin = () => {
-    const ruta = "http://"+ip+"/api/login";
-    const {token, settoken, email, setemail} = useAppContext();
+    const ruta = "http://" + ip + "/api/login";
+    const rutaGetUser = "http://" + ip + "/api/v2/usuarios/";
+    const { token, settoken, email, setemail, usuario, setusuario } = useAppContext();
     const [loading, setLoading] = useState(false);
-    const [valido, setValido] = useState(false);
+    const [valido, setValido] = useState(null);
     const [error, setError] = useState("");
 
     // useEffect(() => {
@@ -37,9 +40,10 @@ const useLogin = () => {
 
     //     verificarToken();
     // }, []);
-    
+
     async function login(email: string, password: string) {
-        setValido(false);
+        setValido(null);
+        setError("");
         const nuevoLogin: iLogin = {
             email: email,
             password: password
@@ -63,32 +67,115 @@ const useLogin = () => {
 
                     await AsyncStorage.setItem('token', jsonValue);
                     setValido(true);
+                    await getUser(response.data);
                 }
 
 
             } catch (error) {
-                if (error.response) {
-                    // El servidor devolvió una respuesta con un código de estado fuera del rango 2xx
-                    console.log(error.response.data); // Aquí puedes acceder a los detalles del error en el lado del servidor
-                    setError(error.response.data || "Error desconocido"); // Puedes adaptar esto según la estructura de tu respuesta de error
-                } else if (error.request) {
-                    // La solicitud fue realizada pero no se recibió respuesta
-                    console.log(error.request);
-                    setError("No se recibió respuesta del servidor");
-                } else {
-                    // Hubo un error al configurar o realizar la solicitud
-                    console.log(error.message);
-                    setError("Error en la configuración o ejecución de la solicitud");
-                }
+                setError(error.response.data || "Error desconocido");
             } finally {
                 setLoading(false);
+
                 setValido(false);
             }
         }
-        axiospost();
+
+        async function getUser(token: string) {
+            
+            try {
+                const response = await axios.get(rutaGetUser + email, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log(response.data);
+
+                const data = response.data;
+
+                const usuarioLoggeado: Usuario = {
+                    email: data.email,
+                    nombre: data.nombre,
+                    apellidos: data.apellidos,
+                    fotoPerfil: data.fotoPerfil,
+                    hash: data.hash,
+                    sexo: data.sexo,
+                    fechaUltimaEstancia: data.fechaUltimaEstancia ?? 0,
+                    fechaUltimoAlquiler: data.fechaUltimoAlquiler ?? 0,
+                    anhoNacimiento: data.anhoNacimiento,
+                    valoracion: data.valoracion,
+                    numVotos: data.numVotos,
+                    active: data.active,
+                    // Mapeo de propiedades si se proporciona, de lo contrario un array vacío
+                    propiedades: data.propiedades ? data.propiedades.map((piso: any) => ({
+                        id: piso.id,
+                        titulo: piso.titulo,
+                        descripcion: piso.descripcion,
+                        electrodomesticos: piso.electrodomesticos,
+                        estanciaMinimaDias: piso.estanciaMinimaDias,
+                        fotos: piso.fotos,
+                        fumar: piso.fumar,
+                        gasIncluido: piso.gasIncluido,
+                        jardin: piso.jardin,
+                        luzIncluida: piso.luzIncluida,
+                        mCuadrados: piso.mCuadrados,
+                        mascotas: piso.mascotas,
+                        numHabitaciones: piso.numHabitaciones,
+                        mapsLink: piso.mapsLink,
+                        parejas: piso.parejas,
+                        precioMes: piso.precioMes,
+                        propietarioReside: piso.propietarioReside,
+                        terraza: piso.terraza,
+                        ubicacion: piso.ubicacion,
+                        valoracion: piso.valoracion,
+                        num_votos: piso.num_votos,
+                        wifi: piso.wifi,
+                        ascensor: piso.ascensor,
+                    })) : [],
+                    pisosInteres: data.pisosInteres ? data.pisosInteres.map((watchlist: any) => ({
+                        id: watchlist.piso.idPiso,
+                        titulo: watchlist.piso.titulo,
+                        descripcion: watchlist.piso.descripcion,
+                        electrodomesticos: watchlist.piso.electrodomesticos,
+                        estanciaMinimaDias: watchlist.piso.estanciaMinimaDias,
+                        fotos: watchlist.piso.fotos,
+                        fumar: watchlist.piso.fumar,
+                        gasIncluido: watchlist.piso.gasIncluido,
+                        jardin: watchlist.piso.jardin,
+                        luzIncluida: watchlist.piso.luzIncluida,
+                        mCuadrados: watchlist.piso.mCuadrados,
+                        mascotas: watchlist.piso.mascotas,
+                        numHabitaciones: watchlist.piso.numHabitaciones,
+                        mapsLink: watchlist.piso.mapsLink,
+                        parejas: watchlist.piso.parejas,
+                        precioMes: watchlist.piso.precioMes,
+                        propietarioReside: watchlist.piso.propietarioReside,
+                        terraza: watchlist.piso.terraza,
+                        ubicacion: watchlist.piso.ubicacion,
+                        valoracion: watchlist.piso.valoracion,
+                        num_votos: watchlist.piso.num_votos,
+                        wifi: watchlist.piso.wifi,
+                        ascensor: watchlist.piso.ascensor,
+                        anotaciones: watchlist.anotaciones,
+                        idAnotacion: watchlist.id
+                    })) : [],
+                    pisoActual: data.pisoActual ?? null
+                };
+                setusuario(usuarioLoggeado);
+                console.log("Datos del usuario loggeado: ------------------------------------\n");
+                
+                console.log(usuarioLoggeado);
+                
+
+
+            } catch (error) {
+                console.log(error);
+
+            }
+        }
+        await axiospost();
     }
 
-  return { login, loading, valido, error }
+    return { login, loading, valido, error }
 }
 
 export default useLogin

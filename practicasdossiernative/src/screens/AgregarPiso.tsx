@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
 import CheckBox from '@react-native-community/checkbox';
 import { useIsFocused } from '@react-navigation/native';
+import Navbar from '../components/Navbar';
 
 type Props = {
 	navigation: any;
@@ -12,8 +13,8 @@ type Props = {
 const AgregarPiso = ({ navigation }: Props) => {
 	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
 	const [text, setText] = useState("");
-	
-	
+
+
 	const [electrodomesticos, setElectrodomesticos] = useState([
 		{ id: 1, label: 'Lavadora', value: 'Lavadora', isChecked: false },
 		{ id: 2, label: 'Secadora', value: 'Secadora', isChecked: false },
@@ -50,249 +51,253 @@ const AgregarPiso = ({ navigation }: Props) => {
 	};
 
 	const prepararPost = async () => {
-		
+
 		//console.log(informacionPiso);
-		
+
 		post();
 	};
 
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
+		<>
+			<Navbar navigation={navigation} />
+			<ScrollView contentContainerStyle={styles.container}>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Titulo:</Text>
-					<TextInput style={styles.textInput} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Titulo:</Text>
+						<TextInput style={styles.textInput} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
+					</View>
 				</View>
-			</View>
 
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Descripción:</Text>
-					<View style={styles.textAreaContainer}>
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Descripción:</Text>
+						<View style={styles.textAreaContainer}>
+							<TextInput
+								style={styles.textArea}
+								placeholder="Escribe aquí..."
+								placeholderTextColor="grey"
+								multiline
+								numberOfLines={10}
+								onChangeText={(texto) => updateCampo("descripcion", texto)}
+							/>
+						</View>
+					</View>
+				</View>
+
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Estancia mínima en días:</Text>
 						<TextInput
-							style={styles.textArea}
-							placeholder="Escribe aquí..."
-							placeholderTextColor="grey"
-							multiline
-							numberOfLines={10}
-							onChangeText={(texto) => updateCampo("descripcion", texto)}
+							style={styles.textInput}
+							placeholder='Ejm: 30'
+							keyboardType="numeric"
+							onChangeText={(texto) => updateCampo("estanciaMinimaDias", texto)}
+						/>
+					</View>
+					<View style={styles.column}>
+						<Text style={styles.label}>Número de habitaciones:</Text>
+						<TextInput
+							style={styles.textInput}
+							placeholder='Ejm: 4'
+							keyboardType="numeric"
+							onChangeText={(texto) => updateCampo("numHabitaciones", texto)}
 						/>
 					</View>
 				</View>
-			</View>
-
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Estancia mínima en días:</Text>
-					<TextInput
-						style={styles.textInput}
-						placeholder='Ejm: 30'
-						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("estanciaMinimaDias", texto)}
-					/>
-				</View>
-				<View style={styles.column}>
-					<Text style={styles.label}>Número de habitaciones:</Text>
-					<TextInput
-						style={styles.textInput}
-						placeholder='Ejm: 4'
-						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("numHabitaciones", texto)}
-					/>
-				</View>
-			</View>
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Precio al mes:</Text>
-					<TextInput
-						style={styles.textInput}
-						placeholder='Ejm: 300'
-						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("precioMes", texto)}
-					/>
-				</View>
-				<View style={styles.column}>
-					<Text style={styles.label}>Metros cuadrados:</Text>
-					<TextInput
-						style={styles.textInput}
-						placeholder='Ejm: 23'
-						keyboardType="numeric"
-						onChangeText={(texto) => updateCampo("mCuadrados", texto)}
-					/>
-				</View>
-			</View>
-
-
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Electrodomésticos:</Text>
-				</View>
-			</View>
-			<View style={styles.flatListContainer}>
-				{electrodomesticos.map((item) => (
-					<View key={item.id} style={styles.itemContainer}>
-						<CheckBox
-							value={item.isChecked}
-							onValueChange={() => handleOnChange(item.id)}
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Precio al mes:</Text>
+						<TextInput
+							style={styles.textInput}
+							placeholder='Ejm: 300'
+							keyboardType="numeric"
+							onChangeText={(texto) => updateCampo("precioMes", texto)}
 						/>
-						<Text style={styles.itemText}>{item.label}</Text>
 					</View>
-				))}
-			</View>
-
-			{
-				// 	<View style={styles.singleColumnRow}>
-				// 	<View style={styles.column}>
-				// 		<Text style={styles.label}>Ubicación:</Text>
-				// 	</View>
-				// </View>
-			}
-
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.titulo}>Servicios que se ofrece:</Text>
-				</View>
-			</View>
-
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Ascensor:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.ascensor ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('ascensor', value)}
-						value={informacionPiso.ascensor}
-					/>
+					<View style={styles.column}>
+						<Text style={styles.label}>Metros cuadrados:</Text>
+						<TextInput
+							style={styles.textInput}
+							placeholder='Ejm: 23'
+							keyboardType="numeric"
+							onChangeText={(texto) => updateCampo("mCuadrados", texto)}
+						/>
+					</View>
 				</View>
 
-				<View style={styles.column}>
-					<Text style={styles.label}>Luz incluida:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.luzIncluida ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('luzIncluida', value)}
-						value={informacionPiso.luzIncluida}
-					/>
+
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Electrodomésticos:</Text>
+					</View>
 				</View>
-				<View style={styles.column}>
-					<Text style={styles.label}>Gas:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.gasIncluido ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('gasIncluido', value)}
-						value={informacionPiso.gasIncluido}
-					/>
-				</View>
-				<View style={styles.column}>
-					<Text style={styles.label}>Wifi:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.wifi ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('wifi', value)}
-						value={informacionPiso.wifi}
-					/>
+				<View style={styles.flatListContainer}>
+					{electrodomesticos.map((item) => (
+						<View key={item.id} style={styles.itemContainer}>
+							<CheckBox
+								value={item.isChecked}
+								onValueChange={() => handleOnChange(item.id)}
+							/>
+							<Text style={styles.itemText}>{item.label}</Text>
+						</View>
+					))}
 				</View>
 
-			</View>
+				{
+					// 	<View style={styles.singleColumnRow}>
+					// 	<View style={styles.column}>
+					// 		<Text style={styles.label}>Ubicación:</Text>
+					// 	</View>
+					// </View>
+				}
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.titulo}>En este piso se permite:</Text>
-				</View>
-			</View>
-
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Mascotas:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.mascotas ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('mascotas', value)}
-						value={informacionPiso.mascotas}
-					/>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.titulo}>Servicios que se ofrece:</Text>
+					</View>
 				</View>
 
-				<View style={styles.column}>
-					<Text style={styles.label}>Fumar:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.fumar ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('fumar', value)}
-						value={informacionPiso.fumar}
-					/>
-				</View>
-				<View style={styles.column}>
-					<Text style={styles.label}>Parejas:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.parejas ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('parejas', value)}
-						value={informacionPiso.parejas}
-					/>
-				</View>
-			</View>
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Text style={styles.titulo}>Más opciones:</Text>
-				</View>
-			</View>
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Ascensor:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.ascensor ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('ascensor', value)}
+							value={informacionPiso.ascensor}
+						/>
+					</View>
 
-			<View style={styles.row}>
-				<View style={styles.column}>
-					<Text style={styles.label}>Propietario Reside:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.propietarioReside ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('propietarioReside', value)}
-						value={informacionPiso.propietarioReside}
-					/>
-				</View>
+					<View style={styles.column}>
+						<Text style={styles.label}>Luz incluida:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.luzIncluida ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('luzIncluida', value)}
+							value={informacionPiso.luzIncluida}
+						/>
+					</View>
+					<View style={styles.column}>
+						<Text style={styles.label}>Gas:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.gasIncluido ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('gasIncluido', value)}
+							value={informacionPiso.gasIncluido}
+						/>
+					</View>
+					<View style={styles.column}>
+						<Text style={styles.label}>Wifi:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.wifi ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('wifi', value)}
+							value={informacionPiso.wifi}
+						/>
+					</View>
 
-				<View style={styles.column}>
-					<Text style={styles.label}>Tiene Terraza:</Text>
-					<Switch
-						style={{ alignSelf: 'flex-start' }}
-						trackColor={{ false: '#fc5858', true: '#15de9b' }}
-						thumbColor={informacionPiso.terraza ? '#35bd6b' : '#bd3535'}
-						ios_backgroundColor="#3e3e3e"
-						onValueChange={(value) => setSwitch('terraza', value)}
-						value={informacionPiso.terraza}
-					/>
 				</View>
 
-			</View>
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Button title={informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : "Subir foto del piso"} onPress={() => selectImage()} />
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.titulo}>En este piso se permite:</Text>
+					</View>
 				</View>
-			</View>
 
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Mascotas:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.mascotas ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('mascotas', value)}
+							value={informacionPiso.mascotas}
+						/>
+					</View>
 
-			<View style={styles.singleColumnRow}>
-				<View style={styles.column}>
-					<Button title={loading ? 'Enviando...' : 'Crear'} onPress={prepararPost} />
+					<View style={styles.column}>
+						<Text style={styles.label}>Fumar:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.fumar ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('fumar', value)}
+							value={informacionPiso.fumar}
+						/>
+					</View>
+					<View style={styles.column}>
+						<Text style={styles.label}>Parejas:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.parejas ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('parejas', value)}
+							value={informacionPiso.parejas}
+						/>
+					</View>
 				</View>
-			</View>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Text style={styles.titulo}>Más opciones:</Text>
+					</View>
+				</View>
 
-		</ScrollView>
+				<View style={styles.row}>
+					<View style={styles.column}>
+						<Text style={styles.label}>Propietario Reside:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.propietarioReside ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('propietarioReside', value)}
+							value={informacionPiso.propietarioReside}
+						/>
+					</View>
+
+					<View style={styles.column}>
+						<Text style={styles.label}>Tiene Terraza:</Text>
+						<Switch
+							style={{ alignSelf: 'flex-start' }}
+							trackColor={{ false: '#fc5858', true: '#15de9b' }}
+							thumbColor={informacionPiso.terraza ? '#35bd6b' : '#bd3535'}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={(value) => setSwitch('terraza', value)}
+							value={informacionPiso.terraza}
+						/>
+					</View>
+
+				</View>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Button title={informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : "Subir foto del piso"} onPress={() => selectImage()} />
+					</View>
+				</View>
+
+
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Button title={loading ? 'Enviando...' : 'Crear'} onPress={prepararPost} />
+					</View>
+				</View>
+
+			</ScrollView>
+		</>
+
 	);
 };
 

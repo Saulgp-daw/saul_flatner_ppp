@@ -8,6 +8,7 @@ import useFindPiso from '../hooks/useFindPiso';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
 import ModalAnotacion from '../components/ModalAnotacion';
+import Navbar from '../components/Navbar';
 
 
 
@@ -17,9 +18,9 @@ type Props = {
 
 const WatchList = ({ navigation }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const { token, email } = useAppContext();
-	const { usuario } = useFindUsuario(email);
-	const { watchlists, reload, setReload } = useFindWatchlistByEmail(email);
+	const { token, email, usuario, setusuario } = useAppContext();
+	//const { usuario } = useFindUsuario(email);
+	const { watchlists, reload, setReload } = useFindWatchlistByEmail(usuario.email);
 	const [error, setError] = useState(false);
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
@@ -32,7 +33,7 @@ const WatchList = ({ navigation }: Props) => {
 	}, [reload])
 
 
-	if (!watchlists) {
+	if (!usuario.pisosInteres) {
 		return (
 			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color="#0000ff" />
@@ -40,24 +41,32 @@ const WatchList = ({ navigation }: Props) => {
 		);
 	}
 
-	if (!watchlists || watchlists.length === 0) {
+	if (!usuario.pisosInteres || usuario.pisosInteres.length === 0) {
 		return (
-			<View style={styles.loadingContainer}>
-			  <Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
-			</View>
+			<>
+				<Navbar navigation={navigation} />
+				<View style={styles.loadingContainer}>
+
+					<Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
+				</View>
+			</>
+
 		);
-	  }
+	}
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
-			{watchlists.map((watchlist) => (
-				<>
-					<PisoComponent key={watchlist.piso.idPiso} pisoId={watchlist.piso.idPiso} token={token} navigation={navigation} />
-					<ModalAnotacion idWatchlist={watchlist.id} anotacion={watchlist.anotaciones}/>
-				</>
-				
-			))}
-		</ScrollView>
+		<>
+			<Navbar navigation={navigation} />
+			<ScrollView contentContainerStyle={styles.container}>
+				{usuario.pisosInteres.map((watchlist) => (
+					<View key={watchlist.id}>
+						<PisoComponent pisoId={watchlist.id} token={token} navigation={navigation} />
+						<ModalAnotacion idWatchlist={watchlist.idAnotacion} anotacion={watchlist.anotaciones} />
+					</View>
+				))}
+			</ScrollView>
+		</>
+
 	);
 }
 
@@ -139,7 +148,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',
-	  },
+	},
 
 	valoracion: {
 		position: 'absolute',

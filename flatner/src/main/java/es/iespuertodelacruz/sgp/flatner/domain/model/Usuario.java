@@ -222,6 +222,16 @@ public class Usuario {
 	    }
 	}
 	
+	@Override
+	public String toString() {
+		return "Usuario [email=" + email + ", nombre=" + nombre + ", apellidos=" + apellidos + ", fotoPerfil="
+				+ fotoPerfil + ", password=" + password + ", hash=" + hash + ", rol=" + rol + ", sexo=" + sexo
+				+ ", active=" + active + ", fechaUltimaEstancia=" + fechaUltimaEstancia + ", fechaUltimoAlquiler="
+				+ fechaUltimoAlquiler + ", anhoNacimiento=" + anhoNacimiento + ", valoracion=" + valoracion
+				+ ", numVotos=" + numVotos + ", propiedades=" + propiedades + ", pisosInteres=" + pisosInteres
+				+ ", pisoActual=" + pisoActual + "]";
+	}
+	
 	
 	
 }

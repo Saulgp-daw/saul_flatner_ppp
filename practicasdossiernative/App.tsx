@@ -8,6 +8,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import type { PropsWithChildren } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import {
   SafeAreaView,
@@ -25,9 +26,13 @@ import StackNavigation from './src/navigators/StackNavigation';
 function App(): JSX.Element {
 
   return (
-    <NavigationContainer>
+    <>
+      <NavigationContainer>
         <StackNavigation />
-    </NavigationContainer>
+      </NavigationContainer>
+      <Toast />
+    </>
+
   );
 }
 

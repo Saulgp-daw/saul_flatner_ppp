@@ -15,10 +15,10 @@ type Props = {
 
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
-    const { token, email } = useAppContext();
+    const { token, email, usuario } = useAppContext();
     const { reload, setReload, informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Tonto');
-    const [selectedYear, setSelectedYear] = useState(informacionUsuario ? informacionUsuario.anhoNacimiento : null);
+    const [selectedYear, setSelectedYear] = useState(usuario ? usuario.anhoNacimiento : null);
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
     const [loading, setLoading] = useState(false);
 
@@ -59,7 +59,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
         }
     };
 
-    if (!informacionUsuario) {
+    if (!usuario) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />
@@ -68,89 +68,86 @@ const PerfilPrivado = ({ navigation }: Props) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <>
+            <Navbar navigation={navigation} />
+            <ScrollView contentContainerStyle={styles.container}>
 
-            <View style={styles.profileImageContainer}>
-                <Image
-                    source={{
-                        uri: ruta + informacionUsuario.fotoPerfil,
-                        method: "GET",
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }}
-                    style={styles.profileImage}
-                    onError={(e) => {
-                        console.log(ruta + informacionUsuario.fotoPerfil);
+                <View style={styles.profileImageContainer}>
+                    {usuario.fotoPerfil && !error ? (
+                        <Image
+                            source={{
+                                uri: ruta + usuario.fotoPerfil,
+                                method: "GET",
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            }}
+                            style={styles.profileImage}
+                            onError={() => setError(true)}
+                        />
+                    ) : (
+                        <Image source={require(imagenDefecto)} style={styles.profileImage} />
+                    )}
+                </View>
 
-                        setError(true);
-                    }}
-                    onLoad={() => {
-                        setError(false);
-                    }}
-                />
-                {error == true ??
-                  
-                    <Image source={require(imagenDefecto)} style={styles.profileImage} />
+                <View style={styles.row}>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Email:</Text>
+                        <TextInput style={styles.disabledInput} defaultValue={usuario ? usuario.email || "Email" : "Email"} editable={false} />
+                    </View>
+
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Nombre:</Text>
+                        <TextInput style={styles.textInput} defaultValue={usuario ? usuario.nombre || "" : ""} onChangeText={(texto) => updateNombre(texto)} />
+                    </View>
+                </View>
+
+                <View style={styles.row}>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Apellidos:</Text>
+                        <TextInput style={styles.textInput} defaultValue={usuario ? usuario.apellidos || "" : ""} onChangeText={(texto) => updateApellidos(texto)} />
+                    </View>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Contraseña:</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            secureTextEntry={true}
+                            placeholder='*************'
+                            onChangeText={(texto) => updatePassword(texto)}
+                        />
+                    </View>
+                </View>
+                <View style={styles.row}>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Sexo:</Text>
+                        <SexoPicker onSexoChange={handleSexoChange} sexoInicial={usuario.sexo} />
+                    </View>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Año de Nacimiento:</Text>
+                        <YearPicker onYearChange={handleYearChange} anhoInicial={usuario.anhoNacimiento} />
+                    </View>
+                </View>
+
+                <View style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+
+                        <Button title={fotoSubida ? "Foto Subida" : "Subir foto de perfil"} onPress={() => selectImage()} />
+                    </View>
+                </View>
+                {
+                    //     <View style={styles.singleColumnRow}>
+                    //     <View style={styles.column}>
+                    //         <Text style={styles.label}>{informacionUsuario && informacionUsuario.fotoPerfil != "" ? informacionUsuario.fotoPerfil || "" : ""}</Text>
+                    //     </View>
+                    // </View>
                 }
-            </View>
-            <View style={styles.row}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Email:</Text>
-                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.email || "Email" : "Email"} editable={false} />
-                </View>
-
-                <View style={styles.column}>
-                    <Text style={styles.label}>Nombre:</Text>
-                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.nombre || "" : ""} onChangeText={(texto) => updateNombre(texto)} />
-                </View>
-            </View>
-
-            <View style={styles.row}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Apellidos:</Text>
-                    <TextInput style={styles.textInput} defaultValue={informacionUsuario ? informacionUsuario.apellidos || "" : ""} onChangeText={(texto) => updateApellidos(texto)} />
-                </View>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Contraseña:</Text>
-                    <TextInput
-                        style={styles.textInput}
-                        secureTextEntry={true}
-                        placeholder='*************'
-                        onChangeText={(texto) => updatePassword(texto)}
-                    />
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Sexo:</Text>
-                    <SexoPicker onSexoChange={handleSexoChange} sexoInicial={informacionUsuario.sexo} />
-                </View>
-                <View style={styles.column}>
-                    <Text style={styles.label}>Año de Nacimiento:</Text>
-                    <YearPicker onYearChange={handleYearChange} anhoInicial={informacionUsuario.anhoNacimiento} />
-                </View>
-            </View>
-
-            <View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-
-                    <Button title={fotoSubida ? "Foto Subida" : "Subir foto de perfil"} onPress={() => selectImage()} />
-                </View>
-            </View>
-            {
-                //     <View style={styles.singleColumnRow}>
-                //     <View style={styles.column}>
-                //         <Text style={styles.label}>{informacionUsuario && informacionUsuario.fotoPerfil != "" ? informacionUsuario.fotoPerfil || "" : ""}</Text>
-                //     </View>
-                // </View>
-            }
 
 
-            <View style={styles.singleColumnRow}>
-                <View style={styles.column}>
-                    <Button title={loading ? 'Enviando...' : 'Actualizar Datos'} onPress={handleActualizarDatos} />
+                <View style={styles.singleColumnRow}>
+                    <View style={styles.column}>
+                        <Button title={loading ? 'Enviando...' : 'Actualizar Datos'} onPress={handleActualizarDatos} disabled={false} />
+                    </View>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </>
     )
 }
 
@@ -184,6 +181,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 5,
+        padding: 10,
+    },
+
+    disabledInput: {
+        borderWidth: 1,
+        borderColor: '#A09B9A',
+        backgroundColor: '#E8DAD7',
+        borderRadius: 5,
+        color: "#A09B9A",
         padding: 10,
     },
 

@@ -1,12 +1,14 @@
 import { View, StyleSheet, Button, SafeAreaView } from 'react-native';
 import {
     DrawerContentScrollView,
+    DrawerItem,
     DrawerItemList,
 } from '@react-navigation/drawer';
 
 import React, { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Piso from '../screens/Piso';
+import { Text } from 'react-native';
 
 
 
@@ -30,6 +32,11 @@ const CustomDrawer = (props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
+                <View>
+                    <Text>Hola</Text>
+                </View>
+
+                <DrawerItem label={'TEST'} onPress={() => props.navigation.navigate('Pisos') }/>
                 <DrawerItemList {...props} />
             </DrawerContentScrollView>
 

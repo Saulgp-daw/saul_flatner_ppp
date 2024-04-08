@@ -49,7 +49,7 @@ public class WatchlistRESTController {
 		return ResponseEntity.ok(allByUsuarioEmail);
 	}
 	
-	@PostMapping("/{email}/watchlist/{idPiso}")
+	@PostMapping("/{email}/piso/{idPiso}")
 	public ResponseEntity<?> agregarWatchlist(@PathVariable String email, @PathVariable Integer idPiso) {
 		Usuario interesado = usuarioDomainService.findById(email);
 		Piso piso = pisoDomainService.findById(idPiso);
@@ -71,7 +71,7 @@ public class WatchlistRESTController {
 		return ResponseEntity.ok().body(save);
 	}
 	
-	@DeleteMapping("/{email}/watchlist/{idPiso}")
+	@DeleteMapping("/{email}/piso/{idPiso}")
 	public ResponseEntity<?> borrarWatchlist(@PathVariable String email, @PathVariable Integer idPiso) {
 		Usuario inquilino = usuarioDomainService.findById(email);
 		Piso piso = pisoDomainService.findById(idPiso);

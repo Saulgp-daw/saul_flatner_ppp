@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, Modal, Button, TextInput, TouchableHighlight, T
 import React, { useState } from 'react'
 import useSaveAnotacion from '../hooks/useSaveAnotacion';
 
+import Toast from 'react-native-toast-message';
+
 type Props = {
     idWatchlist: number;
     anotacion: string;
@@ -23,6 +25,11 @@ const ModalAnotacion = ({ idWatchlist, anotacion }: Props) => {
         setModalVisible(false);
         guardarAnotacion(idWatchlist, miAnotacion);
         setAnotacionLista(miAnotacion);
+
+        Toast.show({
+			type: 'success',
+			text1: 'Anotación guardada con éxito'
+		});
     }
 
     return (
