@@ -10,6 +10,7 @@ import usePerfilPrivado from '../hooks/usePerfilPrivado';
 import useWatchList from '../hooks/useWatchList';
 import { DrawerActions } from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
+import { useAppContext } from '../contexts/TokenContextProvider';
 
 type Props = {
     navigation: any;
@@ -24,10 +25,12 @@ const Piso = ({ navigation }: Props) => {
     const route = useRoute();
     const { pisoId } = route.params as RouteParams;
     console.log(pisoId);
+    const { token, email, usuario } = useAppContext();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { piso, reload, setReload } = useFindById(pisoId);
     const { informacionUsuario } = usePerfilPrivado();
+
     const { agregar } = useWatchList();
 
     useEffect(() => {
@@ -62,12 +65,18 @@ const Piso = ({ navigation }: Props) => {
 
                 <View style={styles.details}>
                     <View style={styles.datosContainer}>
-                        <Text><Icon name="bookmark" size={20} /></Text>
+                        <Text>
+                            {
+                                usuario.pisosInteres.some(pisoW => pisoW.id === piso.idPiso) ?
+                                     <Icon name="bookmark" size={20} /> : <Icon name="bookmark-outline" size={20} />
+                            }
+                        </Text>
+
                         <Text style={styles.infoRelevante} >{piso.titulo}</Text>
                         <Text style={styles.infoRelevante}>{piso.precioMes} €</Text>
                     </View>
                     <View style={styles.datosContainer}>
-                        <Text><Icon name="bed" size={20}/> {piso.numHabitaciones}</Text>
+                        <Text><Icon name="bed" size={20} /> {piso.numHabitaciones}</Text>
                         <Text><Icon name="person-sharp" size={20} /> {piso.inquilinos.length}</Text>
                         <Text>Propietario: {piso.propietarioReside ? 'Reside' : 'No Reside'}</Text>
                     </View>

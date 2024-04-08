@@ -1,5 +1,4 @@
 import { Piso } from "./Piso";
-import { Watchlist } from "./Watchlist";
 
 export interface Usuario { 
     email: string;

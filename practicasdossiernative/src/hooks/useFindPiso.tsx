@@ -54,9 +54,7 @@ const useFindPiso = (idPiso: number) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                
-                console.log("RESPONSE DATA: -----------------------\n");
-                console.log(response.data.usuariosInteresados[0].usuario);
+               
 
                 const data = response.data;
 

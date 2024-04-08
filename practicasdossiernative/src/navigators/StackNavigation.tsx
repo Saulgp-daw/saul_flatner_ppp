@@ -10,23 +10,32 @@ import WatchList from '../screens/WatchList';
 import TokenContextProvider from '../contexts/TokenContextProvider';
 import Busqueda from '../screens/Busqueda';
 import DrawerFlatner from './DrawerFlatner';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+
 
 
 type Props = {}
-const Stack = createNativeStackNavigator();
+//const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const StackNavigation = (props: Props) => {
     return (
         <TokenContextProvider>
-                <Stack.Navigator>
-                    <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-                    <Stack.Screen name='Registro' component={Registro} options={{ headerShown: false }} />
-                    <Stack.Screen name='DrawerFlatner' component={DrawerFlatner} options={{ headerShown: false }} />
-                    <Stack.Screen name='Busqueda' component={Busqueda} options={{ headerShown: false }}/>
-                    <Stack.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }}/>
-                    <Stack.Screen name='Piso' component={Piso} options={{ headerShown: false }} />
-                    <Stack.Screen name='Perfil' component={PerfilPublico} options={{ headerShown: false }} /> 
-                </Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    gestureEnabled: true,
+                    gestureDirection: 'horizontal',
+                    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                }}
+            >
+                <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+                <Stack.Screen name='Registro' component={Registro} options={{ headerShown: false }} />
+                <Stack.Screen name='DrawerFlatner' component={DrawerFlatner} options={{ headerShown: false }} />
+                <Stack.Screen name='Busqueda' component={Busqueda} options={{ headerShown: false }} />
+                <Stack.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }} />
+                <Stack.Screen name='Piso' component={Piso} options={{ headerShown: false }} />
+                <Stack.Screen name='Perfil' component={PerfilPublico} options={{ headerShown: false }} />
+            </Stack.Navigator>
         </TokenContextProvider>
     )
 }
