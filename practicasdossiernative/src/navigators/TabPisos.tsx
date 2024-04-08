@@ -1,41 +1,42 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
+import React from 'react';
+import { View, Text } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Busqueda from '../screens/Busqueda';
 import AgregarPiso from '../screens/AgregarPiso';
+import MisPisos from '../screens/MisPisos';
 
 type Props = {
   navigation: any;
 }
-const Tab = createBottomTabNavigator();
+
+const Tab = createMaterialTopTabNavigator();
+
 const TabPisos = ({ navigation }: Props) => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}> 
-      <Tab.Screen
+    <Tab.Navigator
       
-        name="Buscar"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="search-outline" size={30} />
-          ),
-        }}
-      >
-        {() => <Busqueda navigation={navigation} />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="Agregar"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="add-circle-outline" size={30} />
-          ),
-        }}
-      >
-        {() => <AgregarPiso navigation={navigation} />}
-      </Tab.Screen>
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color }) => {
+          let iconName;
+
+          if (route.name === 'Busqueda') {
+            iconName = 'search-outline';
+          } else if (route.name === 'AgregarPiso') {
+            iconName = 'add-circle-outline';
+          } else if (route.name === 'MisPisos') {
+            iconName = 'home';
+          }
+
+          return <Icon name={iconName} size={23} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen name="Busqueda" component={Busqueda} options={{ title: 'Busqueda' }} />
+      <Tab.Screen name="AgregarPiso" component={AgregarPiso} options={{ title: 'Agregar' }} />
+      <Tab.Screen name="MisPisos" component={MisPisos} options={{ title: 'Mis Pisos' }} />
     </Tab.Navigator>
   );
 };
 
-export default TabPisos
+export default TabPisos;

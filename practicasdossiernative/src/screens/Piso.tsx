@@ -51,7 +51,6 @@ const Piso = ({ navigation }: Props) => {
 
     return (
         <View style={styles.container}>
-            <Navbar navigation={navigation} />
             <ScrollView style={styles.container} >
 
                 <Slider

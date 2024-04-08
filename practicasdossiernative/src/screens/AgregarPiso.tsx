@@ -60,7 +60,6 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<Navbar navigation={navigation} />
 			<ScrollView contentContainerStyle={styles.container}>
 
 				<View style={styles.singleColumnRow}>

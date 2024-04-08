@@ -8,6 +8,7 @@ import YearPicker from '../components/YearPicker';
 import { Button } from 'react-native';
 import { ip } from '../../global';
 import { useAppContext } from '../contexts/TokenContextProvider';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
     navigation: any,
@@ -67,9 +68,18 @@ const PerfilPrivado = ({ navigation }: Props) => {
         );
     }
 
+    async function logOut() {
+        try {
+            console.log('Token eliminado');
+            navigation.navigate("Login");
+
+        } catch (e) {
+            console.error('Error al eliminar el token', e);
+        }
+    }
+
     return (
         <>
-            <Navbar navigation={navigation} />
             <ScrollView contentContainerStyle={styles.container}>
 
                 <View style={styles.profileImageContainer}>
@@ -146,6 +156,9 @@ const PerfilPrivado = ({ navigation }: Props) => {
                         <Button title={loading ? 'Enviando...' : 'Actualizar Datos'} onPress={handleActualizarDatos} disabled={false} />
                     </View>
                 </View>
+                <View style={styles.logOut}>
+                  
+                </View>
             </ScrollView>
         </>
     )
@@ -172,6 +185,16 @@ const styles = StyleSheet.create({
     singleColumnRow: {
         flexDirection: 'row',
         marginBottom: 20,
+    },
+
+    logOut: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: 'red',
+        padding: 5,
+        borderRadius: 5,
+        color: "white"
     },
 
     label: {

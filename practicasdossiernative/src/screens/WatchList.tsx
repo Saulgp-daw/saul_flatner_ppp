@@ -44,7 +44,6 @@ const WatchList = ({ navigation }: Props) => {
 	if (!usuario.pisosInteres || usuario.pisosInteres.length === 0) {
 		return (
 			<>
-				<Navbar navigation={navigation} />
 				<View style={styles.loadingContainer}>
 
 					<Text style={styles.noPisosText}>No tienes ningún piso agregado</Text>
@@ -56,7 +55,6 @@ const WatchList = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<Navbar navigation={navigation} />
 			<ScrollView contentContainerStyle={styles.container}>
 				{usuario.pisosInteres.map((watchlist) => (
 					<View key={watchlist.id}>

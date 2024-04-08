@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-type Props = {}
+type Props = {
+	navigation: any,
+}
 
-const Mensajes = (props: Props) => {
+const Mensajes = ({ navigation }: Props) => {
   return (
     <View>
       <Text>Mensajes</Text>
