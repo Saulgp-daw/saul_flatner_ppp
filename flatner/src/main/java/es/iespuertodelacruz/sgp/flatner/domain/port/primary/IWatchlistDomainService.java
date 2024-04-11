@@ -13,5 +13,6 @@ public interface IWatchlistDomainService {
 	boolean delete(Integer id);
 	boolean existsByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId);
 	boolean deleteByUsuarioEmailAndPisoId(String emailUsuario, Integer pisoId);
+	boolean deleteByPisoId(Integer idPiso);
 	List<Watchlist> findAllByUsuarioEmail (String email);
 }

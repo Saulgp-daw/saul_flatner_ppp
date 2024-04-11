@@ -25,7 +25,7 @@ const TabPisos = ({ navigation }: Props) => {
           } else if (route.name === 'AgregarPiso') {
             iconName = 'add-circle-outline';
           } else if (route.name === 'MisPisos') {
-            iconName = 'home';
+            iconName = 'newspaper-outline';
           }
 
           return <Icon name={iconName} size={23} color={color} />;
@@ -34,7 +34,7 @@ const TabPisos = ({ navigation }: Props) => {
     >
       <Tab.Screen name="Busqueda" component={Busqueda} options={{ title: 'Busqueda' }} />
       <Tab.Screen name="AgregarPiso" component={AgregarPiso} options={{ title: 'Agregar' }} />
-      <Tab.Screen name="MisPisos" component={MisPisos} options={{ title: 'Mis Pisos' }} />
+      <Tab.Screen name="MisPisos" component={MisPisos} options={{ title: 'Mis Anuncios' }} />
     </Tab.Navigator>
   );
 };

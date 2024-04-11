@@ -106,4 +106,17 @@ public class WatchlistEntityService implements IWatchlistDomainRepository{
 		return lista.stream().map(we -> mapper.toDomainWatchlist(we)).collect(Collectors.toList());
 	}
 
+	@Override
+	@Transactional
+	public boolean deleteByPisoId(Integer idPiso) {
+		
+		try {
+			weRepository.deleteByPisoId(idPiso);
+			return true;
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+
 }

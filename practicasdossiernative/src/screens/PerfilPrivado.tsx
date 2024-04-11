@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import usePerfilPrivado from '../hooks/usePerfilPrivado';
@@ -157,7 +157,11 @@ const PerfilPrivado = ({ navigation }: Props) => {
                     </View>
                 </View>
                 <View style={styles.logOut}>
-                  
+                    <TouchableHighlight onPress={() => logOut()} >
+                        <Text>
+                            <Icon name="exit-outline" size={32} />
+                        </Text>
+                    </TouchableHighlight>
                 </View>
             </ScrollView>
         </>

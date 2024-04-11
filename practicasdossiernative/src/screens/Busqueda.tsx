@@ -39,7 +39,7 @@ const Busqueda = ({ navigation }: Props) => {
     return (
       <>
         <View style={styles.loadingContainer}>
-          <Text style={styles.noPisosText}>Aún no hay pisos creados</Text>
+          <Text style={styles.noPisosText}>No hay ningún piso o los filtros de búsqueda no coinciden con lo que deseas</Text>
         </View>
       </>
     );
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    margin: 9
   },
 
   caja: {

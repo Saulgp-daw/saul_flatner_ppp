@@ -88,6 +88,16 @@ public class WatchlistRESTController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede asignar un piso o usario que no existe");
 	}
 	
+	@DeleteMapping("/piso/{idPiso}")
+	public ResponseEntity<?> borrarMultiples(@PathVariable Integer idPiso){
+		boolean delete = watchlistDomainService.deleteByPisoId(idPiso);
+		if(delete) {
+			return ResponseEntity.ok().body("Watchlist eliminada correctamente");
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo borrar la entrada de la watchlist.");
+		}
+		
+	}
 	@PutMapping("/{id}")
 	public ResponseEntity<?> comentarioWatchlist(@PathVariable Integer id, @RequestBody AnotacionDTO dto ){
 		Watchlist find = watchlistDomainService.findById(id);

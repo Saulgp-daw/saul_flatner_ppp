@@ -17,5 +17,9 @@ public interface IWatchlistEntityRepository extends JpaRepository<WatchlistEntit
 
 	@Query("SELECT w FROM WatchlistEntity w WHERE w.usuario.email = :email")
 	List<WatchlistEntity> findAllByUsuarioEmail(@Param("email") String usuario);
+	
+	@Modifying
+	@Query("DELETE FROM WatchlistEntity w WHERE w.piso.idPiso = :idPiso")
+	void deleteByPisoId(@Param("idPiso") int idPiso);
 
 }

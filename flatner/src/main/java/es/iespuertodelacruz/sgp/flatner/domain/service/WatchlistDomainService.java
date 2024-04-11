@@ -57,4 +57,9 @@ public class WatchlistDomainService implements IWatchlistDomainService{
 		return watchlistRepository.findAllByUsuarioEmail(email);
 	}
 
+	@Override
+	public boolean deleteByPisoId(Integer idPiso) {
+		return watchlistRepository.deleteByPisoId(idPiso);
+	}
+
 }

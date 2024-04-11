@@ -5,10 +5,12 @@ import { ImageLibraryOptions, ImagePickerResponse, launchImageLibrary } from 're
 import axios from 'axios';
 import { ip } from '../../global';
 import { useIsFocused } from '@react-navigation/native';
+import { Piso } from '../types/Piso';
+import useGetUserLogged from './useGetUserLogged';
 
 type Props = {}
 
-type Piso = {
+type PisoPost = {
     ascensor: boolean;
     descripcion: string;
     electrodomesticos: string;
@@ -34,14 +36,13 @@ type Piso = {
 }
 
 const useAgregarPiso = () => {
-    const { token, email } = useAppContext();
+    const { token, email, usuario, setusuario } = useAppContext();
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/pisos";
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
-   
     
-
-    const [informacionPiso, setInformacionPiso] = useState<Piso>({
+    const { getUser } = useGetUserLogged();
+    const [informacionPiso, setInformacionPiso] = useState<PisoPost>({
         ascensor: false,
         descripcion: '',
         electrodomesticos: '',
@@ -66,7 +67,7 @@ const useAgregarPiso = () => {
         fotoBase64: ''
     });
 
-    const setSwitch = (key: keyof Piso, value: boolean) => {
+    const setSwitch = (key: keyof PisoPost, value: boolean) => {
         setInformacionPiso((prevOpcionesPiso) => ({
             ...prevOpcionesPiso,
             [key]: value,
@@ -116,6 +117,7 @@ const useAgregarPiso = () => {
                 console.log(response.data);
                 Alert.alert("Piso agregado!", "Respuesta: " + response.status);
                 setLoading(false);
+                await getUser(token);
             } catch (error) {
                 console.log(error);
                 setLoading(false);
@@ -123,9 +125,6 @@ const useAgregarPiso = () => {
         }
 
         axiospost();
-        //console.log(informacionPiso);
-
-
     }
 
 
