@@ -13,7 +13,7 @@ const useGetUserLogged = () => {
     const { token, settoken, email, setemail, usuario, setusuario } = useAppContext();
     
  
-    async function getUser(token: string) {
+    async function getUser() {
             
         try {
             const response = await axios.get(rutaGetUser + email, {
@@ -21,7 +21,6 @@ const useGetUserLogged = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.error(response.data);
 
             const data = response.data;
 
@@ -38,6 +37,7 @@ const useGetUserLogged = () => {
                 valoracion: data.valoracion,
                 numVotos: data.numVotos,
                 active: data.active,
+                verified: data.verified,
                 // Mapeo de propiedades si se proporciona, de lo contrario un array vacío
                 propiedades: data.propiedades ? data.propiedades.map((piso: any) => ({
                     id: piso.idPiso,
@@ -97,7 +97,7 @@ const useGetUserLogged = () => {
             console.log("Datos del usuario loggeado: ------------------------------------\n");
             console.log(usuarioLoggeado);
         } catch (error) {
-            console.log(error);
+            console.log("hubo un error en getUserLogged "+error);
         }
     }
 

@@ -4,6 +4,8 @@ import { ip } from '../../global';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import axios from 'axios';
 import { launchImageLibrary, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
+import Toast from 'react-native-toast-message';
+import useGetUserLogged from './useGetUserLogged';
 
 type Props = {}
 
@@ -34,6 +36,7 @@ const usePerfilPrivado = () => {
   const [password, setPassword] = useState('');
   const [fotoSubida, setFotoSubida] = useState(false);
   const [reload, setReload] = useState(true);
+  const { getUser } = useGetUserLogged();
 
   const [informacionUsuario, setInformacionUsuario] = useState<Usuario>(
     {
@@ -179,15 +182,32 @@ const usePerfilPrivado = () => {
     
     console.log(actualizado);
 
+    function updateSuccess(){
+      Toast.show({
+        type: 'success',
+        text1: '¡Datos actualizados con éxito!'
+      });
+    }
+
+    function updateFailure(){
+      Toast.show({
+        type: 'error',
+        text1: 'Oh no, hubo un error al actualizar'
+      });
+    }
+
     const axiosput = async () => {
       try {
         console.log(rutaPut + informacionUsuario.email);
 
         const response = await axios.put(rutaPut + informacionUsuario.email, actualizado, { headers: { 'Authorization': `Bearer ${token}` } });
         console.log(response.data);
-        Alert.alert("Usuario modificado!", "Respuesta: " + response.status);
+        updateSuccess();
+        getUser();
       } catch (error) {
-        console.log(error);
+        
+        console.log("Hubo un error en usePerfilPrivado: "+error);
+        updateFailure();
       }
     }
 

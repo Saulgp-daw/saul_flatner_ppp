@@ -5,6 +5,7 @@ import useAgregarPiso from '../hooks/useAgregarPiso'
 import CheckBox from '@react-native-community/checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import Navbar from '../components/Navbar';
+import { useAppContext } from '../contexts/TokenContextProvider';
 
 type Props = {
 	navigation: any;
@@ -13,6 +14,8 @@ type Props = {
 const AgregarPiso = ({ navigation }: Props) => {
 	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
 	const [text, setText] = useState("");
+	
+    const { token, email, usuario } = useAppContext();
 
 
 	const [electrodomesticos, setElectrodomesticos] = useState([
@@ -56,6 +59,16 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 		post();
 	};
+	
+	if (!usuario || usuario.verified == false) {
+		return (
+		  <>
+			<View style={styles.loadingContainer}>
+			  <Text>Debes completar tus datos y estar verificado por un admin para crear tu piso</Text>
+			</View>
+		  </>
+		);
+	  }
 
 
 	return (

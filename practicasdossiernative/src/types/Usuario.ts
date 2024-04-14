@@ -13,6 +13,7 @@ export interface Usuario {
     valoracion: number;
     numVotos: number;
     active: boolean;
+    verified: boolean;
     propiedades: Piso[];
     pisosInteres: Piso[];
     pisoActual: Piso;
