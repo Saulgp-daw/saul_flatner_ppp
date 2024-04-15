@@ -12,10 +12,11 @@ type Props = {
 }
 
 const AgregarPiso = ({ navigation }: Props) => {
-	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo } = useAgregarPiso();
+	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo, tituloValido, estanciaMinimaValido, numHabitacionesValido } = useAgregarPiso();
 	const [text, setText] = useState("");
-	
     const { token, email, usuario } = useAppContext();
+
+
 
 
 	const [electrodomesticos, setElectrodomesticos] = useState([
@@ -77,8 +78,8 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<Text style={styles.label}>Titulo:</Text>
-						<TextInput style={styles.textInput} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
+						<Text style={styles.label}>* Titulo:</Text>
+						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
 					</View>
 				</View>
 
@@ -100,41 +101,45 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 				<View style={styles.row}>
 					<View style={styles.column}>
-						<Text style={styles.label}>Estancia mínima en días:</Text>
+						<Text style={styles.label}>* Estancia mínima en días:</Text>
 						<TextInput
-							style={styles.textInput}
+							style={[styles.textInput, !estanciaMinimaValido && styles.inputError]}
 							placeholder='Ejm: 30'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("estanciaMinimaDias", texto)}
+							contextMenuHidden={true}
 						/>
 					</View>
 					<View style={styles.column}>
-						<Text style={styles.label}>Número de habitaciones:</Text>
+						<Text style={styles.label}>* Nº de habitaciones:</Text>
 						<TextInput
-							style={styles.textInput}
+							style={[styles.textInput, !numHabitacionesValido && styles.inputError]}
 							placeholder='Ejm: 4'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("numHabitaciones", texto)}
+							contextMenuHidden={true}
 						/>
 					</View>
 				</View>
 				<View style={styles.row}>
 					<View style={styles.column}>
-						<Text style={styles.label}>Precio al mes:</Text>
+						<Text style={styles.label}>* Precio al mes:</Text>
 						<TextInput
 							style={styles.textInput}
 							placeholder='Ejm: 300'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("precioMes", texto)}
+							contextMenuHidden={true}
 						/>
 					</View>
 					<View style={styles.column}>
-						<Text style={styles.label}>Metros cuadrados:</Text>
+						<Text style={styles.label}>* Metros cuadrados:</Text>
 						<TextInput
 							style={styles.textInput}
 							placeholder='Ejm: 23'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("mCuadrados", texto)}
+							contextMenuHidden={true}
 						/>
 					</View>
 				</View>
@@ -349,6 +354,11 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		padding: 10,
 	},
+
+	inputError: {
+        borderColor: 'red',
+        borderWidth: 2,
+    },
 
 	profileImageContainer: {
 		alignItems: 'center', // Centra la imagen horizontalmente

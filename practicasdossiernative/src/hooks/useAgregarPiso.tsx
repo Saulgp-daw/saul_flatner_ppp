@@ -7,6 +7,7 @@ import { ip } from '../../global';
 import { useIsFocused } from '@react-navigation/native';
 import { Piso } from '../types/Piso';
 import useGetUserLogged from './useGetUserLogged';
+import Toast from 'react-native-toast-message';
 
 type Props = {}
 
@@ -41,6 +42,10 @@ const useAgregarPiso = () => {
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
     
+	const [tituloValido, setTituloValido] = useState(true);
+    const [estanciaMinimaValido, setEstanciaMinimaValido] = useState(true);
+    const [numHabitacionesValido, setNumHabitacionesValido] = useState(true);
+    
     const { getUser } = useGetUserLogged();
     const [informacionPiso, setInformacionPiso] = useState<PisoPost>({
         ascensor: false,
@@ -66,6 +71,42 @@ const useAgregarPiso = () => {
         wifi: false,
         fotoBase64: ''
     });
+
+    function validarTitulo(){
+        if(informacionPiso.titulo.trim().length === 0){
+            Toast.show({
+                type: 'error',
+                text1: 'El título es obligatorio'
+            });
+            setTituloValido(false);
+            return false;
+        }
+        return true;
+    }
+
+    function validarEstanciaMinima(){
+        if(informacionPiso.estanciaMinimaDias <= 0){
+            Toast.show({
+                type: 'error',
+                text1: 'La estancia mínima es obligatoria'
+            });
+            setEstanciaMinimaValido(false);
+            return false;
+        }
+        return true;
+    }
+
+    function validarNumHabitaciones(){
+        if(informacionPiso.numHabitaciones <= 0){
+            Toast.show({
+                type: 'error',
+                text1: 'El número de habitaciones mínimo es obligatorio'
+            });
+            setNumHabitacionesValido(false);
+            return false;
+        }
+        return true;
+    }
 
     const setSwitch = (key: keyof PisoPost, value: boolean) => {
         setInformacionPiso((prevOpcionesPiso) => ({
@@ -108,18 +149,38 @@ const useAgregarPiso = () => {
         });
     };
 
+    function agregarPisoSuccess(){
+        Toast.show({
+          type: 'success',
+          text1: '¡Piso creado con éxito!'
+        });
+      }
+  
+      function agregarPisoFailure(){
+        Toast.show({
+          type: 'error',
+          text1: 'Oh no, hubo un error al crear el piso'
+        });
+      }
+
 
     function post() {
+
+        if (!validarTitulo() || !validarEstanciaMinima() || !validarNumHabitaciones()) {
+            return;
+        }
+
         const axiospost = async () => {
             setLoading(true);
             try {
                 const response = await axios.post(ruta, informacionPiso, { headers: { 'Authorization': `Bearer ${token}` } });
                 console.log(response.data);
-                Alert.alert("Piso agregado!", "Respuesta: " + response.status);
+                agregarPisoSuccess();
                 setLoading(false);
-                await getUser(token);
+                await getUser();
             } catch (error) {
                 console.log(error);
+                agregarPisoFailure();
                 setLoading(false);
             }
         }
@@ -128,7 +189,7 @@ const useAgregarPiso = () => {
     }
 
 
-    return { informacionPiso, loading, setLoading, setInformacionPiso, setSwitch, post, selectImage, updateCampo }
+    return { informacionPiso, loading, setLoading, setInformacionPiso, setSwitch, post, selectImage, updateCampo, tituloValido, estanciaMinimaValido, numHabitacionesValido }
 }
 
 export default useAgregarPiso

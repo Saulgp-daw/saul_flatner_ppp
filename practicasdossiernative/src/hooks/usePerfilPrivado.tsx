@@ -85,7 +85,6 @@ const usePerfilPrivado = () => {
           hash: response.data.hash
         }
         setInformacionUsuario(usuario);
-        console.log(response.data.sexo);
         setReload(false);
       } catch (error) {
         console.log(error);
