@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import { ip } from '../../global';
-
 import Icon from 'react-native-vector-icons/Ionicons';
 import useBorrarPiso from '../hooks/useBorrarPiso';
 
@@ -16,6 +15,10 @@ const MisPisos = () => {
       setLoading(false);
     }
   }, [usuario]);
+
+  const handleActionButtonPress = (id) => {
+    Alert.alert("Acción", `Acción para el piso con ID: ${id}`);
+  };
 
   if (!usuario || !usuario.propiedades) {
     return (
@@ -48,8 +51,11 @@ const MisPisos = () => {
           <View style={styles.textContainer}>
             <Text style={styles.title}>{propiedad.titulo}</Text>
           </View>
+          <TouchableHighlight style={styles.actionButton} onPress={() => handleActionButtonPress(propiedad.id)}>
+            <Icon name="construct-outline" size={32} color="white" />
+          </TouchableHighlight>
           <TouchableHighlight style={styles.deleteButton} onPress={() => showConfirmDialog(propiedad.id)}>
-            <Icon name="trash-outline" size={32} color={"white"} />
+            <Icon name="trash-outline" size={32} color="white" />
           </TouchableHighlight>
         </View>
       ))}
@@ -88,6 +94,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: "red",
+    padding: 10,
+  },
+  actionButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: "green",
     padding: 10,
   },
   noPisosText: {

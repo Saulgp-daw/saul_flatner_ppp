@@ -108,7 +108,7 @@ const useLogin = () => {
                     verified: data.verified,
                     // Mapeo de propiedades si se proporciona, de lo contrario un array vacío
                     propiedades: data.propiedades ? data.propiedades.map((piso: any) => ({
-                        id: piso.id,
+                        id: piso.idPiso,
                         titulo: piso.titulo,
                         descripcion: piso.descripcion,
                         electrodomesticos: piso.electrodomesticos,
