@@ -38,10 +38,20 @@ const useBorrarPiso = () => {
   }
 
   function quitarPisoContexto(idPiso: number) {
-    setusuario((prevUsuario) => ({
-      ...prevUsuario,
-      propiedades: prevUsuario.propiedades.filter((piso) => piso.id !== idPiso),
-    }));
+    setusuario((prevUsuario) => {
+      // Filtrar las propiedades para quitar el piso
+      const nuevasPropiedades = prevUsuario.propiedades.filter(piso => piso.id !== idPiso);
+      
+      // Actualizar también otro valor en el contexto, como un contador de propiedades
+      const nuevosfavoritos = prevUsuario.pisosInteres.filter(piso => piso.id !== idPiso);
+
+      // Retorna el nuevo estado con todas las actualizaciones
+      return {
+          ...prevUsuario,
+          propiedades: nuevasPropiedades,
+          pisosInteres: nuevosfavoritos
+      };
+  });
   }
 
   const showConfirmDialog = (idPiso: number) => {

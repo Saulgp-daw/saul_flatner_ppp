@@ -69,6 +69,7 @@ public class LoginRESTController {
 	@PostMapping("/login")
 	public ResponseEntity<String> authenticate(@RequestBody LoginDTO request) {
 		Usuario login = usuarioService.findById(request.getEmail());
+		System.out.println("-----------------"+login.isActive());
 		if(!login.isActive()) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Verifícate mediante el correo antes de entrar");
 		}

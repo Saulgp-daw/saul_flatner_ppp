@@ -11,6 +11,7 @@ import useWatchList from '../hooks/useWatchList';
 import { DrawerActions } from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
 import { useAppContext } from '../contexts/TokenContextProvider';
+import useGetUserLogged from '../hooks/useGetUserLogged';
 
 type Props = {
     navigation: any;
@@ -25,11 +26,12 @@ const Piso = ({ navigation }: Props) => {
     const route = useRoute();
     const { pisoId } = route.params as RouteParams;
     console.log(pisoId);
-    const { token, email, usuario } = useAppContext();
-
+    const { token, email, usuario, setusuario } = useAppContext();
+    const { getUser } = useGetUserLogged();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { piso, reload, setReload } = useFindById(pisoId);
     const { informacionUsuario } = usePerfilPrivado();
+
 
     const { agregar } = useWatchList();
 

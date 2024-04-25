@@ -75,31 +75,33 @@ public class FileStorageService {
 	
 	
 	public String saveImagenPiso(String usuario, String foto, byte[] dataFile) {
-		// creamos el directorio si no existe
-		Path carpetaPerfiles = null;
-		try {
-			carpetaPerfiles = Paths.get(this.root+"/perfiles/"+usuario);
-			Files.createDirectories(carpetaPerfiles);
-		} catch (IOException e) {
-			throw new RuntimeException("no se puede crear el directorio");
-		}
-		
-		
+	    // Verificar si se envió una imagen
+	    if (dataFile == null || dataFile.length == 0) {
+	        return null; // No se envió ninguna imagen, retornamos null
+	    }
 
-		try {
-			Path filenameFree = getFilenameFree("perfiles/"+usuario+"/"+foto);
-			Files.write(filenameFree, dataFile);
-			return filenameFree.getFileName().toString();
-		} catch (Exception e) {
-			if (e instanceof FileAlreadyExistsException) {
-				throw new RuntimeException("A file of that name already exists.");
+	    // Creamos el directorio si no existe
+	    Path carpetaPerfiles = null;
+	    try {
+	        carpetaPerfiles = Paths.get(this.root + "/perfiles/" + usuario);
+	        Files.createDirectories(carpetaPerfiles);
+	    } catch (IOException e) {
+	        throw new RuntimeException("no se puede crear el directorio");
+	    }
 
-			}
+	    try {
+	        Path filenameFree = getFilenameFree("perfiles/" + usuario + "/" + foto);
+	        Files.write(filenameFree, dataFile);
+	        return filenameFree.getFileName().toString();
+	    } catch (Exception e) {
+	        if (e instanceof FileAlreadyExistsException) {
+	            throw new RuntimeException("A file of that name already exists.");
+	        }
 
-			throw new RuntimeException(e.getMessage());
-		}
-
+	        throw new RuntimeException(e.getMessage());
+	    }
 	}
+
 
 	public String save(MultipartFile file) {
 		// creamos el directorio si no existe

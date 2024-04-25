@@ -1,23 +1,47 @@
-import { Button, FlatList, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import { Animated, Button, FlatList, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
 import CheckBox from '@react-native-community/checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import Navbar from '../components/Navbar';
 import { useAppContext } from '../contexts/TokenContextProvider';
+import { Easing } from 'react-native';
 
 type Props = {
 	navigation: any;
 }
 
 const AgregarPiso = ({ navigation }: Props) => {
-	const { informacionPiso, loading, setInformacionPiso, setSwitch, post, selectImage, updateCampo, tituloValido, estanciaMinimaValido, numHabitacionesValido } = useAgregarPiso();
+	const { informacionPiso,
+		loading,
+		tituloValido,
+		estanciaMinimaValido,
+		numHabitacionesValido,
+		precioMesValido,
+		metrosCuadradosValido,
+		isDescripcionExpanded,
+		setInformacionPiso,
+		setSwitch,
+		post,
+		selectImage,
+		updateCampo,
+		toggleDescripcionExpansion
+
+	} = useAgregarPiso();
 	const [text, setText] = useState("");
-    const { token, email, usuario } = useAppContext();
+	const { token, email, usuario } = useAppContext();
+	const descripcionHeight = useRef(new Animated.Value(0)).current;
+	const styles = getStyles(isDescripcionExpanded);
 
-
-
+	useEffect(() => {
+		Animated.timing(descripcionHeight, {
+			toValue: isDescripcionExpanded ? 100 : 0,
+			duration: 300,
+			easing: Easing.inOut(Easing.ease),
+			useNativeDriver: false,
+		}).start();
+	}, [isDescripcionExpanded]);
 
 	const [electrodomesticos, setElectrodomesticos] = useState([
 		{ id: 1, label: 'Lavadora', value: 'Lavadora', isChecked: false },
@@ -60,16 +84,16 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 		post();
 	};
-	
+
 	if (!usuario || usuario.verified == false) {
 		return (
-		  <>
-			<View style={styles.loadingContainer}>
-			  <Text>Debes completar tus datos y estar verificado por un admin para crear tu piso</Text>
-			</View>
-		  </>
+			<>
+				<View style={styles.loadingContainer}>
+					<Text>Debes completar tus datos y estar verificado por un admin para crear tu piso</Text>
+				</View>
+			</>
 		);
-	  }
+	}
 
 
 	return (
@@ -83,10 +107,14 @@ const AgregarPiso = ({ navigation }: Props) => {
 					</View>
 				</View>
 
-				<View style={styles.row}>
+				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<Text style={styles.label}>Descripción:</Text>
-						<View style={styles.textAreaContainer}>
+						<TouchableOpacity onPress={toggleDescripcionExpansion} activeOpacity={0.9}>
+							<Text style={[styles.label, isDescripcionExpanded ? styles.expandedLabel : null]}>
+								{isDescripcionExpanded ? '▲' : '▼'} Descripción:
+							</Text>
+						</TouchableOpacity>
+						<Animated.View style={[styles.textAreaContainer, { maxHeight: descripcionHeight }]}>
 							<TextInput
 								style={styles.textArea}
 								placeholder="Escribe aquí..."
@@ -95,9 +123,10 @@ const AgregarPiso = ({ navigation }: Props) => {
 								numberOfLines={10}
 								onChangeText={(texto) => updateCampo("descripcion", texto)}
 							/>
-						</View>
+						</Animated.View>
 					</View>
 				</View>
+
 
 				<View style={styles.row}>
 					<View style={styles.column}>
@@ -125,7 +154,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 					<View style={styles.column}>
 						<Text style={styles.label}>* Precio al mes:</Text>
 						<TextInput
-							style={styles.textInput}
+							style={[styles.textInput, !precioMesValido && styles.inputError]}
 							placeholder='Ejm: 300'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("precioMes", texto)}
@@ -135,7 +164,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 					<View style={styles.column}>
 						<Text style={styles.label}>* Metros cuadrados:</Text>
 						<TextInput
-							style={styles.textInput}
+							style={[styles.textInput, !metrosCuadradosValido && styles.inputError]}
 							placeholder='Ejm: 23'
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("mCuadrados", texto)}
@@ -320,7 +349,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 export default AgregarPiso
 
-const styles = StyleSheet.create({
+const getStyles = (isDescripcionExpanded) => StyleSheet.create({
 	container: {
 		flexGrow: 1,
 		padding: 20,
@@ -356,9 +385,9 @@ const styles = StyleSheet.create({
 	},
 
 	inputError: {
-        borderColor: 'red',
-        borderWidth: 2,
-    },
+		borderColor: 'red',
+		borderWidth: 2,
+	},
 
 	profileImageContainer: {
 		alignItems: 'center', // Centra la imagen horizontalmente
@@ -380,6 +409,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		padding: 5,
 		marginBottom: 20,
+		overflow: 'hidden', // Oculta el contenido que excede la altura máxima
 	},
 	textArea: {
 		height: 100,
@@ -403,5 +433,15 @@ const styles = StyleSheet.create({
 	},
 	itemText: {
 		marginLeft: 5,
+	},
+	expandedLabel: {
+		fontWeight: 'bold',
+		color: 'blue',
+	},
+	expandedDescription: {
+		maxHeight: isDescripcionExpanded ? 1000 : 0,
+		overflow: 'hidden', // Oculta el contenido que excede la altura máxima
+		transitionProperty: 'max-height', // Propiedad que va a cambiar
+		transitionDuration: '0.3s', // Duración de la transición
 	},
 })

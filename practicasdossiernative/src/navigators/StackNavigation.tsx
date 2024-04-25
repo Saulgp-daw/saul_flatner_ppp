@@ -11,6 +11,7 @@ import TokenContextProvider from '../contexts/TokenContextProvider';
 import Busqueda from '../screens/Busqueda';
 import DrawerFlatner from './DrawerFlatner';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import TabPrincipal from './TabPrincipal';
 
 
 
@@ -30,7 +31,7 @@ const StackNavigation = (props: Props) => {
             >
                 <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name='Registro' component={Registro} options={{ headerShown: false }} />
-                <Stack.Screen name='DrawerFlatner' component={DrawerFlatner} options={{ headerShown: false }} />
+                <Stack.Screen name='TabPrincipal' component={TabPrincipal} options={{ headerShown: false }} />
                 <Stack.Screen name='Busqueda' component={Busqueda} options={{ headerShown: false }} />
                 <Stack.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }} />
                 <Stack.Screen name='Piso' component={Piso} options={{ headerShown: false }} />

@@ -15,6 +15,7 @@ public class Usuario {
 	private String rol;
 	private String sexo;
 	private boolean active;
+	private boolean verified;
 	private BigInteger fechaUltimaEstancia;
 	private BigInteger fechaUltimoAlquiler;
 	private int anhoNacimiento;
@@ -30,7 +31,7 @@ public class Usuario {
 
 	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
 			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
-			int anhoNacimiento, BigDecimal valoracion, int numVotos) {
+			int anhoNacimiento, BigDecimal valoracion, int numVotos, boolean verified) {
 		super();
 		this.email = email;
 		this.nombre = nombre;
@@ -46,12 +47,13 @@ public class Usuario {
 		this.anhoNacimiento = anhoNacimiento;
 		this.valoracion = valoracion;
 		this.numVotos = numVotos;
+		this.verified = verified;
 	}
 	
 	public Usuario(String email, String nombre, String apellidos, String fotoPerfil, String password, String hash,
 			String rol, String sexo, boolean active, BigInteger fechaUltimaEstancia, BigInteger fechaUltimoAlquiler,
 			int anhoNacimiento, BigDecimal valoracion, int numVotos, List<Piso> propiedades, List<Watchlist> pisosInteres,
-			Piso pisoActual) {
+			Piso pisoActual, boolean verified) {
 		super();
 		this.email = email;
 		this.nombre = nombre;
@@ -70,9 +72,18 @@ public class Usuario {
 		this.propiedades = propiedades;
 		this.pisosInteres = pisosInteres;
 		this.pisoActual = pisoActual;
+		this.verified = verified;
 	}
 
 
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
 
 	public int getNumVotos() {
 		return numVotos;

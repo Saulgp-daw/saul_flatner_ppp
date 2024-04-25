@@ -41,11 +41,21 @@ const useAgregarPiso = () => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/pisos";
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
-    
-	const [tituloValido, setTituloValido] = useState(true);
+
+    /**
+     * useState para validar los campos válidos de los inputs
+     */
+    const [tituloValido, setTituloValido] = useState(true);
     const [estanciaMinimaValido, setEstanciaMinimaValido] = useState(true);
     const [numHabitacionesValido, setNumHabitacionesValido] = useState(true);
-    
+    const [precioMesValido, setPrecioMesValido] = useState(true);
+    const [metrosCuadradosValido, setMetrosCuadradosValido] = useState(true);
+
+    /**
+     * useState para expandir los campos opcionales
+     */
+
+    const [isDescripcionExpanded, setIsDescripcionExpanded] = useState(false);
     const { getUser } = useGetUserLogged();
     const [informacionPiso, setInformacionPiso] = useState<PisoPost>({
         ascensor: false,
@@ -72,8 +82,14 @@ const useAgregarPiso = () => {
         fotoBase64: ''
     });
 
-    function validarTitulo(){
-        if(informacionPiso.titulo.trim().length === 0){
+    function toggleDescripcionExpansion() {
+        setIsDescripcionExpanded(!isDescripcionExpanded);
+    }
+
+    
+
+    function validarTitulo() {
+        if (informacionPiso.titulo.trim().length === 0) {
             Toast.show({
                 type: 'error',
                 text1: 'El título es obligatorio'
@@ -84,8 +100,8 @@ const useAgregarPiso = () => {
         return true;
     }
 
-    function validarEstanciaMinima(){
-        if(informacionPiso.estanciaMinimaDias <= 0){
+    function validarEstanciaMinima() {
+        if (informacionPiso.estanciaMinimaDias <= 0) {
             Toast.show({
                 type: 'error',
                 text1: 'La estancia mínima es obligatoria'
@@ -96,8 +112,8 @@ const useAgregarPiso = () => {
         return true;
     }
 
-    function validarNumHabitaciones(){
-        if(informacionPiso.numHabitaciones <= 0){
+    function validarNumHabitaciones() {
+        if (informacionPiso.numHabitaciones <= 0) {
             Toast.show({
                 type: 'error',
                 text1: 'El número de habitaciones mínimo es obligatorio'
@@ -105,6 +121,31 @@ const useAgregarPiso = () => {
             setNumHabitacionesValido(false);
             return false;
         }
+        return true;
+    }
+
+    function validarPrecioMes() {
+        if (informacionPiso.precioMes <= 0) {
+            Toast.show({
+                type: "error",
+                text1: "El precio al mes debe ser obligatorio"
+            });
+            setPrecioMesValido(false);
+            return false;
+        }
+        return true;
+    }
+
+    function validarMetrosCuadrados() {
+        if (informacionPiso.mCuadrados <= 0) {
+            Toast.show({
+                type: "error",
+                text1: "Los metros cuadrados son obligatorios"
+            });
+            setMetrosCuadradosValido(false);
+            return false;
+        }
+
         return true;
     }
 
@@ -149,24 +190,24 @@ const useAgregarPiso = () => {
         });
     };
 
-    function agregarPisoSuccess(){
+    function agregarPisoSuccess() {
         Toast.show({
-          type: 'success',
-          text1: '¡Piso creado con éxito!'
+            type: 'success',
+            text1: '¡Piso creado con éxito!'
         });
-      }
-  
-      function agregarPisoFailure(){
+    }
+
+    function agregarPisoFailure() {
         Toast.show({
-          type: 'error',
-          text1: 'Oh no, hubo un error al crear el piso'
+            type: 'error',
+            text1: 'Oh no, hubo un error al crear el piso'
         });
-      }
+    }
 
 
     function post() {
 
-        if (!validarTitulo() || !validarEstanciaMinima() || !validarNumHabitaciones()) {
+        if (!validarTitulo() || !validarEstanciaMinima() || !validarNumHabitaciones() || !validarPrecioMes() || !validarMetrosCuadrados()) {
             return;
         }
 
@@ -189,7 +230,23 @@ const useAgregarPiso = () => {
     }
 
 
-    return { informacionPiso, loading, setLoading, setInformacionPiso, setSwitch, post, selectImage, updateCampo, tituloValido, estanciaMinimaValido, numHabitacionesValido }
+    return { 
+        informacionPiso, 
+        loading, 
+        tituloValido, 
+        estanciaMinimaValido, 
+        numHabitacionesValido, 
+        precioMesValido, 
+        metrosCuadradosValido,
+        isDescripcionExpanded,
+        setLoading, 
+        setInformacionPiso, 
+        setSwitch, 
+        post, 
+        selectImage, 
+        updateCampo, 
+        toggleDescripcionExpansion
+    }
 }
 
 export default useAgregarPiso

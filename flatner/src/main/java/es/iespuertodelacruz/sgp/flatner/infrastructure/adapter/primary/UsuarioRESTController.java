@@ -167,6 +167,8 @@ public class UsuarioRESTController {
 	@PostMapping("/{email}/pisos")
 	public ResponseEntity<?> save(@PathVariable String email, @RequestBody PisoDTO pisoDTO) {
 		Usuario propietarioFind = usuarioDomainService.findById(email);
+		System.out.println(email);
+		System.out.println(propietarioFind.getEmail());
 
 		if (propietarioFind != null) {
 			Piso piso = new Piso(0, pisoDTO.isAscensor(), pisoDTO.getDescripcion(), pisoDTO.getElectrodomesticos(),
@@ -180,7 +182,9 @@ public class UsuarioRESTController {
 			byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
 
 			String nombreNuevoFichero = storageService.saveImagenPiso(email, pisoDTO.getFotos(), photoBytes);
-			piso.setFotos(stringAList(nombreNuevoFichero));
+			piso.setFotos(nombreNuevoFichero != null ? stringAList(nombreNuevoFichero) : new ArrayList<>());
+
+			
 			Piso save = pisoDomainService.save(piso);
 			if (save != null) {
 				return ResponseEntity.ok(save);

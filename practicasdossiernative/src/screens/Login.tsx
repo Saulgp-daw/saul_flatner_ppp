@@ -20,7 +20,7 @@ const Login = ({ navigation }: Props) => {
 
 	useEffect(() => {
 		if (valido) {
-			navigation.navigate("DrawerFlatner");
+			navigation.navigate("TabPrincipal");
 		}
 	}, [valido, navigation]);
 

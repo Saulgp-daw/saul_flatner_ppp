@@ -40,7 +40,8 @@ public class EntityMapper {
 					entity.getFechaUltimoAlquiler(),
 					entity.getAnhoNacimiento(), 
 					entity.getValoracion(),
-					entity.getNumVotos()
+					entity.getNumVotos(),
+					entity.getVerified()
 					);
 		}
 		return usuario;
@@ -173,7 +174,8 @@ public class EntityMapper {
 					entity.getNumVotos(),
 					propiedades,
 					pisosInteres,
-					pisoActual
+					pisoActual,
+					entity.getVerified()
 					);
 		}
 		return usuario;

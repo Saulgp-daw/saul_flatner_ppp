@@ -9,6 +9,8 @@ const MisPisos = () => {
   const { usuario, token } = useAppContext();
   const { showConfirmDialog } = useBorrarPiso();
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+  const imagenDefecto = "../resources/default.jpg";
 
   useEffect(() => {
     if (usuario && usuario.propiedades && usuario.propiedades.length > 0) {
@@ -18,6 +20,10 @@ const MisPisos = () => {
 
   const handleActionButtonPress = (id) => {
     Alert.alert("Acción", `Acción para el piso con ID: ${id}`);
+  };
+
+  const handleImageError = (id) => {
+    setErrors(prevErrors => ({ ...prevErrors, [id]: true }));
   };
 
   if (!usuario || !usuario.propiedades) {
@@ -41,12 +47,13 @@ const MisPisos = () => {
       {usuario.propiedades.map((propiedad) => (
         <View key={propiedad.id} style={styles.itemContainer}>
           <Image
-            source={{
-              uri: `http://${ip}/api/v2/usuarios/${usuario.email}/images/${propiedad.fotos[0]}`,
+            source={errors[propiedad.id] ? require('../resources/default.jpg') : {
+              uri: `http://${ip}/api/v2/usuarios/${usuario.email}/images/${propiedad.fotos[0] || 'default.jpg'}`,
               method: 'GET',
               headers: { 'Authorization': `Bearer ${token}` }
             }}
             style={styles.image}
+            onError={() => handleImageError(propiedad.id)}
           />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{propiedad.titulo}</Text>
