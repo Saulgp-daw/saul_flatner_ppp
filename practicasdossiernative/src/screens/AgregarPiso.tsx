@@ -1,4 +1,4 @@
-import { Animated, Button, FlatList, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Animated, Button, FlatList, Image, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
@@ -7,6 +7,8 @@ import { useIsFocused } from '@react-navigation/native';
 import Navbar from '../components/Navbar';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import { Easing } from 'react-native';
+import DropShadow from "react-native-drop-shadow";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
 	navigation: any;
@@ -21,17 +23,26 @@ const AgregarPiso = ({ navigation }: Props) => {
 		precioMesValido,
 		metrosCuadradosValido,
 		isDescripcionExpanded,
+		isElectrodomesticosExpanded,
+		isExtraExpanded,
+		selectedImage,
 		setInformacionPiso,
 		setSwitch,
 		post,
 		selectImage,
 		updateCampo,
-		toggleDescripcionExpansion
+		toggleDescripcionExpansion,
+		toggleElectrodomesticosExpansion,
+		toggleExtraExpansion
 
 	} = useAgregarPiso();
 	const [text, setText] = useState("");
 	const { token, email, usuario } = useAppContext();
 	const descripcionHeight = useRef(new Animated.Value(0)).current;
+	const electrodomesticosHeight = useRef(new Animated.Value(0)).current;
+	const extraSectionHeight = useRef(new Animated.Value(0)).current;
+	const imagenDefecto = "../resources/default.jpg";
+
 	const styles = getStyles(isDescripcionExpanded);
 
 	useEffect(() => {
@@ -42,6 +53,25 @@ const AgregarPiso = ({ navigation }: Props) => {
 			useNativeDriver: false,
 		}).start();
 	}, [isDescripcionExpanded]);
+
+	useEffect(() => {
+		Animated.timing(electrodomesticosHeight, {
+			toValue: isElectrodomesticosExpanded ? 2 : 0,
+			duration: 300,
+			easing: Easing.inOut(Easing.ease),
+			useNativeDriver: false
+		}).start();
+	}, [isElectrodomesticosExpanded]);
+
+	useEffect(() => {
+		Animated.timing(extraSectionHeight, {
+			toValue: isExtraExpanded ? 1 : 0,
+			duration: 300,
+			easing: Easing.inOut(Easing.ease),
+			useNativeDriver: false
+		}).start();
+	}, [isExtraExpanded]);
+
 
 	const [electrodomesticos, setElectrodomesticos] = useState([
 		{ id: 1, label: 'Lavadora', value: 'Lavadora', isChecked: false },
@@ -102,31 +132,48 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<Text style={styles.label}>* Titulo:</Text>
-						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
+						<TouchableOpacity onPress={selectImage} style={styles.imageUpload} activeOpacity={0.7}>
+							{selectedImage ? (
+								<>
+									<DropShadow style={styles.shadowProp2}>
+										<DropShadow style={styles.shadowProp1}>
+											<Image
+												source={{ uri: selectedImage }}
+												style={styles.previewImage}
+												resizeMode="cover"
+											/>
+										</DropShadow>
+									</DropShadow>
+								</>
+							) : (
+								<>
+									<DropShadow style={styles.shadowProp2}>
+										<DropShadow style={styles.shadowProp1}>
+											<Image
+												source={require(imagenDefecto)}
+												style={styles.previewImage}
+												resizeMode="cover"
+											/>
+										</DropShadow>
+									</DropShadow>
+								</>
+							)}
+							<View style={styles.trianguloContainer}>
+								<View style={styles.triangulo} />
+								<Text style={styles.texto}>
+									{informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" :  "Icono agregar"}
+								</Text>
+							</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<TouchableOpacity onPress={toggleDescripcionExpansion} activeOpacity={0.9}>
-							<Text style={[styles.label, isDescripcionExpanded ? styles.expandedLabel : null]}>
-								{isDescripcionExpanded ? '▲' : '▼'} Descripción:
-							</Text>
-						</TouchableOpacity>
-						<Animated.View style={[styles.textAreaContainer, { maxHeight: descripcionHeight }]}>
-							<TextInput
-								style={styles.textArea}
-								placeholder="Escribe aquí..."
-								placeholderTextColor="grey"
-								multiline
-								numberOfLines={10}
-								onChangeText={(texto) => updateCampo("descripcion", texto)}
-							/>
-						</Animated.View>
+						<Text style={styles.label}>* Titulo:</Text>
+						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
 					</View>
 				</View>
-
 
 				<View style={styles.row}>
 					<View style={styles.column}>
@@ -173,167 +220,197 @@ const AgregarPiso = ({ navigation }: Props) => {
 					</View>
 				</View>
 
-
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<Text style={styles.label}>Electrodomésticos:</Text>
-					</View>
-				</View>
-				<View style={styles.flatListContainer}>
-					{electrodomesticos.map((item) => (
-						<View key={item.id} style={styles.itemContainer}>
-							<CheckBox
-								value={item.isChecked}
-								onValueChange={() => handleOnChange(item.id)}
+						<TouchableOpacity onPress={toggleDescripcionExpansion} activeOpacity={0.9}>
+							<Text style={[styles.label, isDescripcionExpanded ? styles.expandedLabel : null]}>
+								{isDescripcionExpanded ? '▲' : '▼'} Descripción:
+							</Text>
+						</TouchableOpacity>
+						<Animated.View style={[styles.textAreaContainer, { maxHeight: descripcionHeight }]}>
+							<TextInput
+								style={styles.textArea}
+								placeholder="Escribe aquí..."
+								placeholderTextColor="grey"
+								multiline
+								numberOfLines={10}
+								onChangeText={(texto) => updateCampo("descripcion", texto)}
 							/>
-							<Text style={styles.itemText}>{item.label}</Text>
+						</Animated.View>
+					</View>
+				</View>
+
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<TouchableOpacity onPress={toggleElectrodomesticosExpansion} activeOpacity={0.9}>
+							<Text style={[styles.label, isElectrodomesticosExpanded ? styles.expandedLabel : null]}>
+								{isElectrodomesticosExpanded ? '▲' : '▼'} Electrodomésticos:
+							</Text>
+						</TouchableOpacity>
+						<Animated.View style={[styles.flatListContainer, {
+							height: electrodomesticosHeight.interpolate({
+								inputRange: [0, 1],
+								outputRange: [0, 150] // Ajusta este valor según el tamaño deseado cuando está expandido
+							}),
+							overflow: 'hidden'
+						}]}>
+							{electrodomesticos.map((item) => (
+								<View key={item.id} style={styles.itemContainer}>
+									<CheckBox
+										value={item.isChecked}
+										onValueChange={() => handleOnChange(item.id)}
+									/>
+									<Text style={styles.itemText}>{item.label}</Text>
+								</View>
+							))}
+						</Animated.View>
+					</View>
+				</View>
+
+
+				<TouchableOpacity onPress={toggleExtraExpansion} activeOpacity={0.9}>
+					<Text style={[styles.label, isExtraExpanded ? styles.expandedLabel : null, { marginBottom: 20 }]}>
+						{isExtraExpanded ? '▲' : '▼'} Servicios extra:
+					</Text>
+				</TouchableOpacity>
+				<Animated.View
+					style={{
+						height: extraSectionHeight.interpolate({
+							inputRange: [0, 1],
+							outputRange: [0, 400] // Ajusta esta altura según el contenido
+						}),
+						overflow: 'hidden'
+					}}
+				>
+					<View style={styles.singleColumnRow}>
+						<View style={styles.column}>
+							<Text style={styles.titulo}>Servicios que se ofrece:</Text>
 						</View>
-					))}
-				</View>
-
-				{
-					// 	<View style={styles.singleColumnRow}>
-					// 	<View style={styles.column}>
-					// 		<Text style={styles.label}>Ubicación:</Text>
-					// 	</View>
-					// </View>
-				}
-
-				<View style={styles.singleColumnRow}>
-					<View style={styles.column}>
-						<Text style={styles.titulo}>Servicios que se ofrece:</Text>
-					</View>
-				</View>
-
-				<View style={styles.row}>
-					<View style={styles.column}>
-						<Text style={styles.label}>Ascensor:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.ascensor ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('ascensor', value)}
-							value={informacionPiso.ascensor}
-						/>
 					</View>
 
-					<View style={styles.column}>
-						<Text style={styles.label}>Luz incluida:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.luzIncluida ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('luzIncluida', value)}
-							value={informacionPiso.luzIncluida}
-						/>
-					</View>
-					<View style={styles.column}>
-						<Text style={styles.label}>Gas:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.gasIncluido ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('gasIncluido', value)}
-							value={informacionPiso.gasIncluido}
-						/>
-					</View>
-					<View style={styles.column}>
-						<Text style={styles.label}>Wifi:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.wifi ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('wifi', value)}
-							value={informacionPiso.wifi}
-						/>
+					<View style={styles.row}>
+						<View style={styles.column}>
+							<Text style={styles.label}>Ascensor:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.ascensor ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('ascensor', value)}
+								value={informacionPiso.ascensor}
+							/>
+						</View>
+
+						<View style={styles.column}>
+							<Text style={styles.label}>Luz incluida:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.luzIncluida ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('luzIncluida', value)}
+								value={informacionPiso.luzIncluida}
+							/>
+						</View>
+						<View style={styles.column}>
+							<Text style={styles.label}>Gas:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.gasIncluido ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('gasIncluido', value)}
+								value={informacionPiso.gasIncluido}
+							/>
+						</View>
+						<View style={styles.column}>
+							<Text style={styles.label}>Wifi:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.wifi ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('wifi', value)}
+								value={informacionPiso.wifi}
+							/>
+						</View>
+
 					</View>
 
-				</View>
-
-				<View style={styles.singleColumnRow}>
-					<View style={styles.column}>
-						<Text style={styles.titulo}>En este piso se permite:</Text>
-					</View>
-				</View>
-
-				<View style={styles.row}>
-					<View style={styles.column}>
-						<Text style={styles.label}>Mascotas:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.mascotas ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('mascotas', value)}
-							value={informacionPiso.mascotas}
-						/>
+					<View style={styles.singleColumnRow}>
+						<View style={styles.column}>
+							<Text style={styles.titulo}>En este piso se permite:</Text>
+						</View>
 					</View>
 
-					<View style={styles.column}>
-						<Text style={styles.label}>Fumar:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.fumar ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('fumar', value)}
-							value={informacionPiso.fumar}
-						/>
-					</View>
-					<View style={styles.column}>
-						<Text style={styles.label}>Parejas:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.parejas ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('parejas', value)}
-							value={informacionPiso.parejas}
-						/>
-					</View>
-				</View>
-				<View style={styles.singleColumnRow}>
-					<View style={styles.column}>
-						<Text style={styles.titulo}>Más opciones:</Text>
-					</View>
-				</View>
+					<View style={styles.row}>
+						<View style={styles.column}>
+							<Text style={styles.label}>Mascotas:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.mascotas ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('mascotas', value)}
+								value={informacionPiso.mascotas}
+							/>
+						</View>
 
-				<View style={styles.row}>
-					<View style={styles.column}>
-						<Text style={styles.label}>Propietario Reside:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.propietarioReside ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('propietarioReside', value)}
-							value={informacionPiso.propietarioReside}
-						/>
+						<View style={styles.column}>
+							<Text style={styles.label}>Fumar:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.fumar ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('fumar', value)}
+								value={informacionPiso.fumar}
+							/>
+						</View>
+						<View style={styles.column}>
+							<Text style={styles.label}>Parejas:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.parejas ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('parejas', value)}
+								value={informacionPiso.parejas}
+							/>
+						</View>
 					</View>
-
-					<View style={styles.column}>
-						<Text style={styles.label}>Tiene Terraza:</Text>
-						<Switch
-							style={{ alignSelf: 'flex-start' }}
-							trackColor={{ false: '#fc5858', true: '#15de9b' }}
-							thumbColor={informacionPiso.terraza ? '#35bd6b' : '#bd3535'}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={(value) => setSwitch('terraza', value)}
-							value={informacionPiso.terraza}
-						/>
+					<View style={styles.singleColumnRow}>
+						<View style={styles.column}>
+							<Text style={styles.titulo}>Más opciones:</Text>
+						</View>
 					</View>
 
-				</View>
-				<View style={styles.singleColumnRow}>
-					<View style={styles.column}>
-						<Button title={informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : "Subir foto del piso"} onPress={() => selectImage()} />
-					</View>
-				</View>
+					<View style={styles.row}>
+						<View style={styles.column}>
+							<Text style={styles.label}>Propietario Reside:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.propietarioReside ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('propietarioReside', value)}
+								value={informacionPiso.propietarioReside}
+							/>
+						</View>
 
+						<View style={styles.column}>
+							<Text style={styles.label}>Tiene Terraza:</Text>
+							<Switch
+								style={{ alignSelf: 'flex-start' }}
+								trackColor={{ false: '#fc5858', true: '#15de9b' }}
+								thumbColor={informacionPiso.terraza ? '#35bd6b' : '#bd3535'}
+								ios_backgroundColor="#3e3e3e"
+								onValueChange={(value) => setSwitch('terraza', value)}
+								value={informacionPiso.terraza}
+							/>
+						</View>
+					</View>
+				</Animated.View>
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
@@ -408,7 +485,6 @@ const getStyles = (isDescripcionExpanded) => StyleSheet.create({
 		borderColor: 'gray',
 		borderWidth: 1,
 		padding: 5,
-		marginBottom: 20,
 		overflow: 'hidden', // Oculta el contenido que excede la altura máxima
 	},
 	textArea: {
@@ -443,5 +519,51 @@ const getStyles = (isDescripcionExpanded) => StyleSheet.create({
 		overflow: 'hidden', // Oculta el contenido que excede la altura máxima
 		transitionProperty: 'max-height', // Propiedad que va a cambiar
 		transitionDuration: '0.3s', // Duración de la transición
+	},
+	previewImage: {
+		width: "100%",
+		height: 200,
+	},
+	shadowProp1: {
+		shadowColor: '#ff0066',
+		shadowOffset: { width: 7, height: 7 },
+		shadowOpacity: 0.6,
+		shadowRadius: 1,
+	},
+	shadowProp2: {
+		shadowColor: '#0099ff',
+		shadowOffset: { width: -7, height: -7 },
+		shadowOpacity: 0.6,
+		shadowRadius: 1,
+	},
+
+	imageUpload: {
+		position: "relative",
+	},
+
+	trianguloContainer: {
+		position: 'absolute',
+		top: -10,
+		right: 0,
+	},
+	triangulo: {
+		width: 0,
+		height: 0,
+		borderLeftWidth: 30,
+		borderRightWidth: 30,
+		borderBottomWidth: 70,
+		borderLeftColor: 'transparent',
+		borderRightColor: 'transparent',
+		borderBottomColor: 'rgba(0, 255, 0, 1)',
+		transform: [{ rotate: '78deg' }], // Rotación del triángulo
+	},
+	texto: {
+		color: '#000066',
+		fontSize: 14,
+		textAlign: 'center',
+		position: 'absolute',
+		width: 200,
+		top: 20,
+		left: -80, 
 	},
 })

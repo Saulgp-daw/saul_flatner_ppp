@@ -41,6 +41,7 @@ const useAgregarPiso = () => {
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/pisos";
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState("");
 
     /**
      * useState para validar los campos válidos de los inputs
@@ -56,6 +57,9 @@ const useAgregarPiso = () => {
      */
 
     const [isDescripcionExpanded, setIsDescripcionExpanded] = useState(false);
+    const [isElectrodomesticosExpanded, setisElectrodomesticosExpanded] = useState(false);
+    const [isExtraExpanded, setisExtraExpanded] = useState(false);
+
     const { getUser } = useGetUserLogged();
     const [informacionPiso, setInformacionPiso] = useState<PisoPost>({
         ascensor: false,
@@ -86,7 +90,13 @@ const useAgregarPiso = () => {
         setIsDescripcionExpanded(!isDescripcionExpanded);
     }
 
+    function toggleElectrodomesticosExpansion() {
+        setisElectrodomesticosExpanded(!isElectrodomesticosExpanded);
+    }
     
+    function toggleExtraExpansion() {
+        setisExtraExpanded(!isExtraExpanded);
+    }
 
     function validarTitulo() {
         if (informacionPiso.titulo.trim().length === 0) {
@@ -186,6 +196,7 @@ const useAgregarPiso = () => {
                     fotoBase64: base64Image,
                     fotos: fileName
                 }));
+                setSelectedImage(`data:image/png;base64,${base64Image}`);
             }
         });
     };
@@ -239,13 +250,18 @@ const useAgregarPiso = () => {
         precioMesValido, 
         metrosCuadradosValido,
         isDescripcionExpanded,
+        isElectrodomesticosExpanded,
+        isExtraExpanded,
+        selectedImage,
         setLoading, 
         setInformacionPiso, 
         setSwitch, 
         post, 
         selectImage, 
         updateCampo, 
-        toggleDescripcionExpansion
+        toggleDescripcionExpansion,
+        toggleElectrodomesticosExpansion,
+        toggleExtraExpansion
     }
 }
 
