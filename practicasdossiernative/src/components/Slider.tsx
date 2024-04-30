@@ -13,13 +13,16 @@ type SliderProps = {
 };
 
 const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProps) => {
-  const { token, settoken } = useAppContext();
+  const { token, usuario, settoken } = useAppContext();
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const imagenDefecto = "../resources/default.jpg";
-	const [errorImagen, setErrorImagen] = useState(false);
+  const [erroresImagen, setErroresImagen] = useState(new Set<number>());
+
   const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
   console.log(ruta);
+  console.log(images);
+
 
   const goToNextSlide = () => {
     flatListRef.current.scrollToIndex({
@@ -41,11 +44,16 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
     }
   }).current;
 
+  const handleImageError = (id: number) => {
+    setErroresImagen(prev => new Set(prev.add(id)));
+  };
+
+
 
 
   return (
     <View>
-       <FlatList
+      <FlatList
         ref={flatListRef}
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -54,7 +62,7 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <View>
-            {errorImagen === false ? (
+            {!erroresImagen.has(item.id) ? (
               <Image
                 source={{
                   uri: ruta + item.source,
@@ -63,13 +71,14 @@ const Slider: React.FC<SliderProps> = ({ images, valoracion, email }: SliderProp
                 }}
                 style={styles.image}
                 resizeMode="cover"
-                onError={(e) => setErrorImagen(true)}
+                onError={() => handleImageError(item.id)}
               />
             ) : (
               <Image source={require(imagenDefecto)} style={styles.image} />
             )}
           </View>
         )}
+        
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 50,

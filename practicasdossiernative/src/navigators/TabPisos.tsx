@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Icon from 'react-native-vector-icons/Ionicons';
 import Busqueda from '../screens/Busqueda';
 import AgregarPiso from '../screens/AgregarPiso';
-import MisPisos from '../screens/MisPisos';
+import MisAnuncios from '../screens/MisAnuncios';
 
 type Props = {
   navigation: any;
@@ -24,7 +24,7 @@ const TabPisos = ({ navigation }: Props) => {
             iconName = 'search-outline';
           } else if (route.name === 'AgregarPiso') {
             iconName = 'add-circle-outline';
-          } else if (route.name === 'MisPisos') {
+          } else if (route.name === 'MisAnuncios') {
             iconName = 'newspaper-outline';
           }
 
@@ -34,7 +34,7 @@ const TabPisos = ({ navigation }: Props) => {
     >
       <Tab.Screen name="Busqueda" component={Busqueda} options={{ title: 'Busqueda' }} />
       <Tab.Screen name="AgregarPiso" component={AgregarPiso} options={{ title: 'Agregar' }} />
-      <Tab.Screen name="MisPisos" component={MisPisos} options={{ title: 'Mis Anuncios' }} />
+      <Tab.Screen name="MisAnuncios" component={MisAnuncios} options={{ title: 'Mis Anuncios' }} />
     </Tab.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import { Animated, Button, FlatList, Image, StyleSheet, Switch, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, Button, FlatList, Image, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import useAgregarPiso from '../hooks/useAgregarPiso'
@@ -10,14 +10,19 @@ import { Easing } from 'react-native';
 import DropShadow from "react-native-drop-shadow";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import CountryPicker, { Country } from 'react-native-country-picker-modal';
-import ModalMap from '../components/ModalMap';
+import { useRoute } from '@react-navigation/native';
+import { Piso } from '../types/Piso';
+import useModificarPiso from '../hooks/useModificarPiso';
 
 type Props = {
 	navigation: any;
 }
 
-const AgregarPiso = ({ navigation }: Props) => {
+type RouteParams = {
+    pisoId: number;
+};
+
+const ModificarPiso = ({ navigation }: Props) => {
 	const { informacionPiso,
 		loading,
 		tituloValido,
@@ -29,31 +34,29 @@ const AgregarPiso = ({ navigation }: Props) => {
 		isElectrodomesticosExpanded,
 		isExtraExpanded,
 		selectedImage,
-		countryCode,
 		setInformacionPiso,
 		setSwitch,
-		post,
+		putPiso,
 		selectImage,
 		updateCampo,
 		toggleDescripcionExpansion,
 		toggleElectrodomesticosExpansion,
-		toggleExtraExpansion,
-		handleCountrySelect
+		toggleExtraExpansion
 
-	} = useAgregarPiso();
+	} = useModificarPiso();
 	const [text, setText] = useState("");
 	const { token, email, usuario } = useAppContext();
 	const descripcionHeight = useRef(new Animated.Value(0)).current;
 	const electrodomesticosHeight = useRef(new Animated.Value(0)).current;
 	const extraSectionHeight = useRef(new Animated.Value(0)).current;
 	const imagenDefecto = "../resources/default.jpg";
-	const [modalVisible, setModalVisible] = useState(false);
+	const route = useRoute();
+	const { pisoId } = route.params as RouteParams;
+	const [pisoMod, setPisoMod] = useState<Piso>();
+	console.log(usuario);
 	
 
-
 	const styles = getStyles(isDescripcionExpanded);
-
-
 
 	useEffect(() => {
 		Animated.timing(descripcionHeight, {
@@ -81,6 +84,20 @@ const AgregarPiso = ({ navigation }: Props) => {
 			useNativeDriver: false
 		}).start();
 	}, [isExtraExpanded]);
+
+	useEffect(() => {
+        const propiedadEncontrada = usuario.propiedades.find(p => p.id === pisoId);
+        if (propiedadEncontrada) {
+			console.log(propiedadEncontrada);
+			setInformacionPiso(propiedadEncontrada);
+			const updatedElectrodomesticos = electrodomesticos.map(e => ({
+				...e,
+				isChecked: propiedadEncontrada.electrodomesticos.split(";;").includes(e.value)
+			}));
+			setElectrodomesticos(updatedElectrodomesticos);
+        }
+    }, [pisoId]);
+	
 
 
 	const [electrodomesticos, setElectrodomesticos] = useState([
@@ -118,27 +135,35 @@ const AgregarPiso = ({ navigation }: Props) => {
 		await updateCampo("electrodomesticos", electrodomesticosString);
 	};
 
-	const prepararPost = async () => {
+	
 
-		//console.log(informacionPiso);
-
-		post();
-	};
+	// const prepararPost = async () => {
+	// 	post();
+	// };
 
 	if (!usuario || usuario.verified == false) {
 		return (
 			<>
 				<View style={styles.loadingContainer}>
-					<Text>Debes completar tus datos y estar verificado por un admin para crear tu piso</Text>
+					<Text>Debes completar tus datos y estar verificado por un admin para modificar tu piso</Text>
 				</View>
 			</>
 		);
 	}
 
+	if (!informacionPiso) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
 
 	return (
 		<>
 			<ScrollView contentContainerStyle={styles.container}>
+
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
 						<TouchableOpacity onPress={selectImage} style={styles.imageUpload} activeOpacity={0.7}>
@@ -170,7 +195,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							<View style={styles.trianguloContainer}>
 								<View style={styles.triangulo} />
 								<Text style={styles.texto}>
-									{informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : <Icon name="add-a-photo" size={30} color="#000" />}
+									{informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" :   <Icon name="add-a-photo" size={30} color="#000" />}
 								</Text>
 							</View>
 						</TouchableOpacity>
@@ -179,9 +204,8 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-					
 						<Text style={styles.label}>* Titulo:</Text>
-						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
+						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} defaultValue={informacionPiso.titulo}/>
 					</View>
 				</View>
 
@@ -194,6 +218,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("estanciaMinimaDias", texto)}
 							contextMenuHidden={true}
+							defaultValue={informacionPiso.estanciaMinimaDias+""}
 						/>
 					</View>
 					<View style={styles.column}>
@@ -204,6 +229,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("numHabitaciones", texto)}
 							contextMenuHidden={true}
+							defaultValue={informacionPiso.numHabitaciones+""}
 						/>
 					</View>
 				</View>
@@ -216,6 +242,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("precioMes", texto)}
 							contextMenuHidden={true}
+							defaultValue={informacionPiso.precioMes+""}
 						/>
 					</View>
 					<View style={styles.column}>
@@ -226,6 +253,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							keyboardType="numeric"
 							onChangeText={(texto) => updateCampo("mCuadrados", texto)}
 							contextMenuHidden={true}
+							defaultValue={informacionPiso.mCuadrados+""}
 						/>
 					</View>
 				</View>
@@ -245,6 +273,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 								multiline
 								numberOfLines={10}
 								onChangeText={(texto) => updateCampo("descripcion", texto)}
+								defaultValue={informacionPiso.descripcion+""}
 							/>
 						</Animated.View>
 					</View>
@@ -422,23 +451,9 @@ const AgregarPiso = ({ navigation }: Props) => {
 					</View>
 				</Animated.View>
 
-				<View style={styles.row}>
-					<View style={styles.column}>
-						<Text>Selecciona un país:</Text>
-						<Button title="Seleccionar país" onPress={() => setModalVisible(true)} />
-						<CountryPicker
-							visible={modalVisible}
-							onSelect={handleCountrySelect}
-							onClose={() => setModalVisible(false)} countryCode={countryCode?.cca2}/>
-					</View>
-					<View style={styles.column}>
-						<ModalMap/>
-					</View>
-				</View>
-
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<Button title={loading ? 'Enviando...' : 'Crear'} onPress={prepararPost} />
+						<Button title={loading ? 'Actualizando...' : 'Modificar'} onPress={putPiso} />
 					</View>
 				</View>
 
@@ -448,7 +463,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 	);
 };
 
-export default AgregarPiso
+export default ModificarPiso
 
 const getStyles = (isDescripcionExpanded) => StyleSheet.create({
 	container: {
@@ -588,6 +603,6 @@ const getStyles = (isDescripcionExpanded) => StyleSheet.create({
 		position: 'absolute',
 		width: 200,
 		top: 20,
-		left: -80,
+		left: -80, 
 	},
 })

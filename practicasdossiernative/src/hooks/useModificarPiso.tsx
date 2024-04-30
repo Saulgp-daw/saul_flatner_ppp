@@ -5,40 +5,17 @@ import { ImageLibraryOptions, ImagePickerResponse, launchImageLibrary } from 're
 import axios from 'axios';
 import { ip } from '../../global';
 import { useIsFocused } from '@react-navigation/native';
+import { Piso } from '../types/Piso';
 import useGetUserLogged from './useGetUserLogged';
 import Toast from 'react-native-toast-message';
-import CountryPicker, { Country } from 'react-native-country-picker-modal';
+
 
 type Props = {}
 
-type PisoPost = {
-    ascensor: boolean;
-    descripcion: string;
-    electrodomesticos: string;
-    estanciaMinimaDias: number;
-    fotos: string;
-    fumar: boolean;
-    gasIncluido: boolean;
-    jardin: boolean;
-    luzIncluida: boolean;
-    mCuadrados: number;
-    mascotas: boolean;
-    numHabitaciones: number;
-    mapsLink: string;
-    parejas: boolean;
-    precioMes: number;
-    propietarioReside: boolean;
-    terraza: boolean;
-    titulo: string;
-    ubicacion: string;
-    valoracion: number;
-    wifi: boolean;
-    fotoBase64: string;
-}
 
-const useAgregarPiso = () => {
+const useModificarPiso = () => {
     const { token, email, usuario, setusuario } = useAppContext();
-    const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/pisos";
+    const ruta = "http://" + ip + "/api/v2/usuarios/";
     //console.log(ruta);
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState("");
@@ -60,21 +37,14 @@ const useAgregarPiso = () => {
     const [isElectrodomesticosExpanded, setisElectrodomesticosExpanded] = useState(false);
     const [isExtraExpanded, setisExtraExpanded] = useState(false);
 
-    const [countryCode, setCountryCode] = useState<Country | null>(null); // Estado para almacenar el país seleccionado
-
-    const handleCountrySelect = (selectedCountry: Country) => {
-        updateCampo('ubicacion', selectedCountry.name);
-        setCountryCode(selectedCountry);
-    };
-
-
     const { getUser } = useGetUserLogged();
-    const [informacionPiso, setInformacionPiso] = useState<PisoPost>({
-        ascensor: false,
-        descripcion: '',
-        electrodomesticos: '',
+    const [informacionPiso, setInformacionPiso] = useState<Piso>({
+        id: 0,
+        titulo: "",
+        descripcion: "",
+        electrodomesticos: "",
         estanciaMinimaDias: 0,
-        fotos: '',
+        fotos: "",
         fumar: false,
         gasIncluido: false,
         jardin: false,
@@ -82,16 +52,19 @@ const useAgregarPiso = () => {
         mCuadrados: 0,
         mascotas: false,
         numHabitaciones: 0,
-        mapsLink: '',
+        mapsLink: "",
         parejas: false,
         precioMes: 0,
         propietarioReside: false,
         terraza: false,
-        titulo: '',
-        ubicacion: '',
-        valoracion: 2.5,
+        ubicacion: "",
+        valoracion: 0,
+        num_votos: 0,
         wifi: false,
-        fotoBase64: ''
+        ascensor: false,
+        anotaciones: "",
+        idAnotacion: 0,
+        fotoBase64: ""
     });
 
     function toggleDescripcionExpansion() {
@@ -167,7 +140,7 @@ const useAgregarPiso = () => {
         return true;
     }
 
-    const setSwitch = (key: keyof PisoPost, value: boolean) => {
+    const setSwitch = (key: keyof Piso, value: boolean) => {
         setInformacionPiso((prevOpcionesPiso) => ({
             ...prevOpcionesPiso,
             [key]: value,
@@ -198,54 +171,94 @@ const useAgregarPiso = () => {
         launchImageLibrary(options, (response: ImagePickerResponse) => {
             if (response.assets && response.assets.length > 0) {
                 const base64Image = response.assets[0].base64;
-                const fileName = response.assets[0].fileName;
-                setInformacionPiso(prevState => ({
-                    ...prevState,
-                    fotoBase64: base64Image,
-                    fotos: fileName
-                }));
+                const fileName = response.assets[0].fileName; // Nombre del archivo de la imagen
+
+                // Asegúrate de que fileName no es undefined antes de intentar agregarlo al array
+                if (fileName) {
+                    setInformacionPiso(prevState => ({
+                        ...prevState,
+                        fotoBase64: base64Image, // Asumiendo que quieres guardar la imagen en base64 también
+                        fotos: fileName
+                    }));
+                } else {
+                    console.error("No se encontró el nombre del archivo");
+                }
+
+                // Esto asume que también quieres mostrar la imagen seleccionada en algún componente
                 setSelectedImage(`data:image/png;base64,${base64Image}`);
             }
         });
     };
+    
 
-    function agregarPisoSuccess() {
+    function modificarPisoSuccess() {
         Toast.show({
             type: 'success',
-            text1: '¡Piso creado con éxito!'
+            text1: '¡Piso modificado con éxito!'
         });
     }
 
-    function agregarPisoFailure() {
+    function modificarPisoFailure() {
         Toast.show({
             type: 'error',
-            text1: 'Oh no, hubo un error al crear el piso'
+            text1: 'Oh no, hubo un error al modificar el piso'
         });
     }
 
 
-    function post() {
+    function putPiso() {
 
         if (!validarTitulo() || !validarEstanciaMinima() || !validarNumHabitaciones() || !validarPrecioMes() || !validarMetrosCuadrados()) {
             return;
         }
 
-        const axiospost = async () => {
+        const { id, ...datosPiso } = informacionPiso; // desestructurar para excluir `id` y cualquier otro dato no necesario
+        //console.log(informacionPiso.fotoBase64);
+        
+
+        const payload = {
+            ascensor: datosPiso.ascensor,
+            descripcion: datosPiso.descripcion,
+            electrodomesticos: datosPiso.electrodomesticos,
+            estanciaMinimaDias: datosPiso.estanciaMinimaDias,
+            fotos: datosPiso.fotos,
+            fumar: datosPiso.fumar,
+            gasIncluido: datosPiso.gasIncluido,
+            jardin: datosPiso.jardin,
+            luzIncluida: datosPiso.luzIncluida,
+            mCuadrados: datosPiso.mCuadrados,
+            mapsLink: datosPiso.mapsLink,
+            mascotas: datosPiso.mascotas,
+            numHabitaciones: datosPiso.numHabitaciones,
+            parejas: datosPiso.parejas,
+            precioMes: datosPiso.precioMes,
+            propietarioReside: datosPiso.propietarioReside,
+            terraza: datosPiso.terraza,
+            titulo: datosPiso.titulo,
+            ubicacion: datosPiso.ubicacion,
+            valoracion: datosPiso.valoracion,
+            wifi: datosPiso.wifi,
+            fotoBase64: datosPiso.fotoBase64
+        };
+
+        const axiosput = async () => {
+            //console.log(ruta+usuario.email+"/pisos/"+id);
             setLoading(true);
             try {
-                const response = await axios.post(ruta, informacionPiso, { headers: { 'Authorization': `Bearer ${token}` } });
+                //console.log("Enviando payload para actualizar:", payload);
+                const response = await axios.put(ruta+usuario.email+"/pisos/"+id, payload, { headers: { 'Authorization': `Bearer ${token}` } });
                 console.log(response.data);
-                agregarPisoSuccess();
+                modificarPisoSuccess();
                 setLoading(false);
                 await getUser();
             } catch (error) {
-                console.log(error);
-                agregarPisoFailure();
+                console.log(error.response);
+                modificarPisoFailure();
                 setLoading(false);
             }
         }
 
-        axiospost();
+        axiosput();
     }
 
 
@@ -261,19 +274,16 @@ const useAgregarPiso = () => {
         isElectrodomesticosExpanded,
         isExtraExpanded,
         selectedImage,
-        countryCode,
         setLoading,
         setInformacionPiso,
         setSwitch,
-        post,
+        putPiso,
         selectImage,
         updateCampo,
         toggleDescripcionExpansion,
         toggleElectrodomesticosExpansion,
-        toggleExtraExpansion,
-        handleCountrySelect,
-        setCountryCode
+        toggleExtraExpansion
     }
 }
 
-export default useAgregarPiso
+export default useModificarPiso

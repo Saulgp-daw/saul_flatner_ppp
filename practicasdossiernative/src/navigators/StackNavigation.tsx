@@ -12,6 +12,8 @@ import Busqueda from '../screens/Busqueda';
 import DrawerFlatner from './DrawerFlatner';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import TabPrincipal from './TabPrincipal';
+import ModificarPiso from '../screens/ModificarPiso';
+import Maps from '../screens/Maps';
 
 
 
@@ -34,8 +36,10 @@ const StackNavigation = (props: Props) => {
                 <Stack.Screen name='TabPrincipal' component={TabPrincipal} options={{ headerShown: false }} />
                 <Stack.Screen name='Busqueda' component={Busqueda} options={{ headerShown: false }} />
                 <Stack.Screen name='Mi Perfil' component={PerfilPrivado} options={{ headerShown: false }} />
+                <Stack.Screen name='ModificarPiso' component={ModificarPiso} options={{ headerShown: false }} />
                 <Stack.Screen name='Piso' component={Piso} options={{ headerShown: false }} />
                 <Stack.Screen name='Perfil' component={PerfilPublico} options={{ headerShown: false }} />
+                <Stack.Screen name='Maps' component={Maps} options={{ headerShown: false }} />
             </Stack.Navigator>
         </TokenContextProvider>
     )

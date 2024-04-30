@@ -5,7 +5,11 @@ import { ip } from '../../global';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useBorrarPiso from '../hooks/useBorrarPiso';
 
-const MisPisos = () => {
+type Props = {
+  navigation: any,
+}
+
+const MisAnuncios = ({ navigation }: Props) => {
   const { usuario, token } = useAppContext();
   const { showConfirmDialog } = useBorrarPiso();
   const [loading, setLoading] = useState(true);
@@ -46,19 +50,22 @@ const MisPisos = () => {
     <ScrollView>
       {usuario.propiedades.map((propiedad) => (
         <View key={propiedad.id} style={styles.itemContainer}>
-          <Image
-            source={errors[propiedad.id] ? require('../resources/default.jpg') : {
-              uri: `http://${ip}/api/v2/usuarios/${usuario.email}/images/${propiedad.fotos[0] || 'default.jpg'}`,
-              method: 'GET',
-              headers: { 'Authorization': `Bearer ${token}` }
-            }}
-            style={styles.image}
-            onError={() => handleImageError(propiedad.id)}
-          />
+          <TouchableHighlight onPress={() => navigation.navigate('Piso', { pisoId: propiedad.id })}>
+            <Image
+              source={errors[propiedad.id] ? require('../resources/default.jpg') : {
+                uri: `http://${ip}/api/v2/usuarios/${usuario.email}/images/${propiedad.fotos[0] || 'default.jpg'}`,
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+              }}
+              style={styles.image}
+              onError={() => handleImageError(propiedad.id)}
+            />
+          </TouchableHighlight>
+
           <View style={styles.textContainer}>
             <Text style={styles.title}>{propiedad.titulo}</Text>
           </View>
-          <TouchableHighlight style={styles.actionButton} onPress={() => handleActionButtonPress(propiedad.id)}>
+          <TouchableHighlight style={styles.actionButton} onPress={() => navigation.navigate('ModificarPiso', { pisoId: propiedad.id })}>
             <Icon name="construct-outline" size={32} color="white" />
           </TouchableHighlight>
           <TouchableHighlight style={styles.deleteButton} onPress={() => showConfirmDialog(propiedad.id)}>
@@ -70,7 +77,7 @@ const MisPisos = () => {
   );
 };
 
-export default MisPisos;
+export default MisAnuncios;
 
 const styles = StyleSheet.create({
   loadingContainer: {

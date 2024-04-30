@@ -6,6 +6,7 @@ import Slider from '../components/Slider'
 import useFindAll from '../hooks/useFindAllPisos'
 import { ip } from '../../global'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 type Props = {
   navigation: any,
@@ -47,7 +48,8 @@ const Busqueda = ({ navigation }: Props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={styles.busqueda}>
+     
+      <ScrollView style={styles.busqueda} >
         {pisos.map((piso, index) => (
           <TouchableOpacity key={piso.id} onPress={() => navigation.navigate('Piso', { pisoId: piso.id })} >
             <View style={styles.caja}>
@@ -82,7 +84,8 @@ export default Busqueda
 const styles = StyleSheet.create({
   busqueda: {
     display: 'flex',
-    alignContent: 'center'
+    alignContent: 'center',
+    flexGrow: 1
   },
   noPisosText: {
     fontSize: 20,

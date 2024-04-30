@@ -69,7 +69,7 @@ const Piso = ({ navigation }: Props) => {
                         <Text>
                             {
                                 usuario.pisosInteres.some(pisoW => pisoW.id === piso.idPiso) ?
-                                     <Icon name="bookmark" size={20} /> : <Icon name="bookmark-outline" size={20} />
+                                    <Icon name="bookmark" size={20} /> : <Icon name="bookmark-outline" size={20} />
                             }
                         </Text>
 

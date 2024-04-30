@@ -1,10 +1,10 @@
 export interface Piso {
-    id: number;
-    titulo: string;
-    descripcion: string;
-    electrodomesticos: string;
-    estanciaMinimaDias: number;
-    fotos: string[];
+    id: number,
+    titulo: string,
+    descripcion: string,
+    electrodomesticos: string,
+    estanciaMinimaDias: number,
+    fotos: string;
     fumar: boolean;
     gasIncluido: boolean,
     jardin: boolean,
@@ -21,8 +21,9 @@ export interface Piso {
     valoracion: number,
     num_votos: number,
     wifi: boolean,
-    ascensor: boolean;
-    anotaciones: string;
-    idAnotacion: number;
+    ascensor: boolean,
+    anotaciones: string,
+    idAnotacion: number,
+    fotoBase64: string,
 
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React from 'react'
 
 type Props = {
@@ -8,7 +8,9 @@ type Props = {
 const Mensajes = ({ navigation }: Props) => {
   return (
     <View>
-      <Text>Mensajes</Text>
+      <TouchableHighlight onPress={() => navigation.navigate('Maps')}>
+        <Text>Maps</Text>
+      </TouchableHighlight>
     </View>
   )
 }
