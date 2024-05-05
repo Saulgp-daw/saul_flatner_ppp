@@ -1,36 +1,97 @@
-import React, { useState } from 'react';
-import { Alert, Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { PERMISSIONS, PermissionStatus, check, request } from "react-native-permissions";
+import { } from "react-native-geolocation-service"
+import Geolocation from '@react-native-community/geolocation';
+import useAgregarPiso from '../hooks/useAgregarPiso';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import SearchLocation from './SearchLocation';
 
 const ModalMap = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [markerCoordinate, setMarkerCoordinate] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [mapRegion, setMapRegion] = useState(null);
+    const { informacionPiso, updateCampo } = useAgregarPiso();
+
+
+    useEffect(() => {
+        async function verPosicion() {
+            let ps: PermissionStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+            if (ps != 'granted') {
+                ps = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+            }
+
+            if (ps == 'granted') {
+                Geolocation.getCurrentPosition(async info => {
+                    console.log(info);
+                    const { latitude, longitude } = info.coords;
+                    await updateCampo('mapsLink', `${latitude},${longitude}`);
+                    setCurrentLocation({ latitude, longitude });
+                    if (!markerCoordinate) {
+                        setMarkerCoordinate({ latitude, longitude });
+                    }
+                    setLoading(false);
+                });
+
+            } else {
+                console.log("No hay permisos");
+
+            }
+        }
+        verPosicion();
+    }, []);
+
+    useEffect(() => {
+        if (currentLocation) {
+            setMapRegion({
+                latitude: currentLocation.latitude - 0.25,
+                longitude: currentLocation.longitude,
+                latitudeDelta: 0.8,
+                longitudeDelta: 0.8
+            });
+        }
+    }, [currentLocation]);
 
     const toggleModal = () => {
         setModalVisible(!modalVisible);
     };
 
-    const onMapPress = (e) => {
+    if (loading) {
+        return <View style={styles.container}><ActivityIndicator size="large" /></View>;
+    }
+
+    const onMapPress = async (e) => {
         const { latitude, longitude } = e.nativeEvent.coordinate;
+        console.log("Ubicación pulsada: " + latitude + ", " + longitude);
+        await updateCampo('mapsLink', `${latitude},${longitude}`);
         setMarkerCoordinate({ latitude, longitude });
+        setCurrentLocation({ latitude, longitude });
+        setMapRegion({
+            latitude,
+            longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        });
+
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.smallMapContainer} onTouchEnd={toggleModal}>
                 <MapView
-                    style={styles.smallMap}
-                    initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                    }}
+                    style={styles.map}
+                    region={mapRegion}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
+                    rotateEnabled={false}
+                    pitchEnabled={false}
                 >
-                    {markerCoordinate && (
-                        <Marker coordinate={markerCoordinate} />
-                    )}
+                    {markerCoordinate && <Marker coordinate={markerCoordinate} />}
                 </MapView>
             </View>
             <Modal
@@ -42,25 +103,24 @@ const ModalMap = () => {
                     toggleModal();
                 }}
             >
-                <View style={styles.modalView}>
+                <ScrollView style={styles.modalView} keyboardShouldPersistTaps="handled" nestedScrollEnabled={true}>
+                    <SearchLocation />
                     <MapView
                         style={styles.map}
-                        initialRegion={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
+                        region={{
+                            latitude: currentLocation ? currentLocation.latitude : 0,
+                            longitude: currentLocation ? currentLocation.longitude : 0,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }}
                         onPress={onMapPress}
                     >
-                        {markerCoordinate && (
-                            <Marker coordinate={markerCoordinate} />
-                        )}
+                        {markerCoordinate && <Marker coordinate={markerCoordinate} />}
                     </MapView>
                     <TouchableHighlight style={styles.closeButton} onPress={toggleModal}>
-                        <Icon name="close" size={23}/>
+                        <Icon name="close" size={23} />
                     </TouchableHighlight>
-                </View>
+                </ScrollView>
             </Modal>
         </View>
     );
@@ -73,16 +133,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 22,
     },
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+    },
     modalView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "white",
+        backgroundColor: "green",
         padding: 15,
     },
     map: {
         width: Dimensions.get('window').width - 40, // Reduzco 40 para el margen del modal
-        height: Dimensions.get('window').height - 120,
+        height: Dimensions.get('window').height - 160,
     },
     closeButton: {
         position: 'absolute',
@@ -92,9 +154,10 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     smallMapContainer: {
-        width: 200,
+        width: Dimensions.get('window').width - 40,
         height: 200,
         overflow: 'hidden',
+
     },
     smallMap: {
         width: '100%',

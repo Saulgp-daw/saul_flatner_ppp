@@ -48,7 +48,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 	const extraSectionHeight = useRef(new Animated.Value(0)).current;
 	const imagenDefecto = "../resources/default.jpg";
 	const [modalVisible, setModalVisible] = useState(false);
-	
+
 
 
 	const styles = getStyles(isDescripcionExpanded);
@@ -138,7 +138,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<ScrollView contentContainerStyle={styles.container}>
+			<ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
 						<TouchableOpacity onPress={selectImage} style={styles.imageUpload} activeOpacity={0.7}>
@@ -179,7 +179,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-					
+
 						<Text style={styles.label}>* Titulo:</Text>
 						<TextInput style={[styles.textInput, !tituloValido && styles.inputError]} placeholder='Ejm: Mirador de Montepinar' onChangeText={(texto) => updateCampo("titulo", texto)} />
 					</View>
@@ -429,10 +429,12 @@ const AgregarPiso = ({ navigation }: Props) => {
 						<CountryPicker
 							visible={modalVisible}
 							onSelect={handleCountrySelect}
-							onClose={() => setModalVisible(false)} countryCode={countryCode?.cca2}/>
+							onClose={() => setModalVisible(false)} countryCode={countryCode?.cca2} />
 					</View>
+				</View>
+				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<ModalMap/>
+						<ModalMap />
 					</View>
 				</View>
 
