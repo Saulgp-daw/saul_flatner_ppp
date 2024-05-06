@@ -1,15 +1,27 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import useAgregarPiso from '../hooks/useAgregarPiso';
 
-type Props = {}
+type Props = {
+    onLocationSelect: (location: { latitude: number, longitude: number }) => void;
+    updateCampo: (key: string, value: any) => void;
+}
 
-const SearchLocation = (props: Props) => {
+const SearchLocation = ({onLocationSelect, updateCampo }: Props) => {
 
-    function test() {
-        console.log("Hola");
-
+    const handlePress = async (data, details) => {
+    if (details && details.geometry) {
+        const { location } = details.geometry;
+        console.log("Location selected:", location); // Log de la ubicación seleccionada
+        onLocationSelect({
+            latitude: location.lat,
+            longitude: location.lng
+        });
+        await updateCampo('mapsLink', `${location.lat},${location.lng}`);
+       
     }
+}
     return (
 
         <GooglePlacesAutocomplete
@@ -23,13 +35,9 @@ const SearchLocation = (props: Props) => {
             }}
             onFail={error => console.log(error)}
             enablePoweredByContainer={false}
-            onPress={(data, details = null) => {
-                console.log(details.geometry.location);
-                console.log("On press not working");
-                
-            }}
+            onPress={handlePress}
             fetchDetails={true}
-            disableScroll={true} // <--- 2. this works
+            disableScroll={true} 
         />
     )
 }

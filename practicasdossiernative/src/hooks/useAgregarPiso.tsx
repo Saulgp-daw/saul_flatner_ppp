@@ -178,13 +178,15 @@ const useAgregarPiso = () => {
 
     const updateCampo = async (key, value) => {
         const parsedValue = typeof informacionPiso[key] === 'number' ? parseFloat(value) : value;
-        // Espera a que se complete la actualización de informacionPiso antes de continuar
-        await setInformacionPiso((prevOpcionesPiso) => ({
+        setInformacionPiso((prevOpcionesPiso) => ({
             ...prevOpcionesPiso,
             [key]: parsedValue,
         }));
-        //console.log(parsedValue);
+        //console.log("Estado actualizado:", informacionPiso);
     };
+    
+    
+    
 
 
     const selectImage = () => {
@@ -225,6 +227,7 @@ const useAgregarPiso = () => {
 
 
     function post() {
+        console.log("Información de Piso antes de enviar:", informacionPiso);
 
         if (!validarTitulo() || !validarEstanciaMinima() || !validarNumHabitaciones() || !validarPrecioMes() || !validarMetrosCuadrados()) {
             return;

@@ -53,6 +53,10 @@ const AgregarPiso = ({ navigation }: Props) => {
 
 	const styles = getStyles(isDescripcionExpanded);
 
+	useEffect(() => {
+		console.log("Estado actualizado:", informacionPiso);
+	}, [informacionPiso]);
+
 
 
 	useEffect(() => {
@@ -135,6 +139,11 @@ const AgregarPiso = ({ navigation }: Props) => {
 		);
 	}
 
+
+	function mostrarInfo(): void {
+		console.log(informacionPiso);
+
+	}
 
 	return (
 		<>
@@ -434,13 +443,24 @@ const AgregarPiso = ({ navigation }: Props) => {
 				</View>
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
-						<ModalMap />
+						<Text>{informacionPiso.mapsLink}</Text>
+					</View>
+				</View>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<ModalMap informacionPiso={informacionPiso} updateCampo={updateCampo} />
+
 					</View>
 				</View>
 
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
 						<Button title={loading ? 'Enviando...' : 'Crear'} onPress={prepararPost} />
+					</View>
+				</View>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<Button title={"Mostrar info piso"} onPress={mostrarInfo} />
 					</View>
 				</View>
 

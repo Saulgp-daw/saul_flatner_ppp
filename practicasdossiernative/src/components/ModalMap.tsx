@@ -9,13 +9,12 @@ import useAgregarPiso from '../hooks/useAgregarPiso';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import SearchLocation from './SearchLocation';
 
-const ModalMap = () => {
+const ModalMap = ({ informacionPiso, updateCampo }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [markerCoordinate, setMarkerCoordinate] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mapRegion, setMapRegion] = useState(null);
-    const { informacionPiso, updateCampo } = useAgregarPiso();
 
 
     useEffect(() => {
@@ -68,7 +67,6 @@ const ModalMap = () => {
     const onMapPress = async (e) => {
         const { latitude, longitude } = e.nativeEvent.coordinate;
         console.log("Ubicación pulsada: " + latitude + ", " + longitude);
-        await updateCampo('mapsLink', `${latitude},${longitude}`);
         setMarkerCoordinate({ latitude, longitude });
         setCurrentLocation({ latitude, longitude });
         setMapRegion({
@@ -77,7 +75,9 @@ const ModalMap = () => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
         });
-
+        await updateCampo('mapsLink', `${latitude},${longitude}`);
+        console.log(informacionPiso);
+        
     };
 
     return (
@@ -104,7 +104,13 @@ const ModalMap = () => {
                 }}
             >
                 <ScrollView style={styles.modalView} keyboardShouldPersistTaps="handled" nestedScrollEnabled={true}>
-                    <SearchLocation />
+                    <SearchLocation
+                        onLocationSelect={(location) => {
+                            setMarkerCoordinate(location);
+                            setCurrentLocation(location);
+                        }}
+                        updateCampo={updateCampo}
+                    />
                     <MapView
                         style={styles.map}
                         region={{
