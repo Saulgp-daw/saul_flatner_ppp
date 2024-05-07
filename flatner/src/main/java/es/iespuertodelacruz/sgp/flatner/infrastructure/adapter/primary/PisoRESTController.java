@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import es.iespuertodelacruz.sgp.flatner.domain.model.Piso;
 import es.iespuertodelacruz.sgp.flatner.domain.port.primary.IPisoDomainService;
@@ -29,8 +32,19 @@ public class PisoRESTController {
 	@Autowired IPisoDomainService pisoDomainService;
 	@Autowired IUsuarioDomainService usuarioDomainService;
 	
+	@Value("${nodejs.url}")
+    private String nodeJsUrl;
+	
 	private List<String> stringAList(String fotos) {
 		return Arrays.asList(fotos.split(";;"));
+	}
+	
+	@GetMapping("/country")
+	public ResponseEntity<?> getCountryInfo(@RequestParam String latitud, @RequestParam String longitud) {
+	    final String nodeJsUrl = nodeJsUrl + "/country?lat=" + latitud + "&lng=" + longitud;
+	    RestTemplate restTemplate = new RestTemplate();
+	    ResponseEntity<String> responseEntity = restTemplate.getForEntity(nodeJsUrl, String.class);
+	    return ResponseEntity.ok(responseEntity.getBody());
 	}
 	
 	@GetMapping

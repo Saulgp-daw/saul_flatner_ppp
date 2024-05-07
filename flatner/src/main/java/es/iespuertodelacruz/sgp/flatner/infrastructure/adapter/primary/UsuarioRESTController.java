@@ -3,6 +3,7 @@ package es.iespuertodelacruz.sgp.flatner.infrastructure.adapter.primary;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URLConnection;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -193,6 +194,65 @@ public class UsuarioRESTController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Propietario no encontrado");
 	}
+	
+	@PutMapping("/{email}/pisos/{id}")
+	public ResponseEntity<?> update(@PathVariable String email, @PathVariable Integer id, @RequestBody PisoDTO pisoDTO){
+		Usuario propietarioFind = usuarioDomainService.findById(email);
+		Piso encontrado = pisoDomainService.findById(id);
+		if(encontrado != null && propietarioFind != null) {
+				encontrado.setAscensor(pisoDTO.isAscensor());
+				encontrado.setDescripcion(pisoDTO.getDescripcion());
+				encontrado.setElectrodomesticos(pisoDTO.getElectrodomesticos());
+				encontrado.setEstanciaMinimaDias(pisoDTO.getEstanciaMinimaDias());
+				encontrado.setFotos(this.stringAList(pisoDTO.getFotos()));
+				encontrado.setFumar(pisoDTO.isFumar());
+				encontrado.setGasIncluido(pisoDTO.isGasIncluido());
+				encontrado.setJardin(pisoDTO.isJardin());
+				encontrado.setLuzIncluida(pisoDTO.isLuzIncluida());
+				encontrado.setmCuadrados(pisoDTO.getmCuadrados());
+				encontrado.setMapsLink(pisoDTO.getMapsLink());
+				encontrado.setMascotas(pisoDTO.isMascotas());
+				encontrado.setNumHabitaciones(pisoDTO.getNumHabitaciones());
+				encontrado.setParejas(pisoDTO.isParejas());
+				encontrado.setPrecioMes(pisoDTO.getPrecioMes());
+				encontrado.setPropietarioReside(pisoDTO.isPropietarioReside());
+				encontrado.setTerraza(pisoDTO.isTerraza());
+				encontrado.setTitulo(pisoDTO.getTitulo());
+				encontrado.setUbicacion(pisoDTO.getUbicacion());
+				BigDecimal valoracion = this.calcularValoracion(encontrado.getNum_votos(), encontrado.getValoracion(), pisoDTO.getValoracion());
+				encontrado.setValoracion(valoracion);
+				
+				
+				
+				String codedPhoto = pisoDTO.getFotoBase64();
+				byte[] photoBytes = Base64.getDecoder().decode(codedPhoto);
+
+				String nombreNuevoFichero = storageService.saveImagenPiso(email, pisoDTO.getFotos(), photoBytes);
+
+				List<String> fotosExistente = encontrado.getFotos();
+				System.out.println(fotosExistente);
+				System.out.println(nombreNuevoFichero);
+
+				// Verificar si la nueva foto ya está presente en la lista de fotos existente
+				if (!fotosExistente.contains(nombreNuevoFichero)) {
+				    // Agregar la nueva foto a la lista existente de fotos
+				    fotosExistente.add(nombreNuevoFichero);
+				    
+				    // Actualizar la lista de fotos del piso con la lista actualizada
+				    encontrado.setFotos(fotosExistente);
+				}
+
+
+				//encontrado.setFotos(nombreNuevoFichero != null ? stringAList(nombreNuevoFichero) : new ArrayList<>());
+				
+				Piso update = pisoDomainService.update(encontrado);
+				if(update != null) {
+					return ResponseEntity.ok(update);
+				}
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Piso no encontrado");
+	}
 
 	@PutMapping("/{email}")
 	public ResponseEntity<?> update(@PathVariable String email, @RequestBody UsuarioDTO usuarioDto) {
@@ -257,6 +317,15 @@ public class UsuarioRESTController {
 	private static BigInteger convertirFechaActualABigInteger() {
 		long segundos = Instant.now().getEpochSecond();
 		return BigInteger.valueOf(segundos);
+	}
+	
+	public BigDecimal calcularValoracion(int numVotosActual, BigDecimal valoracionActual, BigDecimal valoracion) {
+	    BigDecimal nuevaValoracion;
+	    numVotosActual += 1;
+	    BigDecimal sumaValoraciones = valoracionActual.add(valoracion);
+	    nuevaValoracion = sumaValoraciones.divide(BigDecimal.valueOf(numVotosActual), 2, RoundingMode.HALF_UP);
+	    
+	    return nuevaValoracion;
 	}
 
 }

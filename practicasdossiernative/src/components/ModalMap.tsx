@@ -8,6 +8,7 @@ import Geolocation from '@react-native-community/geolocation';
 import useAgregarPiso from '../hooks/useAgregarPiso';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import SearchLocation from './SearchLocation';
+import axios from 'axios';
 
 const ModalMap = ({ informacionPiso, updateCampo }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -31,6 +32,7 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
                     const { latitude, longitude } = info.coords;
                     await updateCampo('mapsLink', `${latitude},${longitude}`);
                     setCurrentLocation({ latitude, longitude });
+                    getCountry(latitude, longitude);
                     if (!markerCoordinate) {
                         setMarkerCoordinate({ latitude, longitude });
                     }
@@ -44,6 +46,19 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
         }
         verPosicion();
     }, []);
+
+    async function getCountry(latitude, longitude){
+        const ruta = `http://192.168.1.59:3010/country?lat=${latitude}&lng=${longitude}`;
+        console.log(ruta);
+        
+        try{
+            const response = await axios.get(ruta);
+            console.log(response);
+            
+        }catch(error){
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
         if (currentLocation) {
