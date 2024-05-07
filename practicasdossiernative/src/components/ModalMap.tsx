@@ -9,6 +9,9 @@ import useAgregarPiso from '../hooks/useAgregarPiso';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import SearchLocation from './SearchLocation';
 import axios from 'axios';
+import { ip } from '../../global';
+import { useAppContext } from '../contexts/TokenContextProvider';
+import useGetCountry from '../hooks/useGetCountry';
 
 const ModalMap = ({ informacionPiso, updateCampo }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -16,6 +19,8 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
     const [currentLocation, setCurrentLocation] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mapRegion, setMapRegion] = useState(null);
+    const { token, settoken } = useAppContext();
+    const {getCountry} = useGetCountry();
 
 
     useEffect(() => {
@@ -32,7 +37,13 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
                     const { latitude, longitude } = info.coords;
                     await updateCampo('mapsLink', `${latitude},${longitude}`);
                     setCurrentLocation({ latitude, longitude });
-                    getCountry(latitude, longitude);
+                    getCountry(latitude, longitude).then(async data => {
+                        //await updateCampo("ubicacion", data.country);
+                        console.log(data);
+                        
+                        
+                    })
+                    ;
                     if (!markerCoordinate) {
                         setMarkerCoordinate({ latitude, longitude });
                     }
@@ -46,19 +57,6 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
         }
         verPosicion();
     }, []);
-
-    async function getCountry(latitude, longitude){
-        const ruta = `http://192.168.1.59:3010/country?lat=${latitude}&lng=${longitude}`;
-        console.log(ruta);
-        
-        try{
-            const response = await axios.get(ruta);
-            console.log(response);
-            
-        }catch(error){
-            console.error(error);
-        }
-    }
 
     useEffect(() => {
         if (currentLocation) {

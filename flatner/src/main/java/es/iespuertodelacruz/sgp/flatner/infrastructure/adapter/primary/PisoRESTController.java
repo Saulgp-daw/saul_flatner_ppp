@@ -41,9 +41,11 @@ public class PisoRESTController {
 	
 	@GetMapping("/country")
 	public ResponseEntity<?> getCountryInfo(@RequestParam String latitud, @RequestParam String longitud) {
-	    final String nodeJsUrl = nodeJsUrl + "/country?lat=" + latitud + "&lng=" + longitud;
+		
+	    final String url = nodeJsUrl + "/country?lat=" + latitud + "&lng=" + longitud;
+	    //System.out.println(url);
 	    RestTemplate restTemplate = new RestTemplate();
-	    ResponseEntity<String> responseEntity = restTemplate.getForEntity(nodeJsUrl, String.class);
+	    ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 	    return ResponseEntity.ok(responseEntity.getBody());
 	}
 	
