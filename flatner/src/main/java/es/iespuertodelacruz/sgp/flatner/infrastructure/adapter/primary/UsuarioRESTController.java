@@ -262,6 +262,7 @@ public class UsuarioRESTController {
 			encontrado.setApellidos(usuarioDto.getApellidos());
 			encontrado.setAnhoNacimiento(usuarioDto.getAnhoNacimiento());
 			encontrado.setSexo(usuarioDto.getSexo());
+			encontrado.setVerified(true);
 			encontrado.setPassword(passwordEncoder.encode(usuarioDto.getPassword()));
 			encontrado.setFechaUltimaEstancia(convertirFechaABigInteger(usuarioDto.getFechaUltimaEstancia()));
 			encontrado.setFechaUltimoAlquiler(convertirFechaABigInteger(usuarioDto.getFechaUltimoAlquiler()));

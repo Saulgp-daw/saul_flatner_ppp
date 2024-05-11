@@ -82,6 +82,7 @@ public class UsuarioEntityService implements IUsuarioDomainRepository{
 			ue.setApellidos(domain.getApellidos());
 			ue.setEmail(domain.getEmail());
 			ue.setActive(domain.isActive());
+			ue.setVerified(domain.isVerified());
 			ue.setAnhoNacimiento(domain.getAnhoNacimiento());
 			ue.setFechaUltimaEstancia(domain.getFechaUltimaEstancia());
 			ue.setFechaUltimoAlquiler(domain.getFechaUltimoAlquiler());

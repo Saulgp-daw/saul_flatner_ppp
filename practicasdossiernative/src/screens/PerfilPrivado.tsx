@@ -17,7 +17,7 @@ type Props = {
 const PerfilPrivado = ({ navigation }: Props) => {
     const perfil = "../resources/perfil.jpg";
     const { token, email, usuario } = useAppContext();
-    const { reload, setReload, informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, actualizarDatos } = usePerfilPrivado();
+    const { reload, setReload, informacionUsuario, fotoSubida, selectImage, updateNombre, updateApellidos, updateAnho, updateSexo, updatePassword, setInformacionUsuario, actualizarDatos } = usePerfilPrivado();
     const [sexo, setSexo] = useState('Tonto');
     const [selectedYear, setSelectedYear] = useState(usuario ? usuario.anhoNacimiento : null);
     const ruta = "http://" + ip + "/api/v2/usuarios/" + email + "/images/";
@@ -44,10 +44,27 @@ const PerfilPrivado = ({ navigation }: Props) => {
         updateSexo(newSexo);
     };
 
-    const handleYearChange = (year) => {
+    const handleYearChange = async (year) => {
+        console.log("Desde handle year change: "+year);
+        
         setSelectedYear(year);
-        updateAnho(year);
+        await updateAnho(year);
+        setInformacionUsuario(prevState => ({
+            ...prevState,
+            anhoNacimiento: year
+        }));
     };
+
+    const receiveYearSignal = async (selectedYear) => {
+        console.log("Recibo la señal"+ selectedYear);
+        updateAnho(selectedYear);
+        await setInformacionUsuario((prevState) => ({
+            ...prevState,
+            anhoNacimiento: selectedYear,
+          }));
+        
+          console.log(informacionUsuario);
+    }
 
     const handleActualizarDatos = async () => {
         setLoading(true);
@@ -132,7 +149,7 @@ const PerfilPrivado = ({ navigation }: Props) => {
                     </View>
                     <View style={styles.column}>
                         <Text style={styles.label}>Año de Nacimiento:</Text>
-                        <YearPicker onYearChange={handleYearChange} anhoInicial={usuario.anhoNacimiento} />
+                        <YearPicker defaultValue={informacionUsuario.anhoNacimiento} cambiarAnhoUsuario={receiveYearSignal} />
                     </View>
                 </View>
 

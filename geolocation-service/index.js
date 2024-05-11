@@ -11,10 +11,22 @@ app.get('/country', async (req, res) => {
     try {
         const response = await axios.get(url);
         const addressComponents = response.data.results[0].address_components;
+        const formattedAddress = response.data.results[0].formatted_address;
         const countryComponent = addressComponents.find(component => component.types.includes("country"));
         const country = countryComponent ? countryComponent.long_name : "Unknown Country";
-        console.log(country);
-        res.send({ country });
+        const streetComponent = addressComponents.find(component => component.types.includes("route"));
+        const street = streetComponent ? streetComponent.long_name : "Unknown Street";
+        const cityComponent = addressComponents.find(component => component.types.includes("locality"));
+        const city = cityComponent ? cityComponent.long_name : "Unknown City";
+        const locationDetails = {
+            country: country,
+            street: street,
+            city: city,
+            formattedAddress: formattedAddress,
+            // Agrega más detalles aquí según sea necesario
+        };
+        console.log(locationDetails);
+        res.send(locationDetails);
     } catch (error) {
         console.error('Error fetching country:', error);
         res.status(500).send('Error fetching country');

@@ -32,7 +32,7 @@ const usePerfilPrivado = () => {
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [sexo, setSexo] = useState('Hombre');
-  const [anho, setAnho] = useState(0);
+  const [anho, setAnho] = useState(2000);
   const [password, setPassword] = useState('');
   const [fotoSubida, setFotoSubida] = useState(false);
   const [reload, setReload] = useState(true);
@@ -144,13 +144,30 @@ const usePerfilPrivado = () => {
     console.log(nuevo);
   };
 
-  const updateAnho = (nuevo) => {
+  const updateAnho = async (nuevo) => {
     setAnho(nuevo);
-    setInformacionUsuario((prevState) => ({
-      ...prevState,
+    let usuario : Usuario ={
+      email: informacionUsuario.email,
+      nombre: informacionUsuario.nombre,
+      apellidos: informacionUsuario.apellidos,
+      fotoPerfil: informacionUsuario.fotoPerfil,
+      fechaUltimaEstancia: informacionUsuario.fechaUltimaEstancia,
+      fechaUltimoAlquiler: informacionUsuario.fechaUltimoAlquiler,
+      sexo: informacionUsuario.sexo,
+      active: informacionUsuario.active,
       anhoNacimiento: nuevo,
-    }));
+      valoracion: informacionUsuario.valoracion,
+      fotoBase64: informacionUsuario.fotoBase64,
+      password: informacionUsuario.password,
+      hash: informacionUsuario.hash
+    }
+
+    setInformacionUsuario(usuario);
+
     console.log(nuevo);
+    console.log(informacionUsuario);
+    setInformacionUsuario(usuario);
+    
   };
 
   const updatePassword = (nuevo) => {
@@ -171,7 +188,7 @@ const usePerfilPrivado = () => {
       fechaUltimaEstancia: informacionUsuario.fechaUltimaEstancia,
       fechaUltimoAlquiler: informacionUsuario.fechaUltimoAlquiler,
       fotoPerfil: informacionUsuario.fotoPerfil,
-      password: '1234',
+      password: informacionUsuario.password,
       sexo: informacionUsuario.sexo,
       fotoBase64: informacionUsuario.fotoBase64,
 
@@ -216,7 +233,7 @@ const usePerfilPrivado = () => {
 
 
 
-  return { informacionUsuario, fotoSubida, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos, reload, setReload }
+  return { informacionUsuario, fotoSubida, selectImage, updateNombre, updateAnho, updateApellidos, updateSexo, updatePassword, actualizarDatos, setInformacionUsuario, reload, setReload }
 }
 
 export default usePerfilPrivado

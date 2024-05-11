@@ -33,7 +33,7 @@ const ModalAnotacion = ({ idWatchlist, anotacion }: Props) => {
     }
 
     return (
-        <View>
+        <View style={{marginTop: 8}}>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Text style={styles.annotationText} numberOfLines={1} ellipsizeMode='tail'>{anotacionLista}</Text>
             </TouchableOpacity>

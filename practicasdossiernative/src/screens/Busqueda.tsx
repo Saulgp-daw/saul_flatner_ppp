@@ -62,7 +62,7 @@ const Busqueda = ({ navigation }: Props) => {
                 email={piso.propietario}
               />
               <View style={styles.datosContainer}>
-                <Text style={styles.infoRelevante}>{piso.titulo}</Text>
+                <Text style={styles.infoRelevante} numberOfLines={1} ellipsizeMode='tail'>{piso.titulo}</Text>
                 <Text style={styles.infoRelevante}>{piso.precio} €</Text>
               </View>
               <View style={styles.datosContainer}>

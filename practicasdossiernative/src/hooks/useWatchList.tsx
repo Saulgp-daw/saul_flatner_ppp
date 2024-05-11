@@ -149,7 +149,50 @@ const useWatchList = () => {
         }
         axiospost();
     }
-    return { agregar, error  }
+
+    function quitar (email: string, idPiso: number){
+        const ruta = "http://" + ip + "/api/v2/watchlists/" + email + "/piso/" + idPiso;
+        console.log("Borro piso");
+        
+
+        async function axiosdelete () {
+            try {
+                setLoading(true);
+                const response = await axios.delete(ruta,{ headers: { 'Authorization': `Bearer ${token}` } });
+                //console.log(response.data);
+                
+                let status = response.status;
+                //console.log(status);
+                if (status === 200) {
+                    //console.log("todo correcto");
+                    Alert.alert("Piso Borrado", "Respuesta: " + response.status);
+                    getUser();
+                }
+
+
+            } catch (error) {
+                if (error.response) {
+                    // El servidor devolvió una respuesta con un código de estado fuera del rango 2xx
+                    console.log(error.response.data); // Aquí puedes acceder a los detalles del error en el lado del servidor
+                    setError(error.response.data || "Error desconocido"); // Puedes adaptar esto según la estructura de tu respuesta de error
+                } else if (error.request) {
+                    // La solicitud fue realizada pero no se recibió respuesta
+                    console.log(error.request);
+                    setError("No se recibió respuesta del servidor");
+                } else {
+                    // Hubo un error al configurar o realizar la solicitud
+                    console.log(error.message);
+                    setError("Error en la configuración o ejecución de la solicitud");
+                }
+            } finally {
+                setLoading(false);
+                setValido(false);
+            }
+        }
+        axiosdelete();
+    }
+
+    return { agregar, quitar, error  }
 }
 
 export default useWatchList

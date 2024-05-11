@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import useFindWatchlistByEmail from '../hooks/useFindWatchlistByEmail';
 import ModalAnotacion from '../components/ModalAnotacion';
 import Navbar from '../components/Navbar';
+import useWatchList from '../hooks/useWatchList';
 
 
 
@@ -25,10 +26,13 @@ const WatchList = ({ navigation }: Props) => {
 	const [pisosConErrores, setPisosConErrores] = useState<number[]>([]);
 
 	useEffect(() => {
+		console.log("hola");
 		const onFocus = navigation.addListener('focus', () => {
 			setReload(true);
 		});
 		return onFocus;
+
+
 
 	}, [reload])
 
@@ -58,11 +62,17 @@ const WatchList = ({ navigation }: Props) => {
 			<ScrollView contentContainerStyle={styles.container}>
 				{usuario.pisosInteres.map((watchlist) => (
 					<View key={watchlist.id}>
-						<PisoComponent pisoId={watchlist.id} token={token} navigation={navigation} />
-						<ModalAnotacion idWatchlist={watchlist.idAnotacion} anotacion={watchlist.anotaciones} />
+						<PisoComponent
+							pisoId={watchlist.id}
+							token={token}
+							navigation={navigation}
+							idAnotacion={watchlist.idAnotacion}
+							anotaciones={watchlist.anotaciones}
+						/>
 					</View>
 				))}
 			</ScrollView>
+
 		</>
 
 	);
@@ -71,10 +81,13 @@ const WatchList = ({ navigation }: Props) => {
 export default WatchList
 
 
-const PisoComponent = ({ pisoId, token, navigation }) => {
+const PisoComponent = ({ pisoId, token, navigation, idAnotacion, anotaciones }) => {
 	const { piso } = useFindPiso(pisoId);
 	const imagenDefecto = "../resources/default.jpg";
 	const [error, setError] = useState(false);
+	const { email, usuario, setusuario } = useAppContext();
+	
+	const { quitar } = useWatchList();
 
 	if (!piso) {
 		return (
@@ -103,23 +116,45 @@ const PisoComponent = ({ pisoId, token, navigation }) => {
 					) : (
 						<Image source={require(imagenDefecto)} style={styles.imagen} />
 					)}
-					<View>
-						<Text style={styles.infoRelevante}>{piso?.titulo}</Text>
-						<Text style={styles.info}>{piso?.valoracion} ⭐</Text>
-						<Text style={styles.info}>
-							<Icon name="person-sharp" size={15} /> {piso.inquilinos.length} - <Icon name="bed" size={15} /> {piso.numHabitaciones}
-						</Text>
+					<View style={styles.infoContainer}>
+						<View style={styles.tituloDislikeContainer}>
+							<Text style={styles.infoRelevante} numberOfLines={1} ellipsizeMode='tail'>{piso?.titulo}</Text>
+							<TouchableOpacity style={styles.dislike} onPress={() => quitar(usuario.email, piso.idPiso)}>
+								<Icon name="heart-dislike-outline" size={27} color="#ff0000" />
+							</TouchableOpacity>
+						</View>
+						<View style={styles.detalles}>
+							<Text style={styles.info}>{piso?.valoracion} ⭐</Text>
+							<Text style={styles.info}>
+								<Icon name="person-sharp" size={15} /> {piso.inquilinos.length}
+							</Text>
+							<Text style={styles.info}>
+								<Icon name="bed" size={15} /> {piso.numHabitaciones}
+							</Text>
+						</View>
+						<ModalAnotacion idWatchlist={idAnotacion} anotacion={anotaciones} />
 					</View>
 				</View>
 			</View>
 		</TouchableOpacity>
 	);
-}
+};
+
 
 const styles = StyleSheet.create({
 	container: {
 		flexGrow: 1,
 		padding: 20,
+	},
+	dislike: {
+		position: 'relative',
+
+	},
+	detalles: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginTop: 5,
+		alignItems: 'center',
 	},
 	loadingContainer: {
 		flex: 1,
@@ -156,11 +191,24 @@ const styles = StyleSheet.create({
 	infoRelevante: {
 		fontWeight: 'bold',
 		fontSize: 20,
-		marginLeft: 10,
 	},
 	imagen: {
 		width: 100,
 		height: 100,
 		resizeMode: 'cover',
+	},
+	infoContainer: {
+		flex: 1,
+		marginLeft: 10,
+	},
+	tituloDislikeContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	detalleContainer: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		marginTop: 5,
 	},
 });

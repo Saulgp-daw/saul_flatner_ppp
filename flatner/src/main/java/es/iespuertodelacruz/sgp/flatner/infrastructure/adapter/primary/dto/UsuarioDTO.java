@@ -15,7 +15,16 @@ public class UsuarioDTO {
 	private String password;
 	private String sexo;
 	private String fotoBase64;
+	private boolean verified;
 	
+
+	public boolean getVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
 
 	public String getFotoBase64() {
 		return fotoBase64;

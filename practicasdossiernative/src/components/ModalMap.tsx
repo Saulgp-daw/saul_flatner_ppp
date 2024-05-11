@@ -38,12 +38,8 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
                     await updateCampo('mapsLink', `${latitude},${longitude}`);
                     setCurrentLocation({ latitude, longitude });
                     getCountry(latitude, longitude).then(async data => {
-                        //await updateCampo("ubicacion", data.country);
-                        console.log(data);
-                        
-                        
-                    })
-                    ;
+                        await updateCampo("ubicacion", data.formattedAddress);
+                    });
                     if (!markerCoordinate) {
                         setMarkerCoordinate({ latitude, longitude });
                     }
@@ -87,6 +83,9 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
             longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
+        });
+        getCountry(latitude, longitude).then(async data => {
+            await updateCampo("ubicacion", data.formattedAddress);
         });
         await updateCampo('mapsLink', `${latitude},${longitude}`);
         console.log(informacionPiso);
@@ -137,7 +136,7 @@ const ModalMap = ({ informacionPiso, updateCampo }) => {
                         {markerCoordinate && <Marker coordinate={markerCoordinate} />}
                     </MapView>
                     <TouchableHighlight style={styles.closeButton} onPress={toggleModal}>
-                        <Icon name="close" size={23} />
+                        <Icon name="checkmark-outline" size={23} />
                     </TouchableHighlight>
                 </ScrollView>
             </Modal>

@@ -2,6 +2,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import useAgregarPiso from '../hooks/useAgregarPiso';
+import useGetCountry from '../hooks/useGetCountry';
+
+
 
 type Props = {
     onLocationSelect: (location: { latitude: number, longitude: number }) => void;
@@ -9,6 +12,7 @@ type Props = {
 }
 
 const SearchLocation = ({onLocationSelect, updateCampo }: Props) => {
+    const {getCountry} = useGetCountry();
 
     const handlePress = async (data, details) => {
     if (details && details.geometry) {
@@ -17,6 +21,9 @@ const SearchLocation = ({onLocationSelect, updateCampo }: Props) => {
         onLocationSelect({
             latitude: location.lat,
             longitude: location.lng
+        });
+        getCountry(location.lat, location.lng).then(async data => {
+            await updateCampo("ubicacion", data.formattedAddress);
         });
         await updateCampo('mapsLink', `${location.lat},${location.lng}`);
        

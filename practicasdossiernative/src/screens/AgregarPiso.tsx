@@ -9,7 +9,7 @@ import { useAppContext } from '../contexts/TokenContextProvider';
 import { Easing } from 'react-native';
 import DropShadow from "react-native-drop-shadow";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import ModalMap from '../components/ModalMap';
 
@@ -179,7 +179,7 @@ const AgregarPiso = ({ navigation }: Props) => {
 							<View style={styles.trianguloContainer}>
 								<View style={styles.triangulo} />
 								<Text style={styles.texto}>
-									{informacionPiso.fotos && informacionPiso.fotos.length > 0 ? "Foto subida" : <Icon name="add-a-photo" size={30} color="#000" />}
+									{informacionPiso.fotos && informacionPiso.fotos.length > 0 ? <Icon name="camera-reverse-outline" size={27} color="#000" /> : <Icon name="camera-outline" size={27} color="#000" />}
 								</Text>
 							</View>
 						</TouchableOpacity>
@@ -431,25 +431,14 @@ const AgregarPiso = ({ navigation }: Props) => {
 					</View>
 				</Animated.View>
 
-				<View style={styles.row}>
-					<View style={styles.column}>
-						<Text>Selecciona un país:</Text>
-						<Button title="Seleccionar país" onPress={() => setModalVisible(true)} />
-						<CountryPicker
-							visible={modalVisible}
-							onSelect={handleCountrySelect}
-							onClose={() => setModalVisible(false)} countryCode={countryCode?.cca2} />
-					</View>
-				</View>
-				<View style={styles.singleColumnRow}>
-					<View style={styles.column}>
-						<Text>{informacionPiso.mapsLink}</Text>
-					</View>
-				</View>
 				<View style={styles.singleColumnRow}>
 					<View style={styles.column}>
 						<ModalMap informacionPiso={informacionPiso} updateCampo={updateCampo} />
-
+					</View>
+				</View>
+				<View style={styles.singleColumnRow}>
+					<View style={styles.column}>
+						<TextInput style={styles.textInput} editable={false}>{informacionPiso.ubicacion}</TextInput>
 					</View>
 				</View>
 
