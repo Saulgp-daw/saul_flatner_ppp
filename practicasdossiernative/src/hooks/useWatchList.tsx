@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAppContext } from '../contexts/TokenContextProvider';
 import useGetUserLogged from './useGetUserLogged';
 import { Usuario } from '../types/Usuario';
+import Toast from 'react-native-toast-message';
 
 type Props = {}
 
@@ -16,6 +17,19 @@ const useWatchList = () => {
     const rutaGetUser = "http://" + ip + "/api/v2/usuarios/";
     const { token, settoken, email, setemail, usuario, setusuario } = useAppContext();
     
+    function FavoritosAdded() {
+        Toast.show({
+            type: 'success',
+            text1: '¡Piso agregado a favoritos!'
+        });
+    }
+
+    function FavoritosDeleted() {
+        Toast.show({
+            type: 'success',
+            text1: 'Piso eliminado de favoritos'
+        });
+    }
 
     async function getUser() {
             
@@ -123,7 +137,8 @@ const useWatchList = () => {
                 //console.log(status);
                 if (status === 200) {
                     //console.log("todo correcto");
-                    Alert.alert("Piso añadido", "Respuesta: " + response.status);
+                    //Alert.alert("Piso añadido", "Respuesta: " + response.status);
+                    FavoritosAdded();
                     getUser();
                 }
 
@@ -165,7 +180,8 @@ const useWatchList = () => {
                 //console.log(status);
                 if (status === 200) {
                     //console.log("todo correcto");
-                    Alert.alert("Piso Borrado", "Respuesta: " + response.status);
+                    //Alert.alert("Piso Borrado", "Respuesta: " + response.status);
+                    FavoritosDeleted();
                     getUser();
                 }
 
